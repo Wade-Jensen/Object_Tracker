@@ -903,3 +903,11 @@
 1460351274 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
 
+1462751900 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\objecttracker.cpp
+	<vil/vil_image_view.h>
+	<vil/vil_load.h>
+	<vil/vil_save.h>
+	<vul/vul_file_iterator.h>
+	<vul/vul_file.h>
+	<vul/vul_arg.h>
+

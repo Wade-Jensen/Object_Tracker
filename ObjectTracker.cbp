@@ -91,8 +91,8 @@
 			<Add library="..\..\vxl-1.17.0\lib\libz.a" />
 		</Linker>
 		<Unit filename="include\DFT.h" />
-		<Unit filename="objectTracker.cpp" />
 		<Unit filename="src\DFT.cpp" />
+		<Unit filename="src\objectTracker.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

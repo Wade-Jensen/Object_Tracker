@@ -1,6 +1,10 @@
-#include "ViBe_Model.h"
+/*
 
+*/
+#ifndef _VIL_IMAGE_
+#define _VIL_IMAGE_
 #include <vil/vil_image_view.h>
+#endif
 
 #ifndef _VIL_LOAD_
 #define _VIL_LOAD_
@@ -19,13 +23,12 @@
 #include <vul/vul_file.h>
 #endif
 
-#ifndef _VCL_VECTOR_
-#define _VCL_VECTOR_
-#include <vcl_vector.h>
-#endif
-
-
 #include <vul/vul_arg.h>
+
+//#ifndef _CSTDINT_
+//#define _CSTDINT_
+//#include <cstdint>
+//#endif
 
 /*
  * Main program to run the ViBe motion detection algorithm.
@@ -38,12 +41,16 @@
 
 int main (int argc, char * argv[])
 {
-   bool first_frame; // have we computed // the first frame?
+   //bool first_frame; // have we computed // the first frame?
     // unknown type current_position = initial_position /// objects current // position, initial // position is // provided by the
                                                         /// Needs to store a location and size
                                                         /// provided by the user
-    vector< vil_image_view<unsigned char> > images /// we track the object over a list of images
+    vcl_vector< vil_image_view<unsigned char> > images; /// we track the object over a list of images provided by the user
                                                     /// this shall be a vector of vil_image_view's
+    // unknown type object_model; // a model of the DF of the image (sequence?)
+    unsigned int maxSearchDist;  ///  max distance to travel in search (user provided)
+
+
 
 
 
@@ -124,7 +131,7 @@ int main (int argc, char * argv[])
         vcl_cout << "No input files, exiting." << vcl_endl;
         return 0;
     }
-
+/*
     vil_image_view<unsigned char> anImage = vil_load(filenames[0].c_str());
 
     ViBe_Model Model;
@@ -152,4 +159,5 @@ int main (int argc, char * argv[])
 
 		// we could now do other things with this file, such as run it through a motion segmentation algorithm
 	}
+	*/
 }
