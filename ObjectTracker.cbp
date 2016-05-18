@@ -90,7 +90,11 @@
 			<Add library="..\..\vxl-1.17.0\lib\libvul_io.a" />
 			<Add library="..\..\vxl-1.17.0\lib\libz.a" />
 		</Linker>
+		<Unit filename="include\DF.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="include\DFT.h" />
+		<Unit filename="src\DF.cpp" />
 		<Unit filename="src\DFT.cpp" />
 		<Unit filename="src\objectTracker.cpp" />
 		<Extensions>
