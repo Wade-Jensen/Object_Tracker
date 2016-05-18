@@ -44,7 +44,6 @@ private:
 
     int width;
     int height;
-
 };
 
 #endif // DF_H_INCLUDED
