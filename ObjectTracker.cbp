@@ -96,6 +96,7 @@
 		<Unit filename="include\DFT.h" />
 		<Unit filename="src\DF.cpp" />
 		<Unit filename="src\DFT.cpp" />
+		<Unit filename="src\DF_Test.cpp" />
 		<Unit filename="src\objectTracker.cpp" />
 		<Extensions>
 			<code_completion />

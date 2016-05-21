@@ -29,18 +29,23 @@ image_array SomeClass::initImageArray(int width, int height, int planes int arrL
 }
 */
 
-DistributionField::DistributionField(){}
+DistributionField::DistributionField(vil_image_view<unsigned char>& Input, DF_params& params){
+
+    init(Input, params);
+}
 
 DistributionField::~DistributionField(){}
 
 
-void DistributionField::init(vil_image_view<unsigned char>& Input, int Num_channels, int Blur_spatial, int Blur_colour){
+void DistributionField::init(vil_image_view<unsigned char>& Input, DF_params& params){
 
     /* Set Parameters from Arguements*/
-    num_channels = Num_channels;
+    num_channels = params.num_channels;
     channel_width = 256/num_channels;
-    blur_spatial = Blur_spatial;
-    blur_colour = Blur_colour;
+    blur_spatial = params.blur_spatial;
+    blur_colour = params.blur_colour;
+    sd_spatial = params.sd_spatial;
+    sd_colour = params.sd_colour;
 
     width = Input.ni();
     height = Input.nj();
@@ -80,8 +85,10 @@ void DistributionField::createField(vil_image_view<unsigned char>& Input){
     for(int i = 0; i < num_channels; i++){
 
         /*Blur Channe using a parameter object - essentially a kernel*/
-        vil_gauss_filter_5tap_params Kernel = vil_gauss_filter_5tap_params(blur_spatial);
-        vil_gauss_filter_5tap(dist_field[i], dist_field[i], Kernel);
+        /*vil_gauss_filter_5tap_params Kernel = vil_gauss_filter_5tap_params(blur_spatial);
+        vil_gauss_filter_5tap(dist_field[i], dist_field[i], Kernel);*/
+
+        vil_gauss_filter_2d(dist_field[i], dist_field[i], sd_spatial, blur_spatial);
     }
 
     /*Run colour blur*/
@@ -112,7 +119,7 @@ void DistributionField::colourBlur(){
             }
 
             /*Blur*/
-            vil_gauss_filter_1d(colourIn, colourOut, blur_colour, 3);
+            vil_gauss_filter_1d(colourIn, colourOut, sd_colour, blur_colour);
 
             /*Copy Results from output psuedo-image back to the DF*/
             for(int k = 0; k < num_channels; k++){
@@ -126,6 +133,52 @@ void DistributionField::colourBlur(){
     }
 
 
+
+}
+
+int DistributionField::compare(DistributionField& inputDF){
+
+    float distance = 0;
+
+    for(int channel = 0; channel < num_channels; channel++){
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+
+                float dR = pow(
+                    dist_field[channel](i, j, 0)-inputDF.dist_field[channel](i, j, 0), 2);
+                float dG = pow(
+                    dist_field[channel](i, j, 1)-inputDF.dist_field[channel](i, j, 1), 2);
+                float dB = pow(
+                    dist_field[channel](i, j, 2)-inputDF.dist_field[channel](i, j, 2), 2);
+
+                distance += sqrt(dR + dG + dB);
+            }
+        }
+    }
+
+    return distance;
+
+}
+
+void DistributionField::update(DistributionField& inputDF, float learning_rate){
+
+    for(int channel = 0; channel < num_channels; channel++){
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+
+                unsigned char R = (1 - learning_rate)*dist_field[channel](i, j, 0)
+                                    + learning_rate*inputDF.dist_field[channel](i, j, 0);
+                unsigned char G = (1 - learning_rate)*dist_field[channel](i, j, 1)
+                                    + learning_rate*inputDF.dist_field[channel](i, j, 1);
+                unsigned char B = (1 - learning_rate)*dist_field[channel](i, j, 2)
+                                    + learning_rate*inputDF.dist_field[channel](i, j, 2);
+
+                dist_field[channel](i, j, 0) =  R;
+                dist_field[channel](i, j, 1) =  G;
+                dist_field[channel](i, j, 2) =  B;
+            }
+        }
+    }
 
 }
 
@@ -144,6 +197,18 @@ void DistributionField::saveField(){
         vil_save(dist_field[i], vcl_string(vcl_string("Channel")+index+vcl_string(".jpeg")).c_str());
     }
 }
+
+DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float SD_spatial, float SD_colour){
+
+    num_channels = Num_channels;
+    channel_width = 256/num_channels;
+    blur_spatial = Blur_spatial;
+    blur_colour = Blur_colour;
+    sd_spatial = sd_spatial;
+    sd_colour = sd_colour;
+}
+
+DF_params::~DF_params(){}
 
 
 
