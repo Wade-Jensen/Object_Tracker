@@ -145,6 +145,11 @@ void DistributionField::saveField(){
     }
 }
 
+vector<vil_image_view<unsigned char> > DistributionField::getDistributionField()
+{
+    return dist_field;
+}
+
 
 
 

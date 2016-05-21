@@ -25,11 +25,12 @@ public:
     /* Save the DF by saving each channel as a JPEG*/
     void saveField();
 
+    vector<vil_image_view<unsigned char> > getDistributionField();
 
 private:
 
     /*Create DF with Set Parameters*/
-    void createField(vil_image_view<unsigned char>&);
+    void createField(vil_image_view<unsigned char>&); /// NEED THIS TO RETURN SOMETHING
     /*Run Colour Clur routine*/
     void colourBlur();
 
