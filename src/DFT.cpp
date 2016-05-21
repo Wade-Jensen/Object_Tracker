@@ -9,12 +9,12 @@
 
 DFT::DFT()
 {
-    //ctor
+    //constructor
 }
 
 DFT::~DFT()
 {
-    //dtor
+    //destructor
 }
 
 void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
@@ -49,7 +49,7 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
 
             /// locate the object in the current frame. Use gradient descent search
             /// to find the new object position
-            //locateObject( df, _currentPosition, _objectModel, _maxSearchDist );
+            _currentPosition = locateObject( df, _currentPosition, _objectModel, _maxSearchDist );
 
             ///  update the object model to incorporate new information
             updateModel( df, _currentPosition);
@@ -60,11 +60,74 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
 
     }
 }
-                                                                                                      /// I THINK THIS IS THE RIGHT TYPE (NOT SURE)
-void DFT::locateObject( vector< vil_image_view<unsigned char> > df, map<vcl_string,int> currentPosition, vector<vil_image_view<unsigned char> > objectModel, int maxSearchDist)
+
+map<vcl_string,int> DFT::locateObject( vector< vil_image_view<unsigned char> > df, map<vcl_string,int> initialPosition, vector<vil_image_view<unsigned char> > objectModel, int maxSearchDist)
 {
     // TODO
     // update the currentPosition member variable to the new object position
+
+    // df = distribution field of the current frame
+    // objectModel = distribution field of the object being tracked
+    // initialPosition = a map which includes the x,y, height and width of initial position of the objectModel
+    // maxSearchDist = the maximum distance from the initial location we should search
+
+    int numSearchLocations = 5;
+    int searchLocationsX[] = {0,-1,0,1,0};
+    int searchLocationsY[] = {0,0,-1,0,1};
+
+    map<vcl_string,int> objectLocation = initialPosition;
+
+
+    while(true)
+    {
+        // we need to work out where the best position is in the local neighbourhood
+         // an arbitrarily large number
+        int bestLocation = 0;
+        int minDistance = 9999999;
+
+        for (int i=0; i<numSearchLocations;i++)
+        {
+            // compare the model to the image at the current search location
+            // note that we need to crop df so that it is the same size as the objectModel
+            // Our crop takes a location, a width and a height
+
+            int x = objectLocation["x"]+searchLocationsX[i];
+            int y = objectLocation["y"]+searchLocationsY[i];
+            int width = objectLocation["width"];
+            int height = objectLocation["height"];
+
+            //vector <vil_image_view<unsigned char> > croppedField = cropDF(df,x,y,height,width);
+
+            //int distance = compareDF(objectModel,croppedField,width,height);
+            int distance;
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                bestLocation = i;
+            }
+        }
+
+        // update the object location based on this iteration
+        objectLocation["x"] += searchLocationsX[bestLocation];
+        objectLocation["y"] += searchLocationsY[bestLocation];
+
+
+        int searchDist = sqrt(
+                              (objectLocation["x"]-initialPosition["x"])*(objectLocation["x"]-initialPosition["x"])
+                              +
+                              (objectLocation["y"]-initialPosition["y"])*(objectLocation["y"]-initialPosition["y"])
+                              );
+
+        // if the best_location is 0, i.e. no motion, then we have reached the end of the search, or
+        // if we’ve gone maxSearchDist, we’ve reached the end of our search
+        if ( (bestLocation != 0) & (searchDist < maxSearchDist) )
+        {
+            break;
+        }
+    }
+
+
+    return objectLocation;
 }
 
 void DFT::displayCurrentPosition ( vil_image_view<unsigned char>& currentFrame, map<vcl_string,int> currentPosition )

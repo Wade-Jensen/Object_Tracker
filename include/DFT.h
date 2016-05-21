@@ -33,7 +33,7 @@ protected:
 private:
     void trackObject( vcl_vector< vil_image_view<unsigned char> >& images);
     vector<vil_image_view<unsigned char> > getDistributionField();
-    void locateObject( vector <vil_image_view<unsigned char> > df, map<vcl_string,int> currentPosition, vector < vil_image_view <unsigned char> > objectModel, int maxSearchDist);
+    map<vcl_string,int> locateObject( vector <vil_image_view<unsigned char> > df, map<vcl_string,int> currentPosition, vector < vil_image_view <unsigned char> > objectModel, int maxSearchDist);
     void displayCurrentPosition ( vil_image_view<unsigned char>& image, map<vcl_string,int> currentPosition );
     void updateModel(vector< vil_image_view<unsigned char> > df, map<vcl_string,int> currentPosition);
 
