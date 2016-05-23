@@ -44,6 +44,7 @@ DistributionField::DistributionField(DistributionField& SuperF, int pos[2], int 
 
     width = size[0];
     height = size[1];
+    planes = SuperF.planes;
 
     /*For each Channel, save a "sub-channel" using vil_crop*/
     for(int k = 0; k < num_channels; k++){
@@ -76,6 +77,7 @@ void DistributionField::init(vil_image_view<unsigned char>& Input, DF_params& pa
 
     width = Input.ni();
     height = Input.nj();
+    planes = Input.nplanes();
 
     /*Begin DF Creation */
     createField(Input);
@@ -87,24 +89,17 @@ void DistributionField::createField(vil_image_view<unsigned char>& Input){
     /*Create All Channels - Blank*/
     for(int k = 0; k < num_channels; k++){
 
-        dist_field.push_back(vil_image_view<unsigned char>(width, height, 3, 1));
+        dist_field.push_back(vil_image_view<unsigned char>(width, height, planes, 1));
     }
 
     /*Pixel-byPixel loop*/
     for(int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
-
-                /*"Set" this pixel in the approriate channel for Red*/
-                int R_channel = Input(i, j, 0)/channel_width;
-                dist_field[R_channel](i, j, 0) = 255;
-
-                /*For Blue*/
-                int G_channel = Input(i, j, 1)/channel_width;
-                dist_field[G_channel](i, j, 1) = 255;
-
-                /*For Green*/
-                int B_channel = Input(i, j, 2)/channel_width;
-                dist_field[B_channel](i, j, 2) = 255;
+            for(int p = 0; p < planes; p++){
+                /*"Set" this pixel in the approriate channel for all colours*/
+                int channel = Input(i, j, p)/channel_width;
+                dist_field[channel](i, j, p) = 255;
+            }
         }
     }
 
@@ -130,30 +125,26 @@ void DistributionField::colourBlur(){
         for(int j = 0; j < height; j++){
 
             /*Create 1D psuedo-image representing all channels*/
-            vil_image_view<unsigned char> colourIn =
-                vil_image_view<unsigned char>(num_channels, 1, 3, 1);
-
-            vil_image_view<unsigned char> colourOut =
-                vil_image_view<unsigned char>(num_channels, 1, 3, 1);
+            vil_image_view<unsigned char> colourLine =
+                vil_image_view<unsigned char>(num_channels, 1, planes, 1);
 
             /*Fill the input psuedo-image from the DF*/
             for(int k = 0; k < num_channels; k++){
+                for(int p = 0; p < planes; p++){
+                    colourLine(k, 0, p) = dist_field[k](i, j, p);
 
-                    unsigned char x = dist_field[k](i, j, 0);
-                    colourIn(k, 0, 0) = x;
-                    colourIn(k, 0, 1) = dist_field[k](i, j, 1);
-                    colourIn(k, 0, 2) = dist_field[k](i, j, 2);
+                }
             }
 
             /*Blur*/
-            vil_gauss_filter_1d(colourIn, colourOut, sd_colour, blur_colour);
+            vil_gauss_filter_1d(colourLine, colourLine, sd_colour, blur_colour);
 
             /*Copy Results from output psuedo-image back to the DF*/
             for(int k = 0; k < num_channels; k++){
+                for(int p = 0; p < planes; p++){
+                    dist_field[k](i, j, p) = colourLine(k, 0, p);
 
-                    dist_field[k](i, j, 0) = colourOut(k, 0, 0);
-                    dist_field[k](i, j, 1) = colourOut(k, 0, 1);
-                    dist_field[k](i, j, 2) = colourOut(k, 0, 2);
+                }
             }
 
         }
@@ -165,20 +156,25 @@ void DistributionField::colourBlur(){
 
 int DistributionField::compare(DistributionField& inputDF){
 
+    if(inputDF != *this){
+        //throw 0;
+        throw "Distribution Field Sizes Do Not Match";
+    }
+
+
     float distance = 0;
 
     for(int channel = 0; channel < num_channels; channel++){
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
 
-                float dR = pow(
-                    dist_field[channel](i, j, 0)-inputDF.dist_field[channel](i, j, 0), 2);
-                float dG = pow(
-                    dist_field[channel](i, j, 1)-inputDF.dist_field[channel](i, j, 1), 2);
-                float dB = pow(
-                    dist_field[channel](i, j, 2)-inputDF.dist_field[channel](i, j, 2), 2);
+                float del = 0;
+                for(int p = 0; p < planes; p++){
 
-                distance += sqrt(dR + dG + dB);
+                    del += pow(
+                        dist_field[channel](i, j, p)-inputDF.dist_field[channel](i, j, p), 2);
+                }
+                distance += sqrt(del);
             }
         }
     }
@@ -189,20 +185,20 @@ int DistributionField::compare(DistributionField& inputDF){
 
 void DistributionField::update(DistributionField& inputDF, float learning_rate){
 
+    if(inputDF != *this){
+        //throw 0;
+        throw "Distribution Field Sizes Do Not Match";
+    }
+
     for(int channel = 0; channel < num_channels; channel++){
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
+                for(int p = 0; p < planes; p++){
 
-                unsigned char R = (1 - learning_rate)*dist_field[channel](i, j, 0)
-                                    + learning_rate*inputDF.dist_field[channel](i, j, 0);
-                unsigned char G = (1 - learning_rate)*dist_field[channel](i, j, 1)
-                                    + learning_rate*inputDF.dist_field[channel](i, j, 1);
-                unsigned char B = (1 - learning_rate)*dist_field[channel](i, j, 2)
-                                    + learning_rate*inputDF.dist_field[channel](i, j, 2);
-
-                dist_field[channel](i, j, 0) =  R;
-                dist_field[channel](i, j, 1) =  G;
-                dist_field[channel](i, j, 2) =  B;
+                        dist_field[channel](i, j, p) =
+                                        (1 - learning_rate)*dist_field[channel](i, j, p)
+                                        + learning_rate*inputDF.dist_field[channel](i, j, p);
+                }
             }
         }
     }
@@ -210,7 +206,7 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate){
 }
 
 /*
- * This method will grab a width x height subfield starting at (X, Y)
+ * This method will grab a (width x height) subfield starting at (X, Y)
 */
 DistributionField DistributionField::subfield(int X, int Y, int width, int height){
 
@@ -236,6 +232,14 @@ void DistributionField::saveField(){
         /*Save channel as jpeg*/
         vil_save(dist_field[i], vcl_string(vcl_string("Channel")+index+vcl_string(".jpeg")).c_str());
     }
+}
+
+bool DistributionField::operator!=(DistributionField& inputDF){
+
+    return !(width == inputDF.width&&
+            height == inputDF.height&&
+            planes == inputDF.planes&&
+            num_channels == inputDF.num_channels);
 }
 
 vector<vil_image_view<unsigned char> > DistributionField::getDistributionField()
