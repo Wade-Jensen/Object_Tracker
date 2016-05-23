@@ -29,13 +29,40 @@ image_array SomeClass::initImageArray(int width, int height, int planes int arrL
 }
 */
 
+DistributionField::DistributionField(){
+}
+
+DistributionField::DistributionField(DistributionField& SuperF, int pos[2], int size[2]){
+
+    /*Transfer Parameters*/
+    num_channels = SuperF.num_channels;
+    channel_width = SuperF.channel_width;
+    blur_spatial = SuperF.blur_spatial;
+    blur_colour = SuperF.blur_colour;
+    sd_spatial = SuperF.sd_spatial;
+    sd_colour = SuperF.sd_colour;
+
+    width = size[0];
+    height = size[1];
+
+    /*For each Channel, save a "sub-channel" using vil_crop*/
+    for(int k = 0; k < num_channels; k++){
+
+        dist_field.push_back(vil_crop(SuperF.dist_field[k],
+                                      pos[0], size[0],
+                                      pos[1], size[1]));
+    }
+
+}
+
 DistributionField::DistributionField(vil_image_view<unsigned char>& Input, DF_params& params){
 
+    /*Following RAII*/
     init(Input, params);
 }
 
+/*Default, does nothing*/
 DistributionField::~DistributionField(){}
-
 
 void DistributionField::init(vil_image_view<unsigned char>& Input, DF_params& params){
 
@@ -182,6 +209,19 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate){
 
 }
 
+/*
+ * This method will grab a width x height subfield starting at (X, Y)
+*/
+DistributionField DistributionField::subfield(int X, int Y, int width, int height){
+
+    /*Package Parameters */
+    int pos[2] = {X, Y};
+    int size[2] = {width, height};
+
+    /*Return constructed sub-field*/
+    return DistributionField(*this, pos, size);
+}
+
 void DistributionField::saveField(){
 
     /*Iterate through channels*/
@@ -198,6 +238,11 @@ void DistributionField::saveField(){
     }
 }
 
+vector<vil_image_view<unsigned char> > DistributionField::getDistributionField()
+{
+    return dist_field;
+}
+
 DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float SD_spatial, float SD_colour){
 
     num_channels = Num_channels;
@@ -209,6 +254,8 @@ DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float 
 }
 
 DF_params::~DF_params(){}
+
+
 
 
 
