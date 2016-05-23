@@ -6,14 +6,19 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
 #include <vil/algo/vil_gauss_filter.h>
+#include <vil/vil_crop.h>
 
 using std::vector;
 using std::stringstream;
 
+/*
+ * Class for passing bulk parameters to a DF constructor
+*/
 class DF_params{
 
 public:
 
+    /*These are all obvious*/
     friend class DistributionField;
     DF_params(int, int, int, float, float);
     ~DF_params();
@@ -38,16 +43,26 @@ class DistributionField{
 public:
 
     /* Constructor & Destructor*/
+    DistributionField();
     DistributionField(vil_image_view<unsigned char>&, DF_params&);
+    DistributionField(DistributionField&, int[2], int[2]);
     ~DistributionField();
 
+    /*Methods for use in DFT
+     * Compare returns raw difference, as described in algorithm breakdown
+     * Update updates the DF, also as described
+     * Subfield returns a sub-DF, contained within this
+    */
     int compare(DistributionField&);
     void update(DistributionField&, float);
+    DistributionField subfield(int, int, int ,int);
 
     /* Save the DF by saving each channel as a JPEG*/
     void saveField();
 
     vector<vil_image_view<unsigned char> > getDistributionField();
+
+    bool operator!=(DistributionField&);
 
 private:
 
@@ -73,6 +88,7 @@ private:
 
     int width;
     int height;
+    int planes;
 };
 
 #endif // DF_H_INCLUDED
