@@ -32,7 +32,7 @@ image_array SomeClass::initImageArray(int width, int height, int planes int arrL
 DistributionField::DistributionField(){
 }
 
-DistributionField::DistributionField(DistributionField& SuperF, int pos[2], int size[2]){
+DistributionField::DistributionField(const DistributionField& SuperF, int pos[2], int size[2]){
 
     /*Transfer Parameters*/
     num_channels = SuperF.num_channels;
@@ -154,7 +154,7 @@ void DistributionField::colourBlur(){
 
 }
 
-int DistributionField::compare(DistributionField& inputDF){
+int DistributionField::compare(DistributionField& inputDF) const{
 
     if(inputDF != *this){
         //throw 0;
@@ -208,7 +208,7 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate){
 /*
  * This method will grab a (width x height) subfield starting at (X, Y)
 */
-DistributionField DistributionField::subfield(int X, int Y, int width, int height){
+DistributionField DistributionField::subfield(int X, int Y, int width, int height) const{
 
     /*Package Parameters */
     int pos[2] = {X, Y};
@@ -234,7 +234,7 @@ void DistributionField::saveField(){
     }
 }
 
-bool DistributionField::operator!=(DistributionField& inputDF){
+bool DistributionField::operator!=(const DistributionField& inputDF){
 
     return !(width == inputDF.width&&
             height == inputDF.height&&

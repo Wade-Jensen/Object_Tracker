@@ -45,7 +45,7 @@ public:
     /* Constructor & Destructor*/
     DistributionField();
     DistributionField(vil_image_view<unsigned char>&, DF_params&);
-    DistributionField(DistributionField&, int[2], int[2]);
+    DistributionField(const DistributionField&, int[2], int[2]);
     ~DistributionField();
 
     /*Methods for use in DFT
@@ -53,16 +53,16 @@ public:
      * Update updates the DF, also as described
      * Subfield returns a sub-DF, contained within this
     */
-    int compare(DistributionField&);
+    int compare(DistributionField&) const;
     void update(DistributionField&, float);
-    DistributionField subfield(int, int, int ,int);
+    DistributionField subfield(int, int, int ,int) const;
 
     /* Save the DF by saving each channel as a JPEG*/
     void saveField();
 
     vector<vil_image_view<unsigned char> > getDistributionField();
 
-    bool operator!=(DistributionField&);
+    bool operator!=(const DistributionField&);
 
 private:
 

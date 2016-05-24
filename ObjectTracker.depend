@@ -1,11 +1,14 @@
 # depslib dependency file v1.0
-1463220871 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
+1463983102 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
 	"../include/DFT.h"
+	"..\include\DF.h"
 	<vcl_vector.h>
 
-1463220871 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
+1463819555 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
 	<vcl_vector.h>
 	<vil/vil_image_view.h>
+	<map>
+	<vul/vul_file.h>
 
 1462766142 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\vcl\vcl_vector.h
 	"vcl_compiler.h"
@@ -755,19 +758,20 @@
 	<vil/vil_smart_ptr.h>
 	<vil/vil_pixel_format.h>
 
-1463753004 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df_test.cpp
+1464013744 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df_test.cpp
 	"..\include\Version.h"
 	"..\include\DF.h"
 	<vil/vil_load.h>
 
 1463388934 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\version.h
 
-1463752871 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
+1464013981 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
 	<vector>
 	<sstream>
 	<vil/vil_image_view.h>
 	<vil/vil_save.h>
 	<vil/algo/vil_gauss_filter.h>
+	<vil/vil_crop.h>
 
 1462766112 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\core\vil\vil_save.h
 	<vil/vil_fwd.h>
@@ -908,6 +912,11 @@
 1462766150 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
 
-1463753116 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
+1464013584 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
 	"..\include\DF.h"
+
+1462766110 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\core\vil\vil_crop.h
+	<vil/vil_image_resource.h>
+	<vil/vil_image_view.h>
+	<vcl_cassert.h>
 

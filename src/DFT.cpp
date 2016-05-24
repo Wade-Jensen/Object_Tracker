@@ -20,15 +20,15 @@ DFT::~DFT()
 void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
 {
     /// placeholders until we work out how to pass in these variables
-    int numChannels;
+    /*int numChannels;
     int spatialBlurSize;
-    int colourBlurSize;
+    int colourBlurSize;*/
 
+    DF_params default_params = DF_params(8, 3, 1, 1, 1);
 
     for (int i=0; i<images.size(); i++)
     {
         DistributionField dfObj;
-        dfObj = DistributionField();
 
         /// if this is the first frame, we need to build the model before we can track it
         if (_firstFrame)
@@ -38,21 +38,21 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
             /// setup and generate the distribution field
 
 
-            dfObj.init(images[i],numChannels,spatialBlurSize,colourBlurSize);
+            dfObj = DistributionField(images[i], default_params);
 
             _firstFrame = false; /// not the first frame, so we can track the object
         }
         if (!_firstFrame)
         {
             /// return the distribution field of the current frame
-            vector<vil_image_view<unsigned char> > df = dfObj.getDistributionField();
+            //vector<vil_image_view<unsigned char> > df = dfObj.getDistributionField();
 
             /// locate the object in the current frame. Use gradient descent search
             /// to find the new object position
-            _currentPosition = locateObject( df, _currentPosition, _objectModel, _maxSearchDist );
+            _currentPosition = locateObject( dfObj, _currentPosition, _maxSearchDist );
 
             ///  update the object model to incorporate new information
-            updateModel( df, _currentPosition);
+            //updateModel( df, _currentPosition);
 
             /// display or print an image, ie. draw a bounding box around the object being tracked
             displayCurrentPosition (images[i], _currentPosition );
@@ -61,7 +61,7 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
     }
 }
 
-map<vcl_string,int> DFT::locateObject( vector< vil_image_view<unsigned char> > df, map<vcl_string,int> initialPosition, vector<vil_image_view<unsigned char> > objectModel, int maxSearchDist)
+map<vcl_string,int> DFT::locateObject(const DistributionField& df, map<vcl_string,int> initialPosition, int maxSearchDist)
 {
     // TODO
     // update the currentPosition member variable to the new object position
@@ -97,9 +97,10 @@ map<vcl_string,int> DFT::locateObject( vector< vil_image_view<unsigned char> > d
             int height = objectLocation["height"];
 
             //vector <vil_image_view<unsigned char> > croppedField = cropDF(df,x,y,height,width);
+            DistributionField croppedField = df.subfield(x, y, width, height);
 
-            //int distance = compareDF(objectModel,croppedField,width,height);
-            int distance;
+            int distance = _objectModel.compare(croppedField);
+            //int distance;
             if (distance < minDistance)
             {
                 minDistance = distance;

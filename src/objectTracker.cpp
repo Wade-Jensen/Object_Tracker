@@ -1,6 +1,7 @@
-/*
+#include "..\include\Version.h"
 
-*/
+#ifdef RELEASE
+
 #ifndef _VIL_IMAGE_
 #define _VIL_IMAGE_
 #include <vil/vil_image_view.h>
@@ -161,3 +162,5 @@ int main (int argc, char * argv[])
 	}
 	*/
 }
+
+#endif
