@@ -1,22 +1,11 @@
 #include "..\include\Version.h"
+#include "..\include\DFT.h"
 
 #ifdef RELEASE
 
-#ifndef _VIL_IMAGE_
-#define _VIL_IMAGE_
 #include <vil/vil_image_view.h>
-#endif
-
-#ifndef _VIL_LOAD_
-#define _VIL_LOAD_
 #include <vil/vil_load.h>
-#endif
-
-#ifndef _VIL_SAVE_
-#define _VIL_SAVE_
 #include <vil/vil_save.h>
-#endif
-
 #include <vul/vul_file_iterator.h>
 
 #ifndef _VUL_FILE_
@@ -26,10 +15,7 @@
 
 #include <vul/vul_arg.h>
 
-//#ifndef _CSTDINT_
-//#define _CSTDINT_
-//#include <cstdint>
-//#endif
+// need to replace with a sensible comment explanation of the main
 
 /*
  * Main program to run the ViBe motion detection algorithm.

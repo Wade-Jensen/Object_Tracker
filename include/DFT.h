@@ -1,28 +1,18 @@
 #ifndef DFT_H
 #define DFT_H
 
-#ifndef _VCL_VECTOR_
-#define _VCL_VECTOR_
 #include <vcl_vector.h>
-using std::vector;
-#endif
-
-#ifndef _VIL_IMAGE_
-#define _VIL_IMAGE_
+#include <vector>
 #include <vil/vil_image_view.h>
-#endif
-
-#ifndef _MAP_
-#define _MAP_
 #include <map>
 using std::map;
-#endif
 
 #ifndef _VUL_FILE_
 #define _VUL_FILE_
 #include <vul/vul_file.h>
-#endif
+#endif _VUL_FILE_
 
+#include <vil/vil_save.h>
 #include "../include/DF.h"
 
 class DFT

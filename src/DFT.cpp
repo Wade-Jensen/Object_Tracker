@@ -2,11 +2,6 @@
 
 #include "..\include\DF.h"
 
-#ifndef _VCL_VECTOR_
-#define _VCL_VECTOR_
-#include <vcl_vector.h>
-#endif
-
 DFT::DFT()
 {
     //constructor

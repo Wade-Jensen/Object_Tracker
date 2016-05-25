@@ -26,12 +26,12 @@ public:
 
 private:
 
-    int num_channels;
-    int channel_width;
-    int blur_spatial;
-    int blur_colour;
-    float sd_spatial;
-    float sd_colour;
+    int numChannels;
+    int channelWidth;
+    int blurSpatial;
+    int blurColour;
+    float sdSpatial;
+    float sdColour;
 
     int width;
     int height;
@@ -81,12 +81,12 @@ private:
     vector< vil_image_view<unsigned char> > dist_field;
 
     /*Parameters*/
-    int num_channels;
-    int channel_width;
-    int blur_spatial;
-    int blur_colour;
-    float sd_spatial;
-    float sd_colour;
+    int numChannels;
+    int channelWidth;
+    int blurSpatial;
+    int blurColour;
+    float sdSpatial;
+    float sdColour;
 
     int width;
     int height;
