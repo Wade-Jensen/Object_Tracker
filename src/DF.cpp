@@ -29,10 +29,12 @@ image_array SomeClass::initImageArray(int width, int height, int planes int arrL
 }
 */
 
-DistributionField::DistributionField(){
+DistributionField::DistributionField()
+{
 }
 
-DistributionField::DistributionField(const DistributionField& SuperF, int pos[2], int size[2]){
+DistributionField::DistributionField(const DistributionField& SuperF, int pos[2], int size[2])
+{
 
     /*Transfer Parameters*/
     num_channels = SuperF.num_channels;
@@ -56,7 +58,8 @@ DistributionField::DistributionField(const DistributionField& SuperF, int pos[2]
 
 }
 
-DistributionField::DistributionField(vil_image_view<unsigned char>& Input, DF_params& params){
+DistributionField::DistributionField(vil_image_view<unsigned char>& Input, DF_params& params)
+{
 
     /*Following RAII*/
     init(Input, params);
@@ -65,7 +68,8 @@ DistributionField::DistributionField(vil_image_view<unsigned char>& Input, DF_pa
 /*Default, does nothing*/
 DistributionField::~DistributionField(){}
 
-void DistributionField::init(vil_image_view<unsigned char>& Input, DF_params& params){
+void DistributionField::init(vil_image_view<unsigned char>& Input, DF_params& params)
+{
 
     /* Set Parameters from Arguements*/
     num_channels = params.num_channels;
@@ -84,7 +88,8 @@ void DistributionField::init(vil_image_view<unsigned char>& Input, DF_params& pa
 
 }
 
-void DistributionField::createField(vil_image_view<unsigned char>& Input){
+void DistributionField::createField(vil_image_view<unsigned char>& Input)
+{
 
     /*Create All Channels - Blank*/
     for(int k = 0; k < num_channels; k++){
@@ -104,7 +109,8 @@ void DistributionField::createField(vil_image_view<unsigned char>& Input){
     }
 
     /*Iterate Through Channels*/
-    for(int i = 0; i < num_channels; i++){
+    for(int i = 0; i < num_channels; i++)
+    {
 
         /*Blur Channe using a parameter object - essentially a kernel*/
         /*vil_gauss_filter_5tap_params Kernel = vil_gauss_filter_5tap_params(blur_spatial);
@@ -118,7 +124,8 @@ void DistributionField::createField(vil_image_view<unsigned char>& Input){
 
 }
 
-void DistributionField::colourBlur(){
+void DistributionField::colourBlur()
+{
 
     /*Pixel-byPixel loop*/
     for(int i = 0; i < width; i++){
@@ -154,9 +161,11 @@ void DistributionField::colourBlur(){
 
 }
 
-int DistributionField::compare(DistributionField& inputDF) const{
+int DistributionField::compare(DistributionField& inputDF) const
+{
 
-    if(inputDF != *this){
+    if(inputDF != *this)
+    {
         //throw 0;
         throw "Distribution Field Sizes Do Not Match";
     }
@@ -164,12 +173,16 @@ int DistributionField::compare(DistributionField& inputDF) const{
 
     float distance = 0;
 
-    for(int channel = 0; channel < num_channels; channel++){
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
+    for(int channel = 0; channel < num_channels; channel++)
+    {
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
 
                 float del = 0;
-                for(int p = 0; p < planes; p++){
+                for(int p = 0; p < planes; p++)
+                {
 
                     del += pow(
                         dist_field[channel](i, j, p)-inputDF.dist_field[channel](i, j, p), 2);
@@ -183,17 +196,23 @@ int DistributionField::compare(DistributionField& inputDF) const{
 
 }
 
-void DistributionField::update(DistributionField& inputDF, float learning_rate){
+void DistributionField::update(DistributionField& inputDF, float learning_rate)
+{
 
-    if(inputDF != *this){
+    if(inputDF != *this)
+    {
         //throw 0;
         throw "Distribution Field Sizes Do Not Match";
     }
 
-    for(int channel = 0; channel < num_channels; channel++){
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                for(int p = 0; p < planes; p++){
+    for(int channel = 0; channel < num_channels; channel++)
+    {
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                for(int p = 0; p < planes; p++)
+                {
 
                         dist_field[channel](i, j, p) =
                                         (1 - learning_rate)*dist_field[channel](i, j, p)
@@ -208,7 +227,8 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate){
 /*
  * This method will grab a (width x height) subfield starting at (X, Y)
 */
-DistributionField DistributionField::subfield(int X, int Y, int width, int height) const{
+DistributionField DistributionField::subfield(int X, int Y, int width, int height) const
+{
 
     /*Package Parameters */
     int pos[2] = {X, Y};
@@ -218,10 +238,12 @@ DistributionField DistributionField::subfield(int X, int Y, int width, int heigh
     return DistributionField(*this, pos, size);
 }
 
-void DistributionField::saveField(){
+void DistributionField::saveField()
+{
 
     /*Iterate through channels*/
-    for(int i = 0; i < num_channels; i++){
+    for(int i = 0; i < num_channels; i++)
+    {
 
         /*Use a string stream to convert int to stream*/
         stringstream conv;
@@ -234,7 +256,8 @@ void DistributionField::saveField(){
     }
 }
 
-bool DistributionField::operator!=(const DistributionField& inputDF){
+bool DistributionField::operator!=(const DistributionField& inputDF)
+{
 
     return !(width == inputDF.width&&
             height == inputDF.height&&
@@ -247,7 +270,8 @@ vector<vil_image_view<unsigned char> > DistributionField::getDistributionField()
     return dist_field;
 }
 
-DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float SD_spatial, float SD_colour){
+DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float SD_spatial, float SD_colour)
+{
 
     num_channels = Num_channels;
     channel_width = 256/num_channels;
@@ -257,7 +281,9 @@ DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float 
     sd_colour = sd_colour;
 }
 
-DF_params::~DF_params(){}
+DF_params::~DF_params()
+{
+}
 
 
 

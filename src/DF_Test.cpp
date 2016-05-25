@@ -7,7 +7,8 @@
 #ifdef DF_TESTER
 
 
-int main(){
+int main()
+{
 
     vil_image_view<unsigned char> test_image = vil_load("baboon.jpg");
     DF_params params = DF_params(8, 9, 3, 3, 1);
@@ -20,7 +21,8 @@ int main(){
     DistributionField DF2 = DF.subfield(128, 128, 256, 256);
     DF2.saveField();
 
-    try{
+    try
+    {
         std::cout << DF2.compare(DF);
     }
     catch(const char* e){

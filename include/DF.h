@@ -14,7 +14,8 @@ using std::stringstream;
 /*
  * Class for passing bulk parameters to a DF constructor
 */
-class DF_params{
+class DF_params
+{
 
 public:
 
@@ -38,7 +39,8 @@ private:
 
 };
 
-class DistributionField{
+class DistributionField
+{
 
 public:
 
