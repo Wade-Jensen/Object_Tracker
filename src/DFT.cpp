@@ -34,10 +34,7 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
         if (_firstFrame)
         {
             /// create the model from the distribution field, and the current position
-
             /// setup and generate the distribution field
-
-
             dfObj = DistributionField(images[i], default_params);
 
             _firstFrame = false; /// not the first frame, so we can track the object

@@ -33,7 +33,7 @@ DistributionField::DistributionField()
 {
 }
 
-DistributionField::DistributionField(const DistributionField& SuperF, int pos[2], int size[2])
+DistributionField::DistributionField(const DistributionField& SuperF, int x, int y, int width, int height)
 {
 
     /*Transfer Parameters*/
@@ -44,16 +44,14 @@ DistributionField::DistributionField(const DistributionField& SuperF, int pos[2]
     sd_spatial = SuperF.sd_spatial;
     sd_colour = SuperF.sd_colour;
 
-    width = size[0];
-    height = size[1];
     planes = SuperF.planes;
 
     /*For each Channel, save a "sub-channel" using vil_crop*/
     for(int k = 0; k < num_channels; k++){
 
         dist_field.push_back(vil_crop(SuperF.dist_field[k],
-                                      pos[0], size[0],
-                                      pos[1], size[1]));
+                                      x, width,
+                                      y, height));
     }
 
 }
@@ -235,7 +233,7 @@ DistributionField DistributionField::subfield(int X, int Y, int width, int heigh
     int size[2] = {width, height};
 
     /*Return constructed sub-field*/
-    return DistributionField(*this, pos, size);
+    return DistributionField(*this, X, Y, width, height);
 }
 
 void DistributionField::saveField()

@@ -47,7 +47,7 @@ public:
     /* Constructor & Destructor*/
     DistributionField();
     DistributionField(vil_image_view<unsigned char>&, DF_params&);
-    DistributionField(const DistributionField&, int[2], int[2]);
+    DistributionField(const DistributionField&, int x, int y, int width, int height);
     ~DistributionField();
 
     /*Methods for use in DFT
