@@ -28,6 +28,55 @@
 
 int main (int argc, char * argv[])
 {
+
+    vcl_vector< vil_image_view<unsigned char> > images;
+
+    /// placeholders until we work out how to pass in these variables
+    /*int numChannels;
+    int spatialBlurSize;
+    int colourBlurSize;*/
+
+    vcl_string outputPath = "output";
+
+    int x;
+    int y;
+    int width;
+    int height;
+
+    int numChannels = 8;
+    int blurSpatial = 3;
+    int blurColour = 1;
+    float sdSpatial = 1;
+    float sdColour = 1;
+
+    int maxSearchDist;
+
+    DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial, sdColour);
+
+    DistributionField dfFrame;
+    /// this is the first frame, we need to build the model before we can track it
+    dfFrame = DistributionField(images[0], default_params);
+    /// create the model from the distribution field, and the current position
+    /// setup and generate the distribution field for the whole frame, then crop it to just the object
+    DFT DFTracker;
+    DFTracker = DFT(dfFrame, x, y, width, height);
+
+    for (int i=1; i<images.size(); i++)
+    {
+
+            /// locate the object in the current frame. Use gradient descent search
+            /// to find the new object position
+            map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
+
+            ///  update the object model to incorporate new information
+            DFTracker.updateModel(dfFrame);
+
+            /// display or print an image, ie. draw a bounding box around the object being tracked
+            DFTracker.displayCurrentPosition (images[i], outputPath, i );
+    }
+
+
+/*
    //bool first_frame; // have we computed // the first frame?
     // unknown type current_position = initial_position /// objects current // position, initial // position is // provided by the
                                                         /// Needs to store a location and size
@@ -118,6 +167,8 @@ int main (int argc, char * argv[])
         vcl_cout << "No input files, exiting." << vcl_endl;
         return 0;
     }
+*/
+
 /*
     vil_image_view<unsigned char> anImage = vil_load(filenames[0].c_str());
 
@@ -147,6 +198,8 @@ int main (int argc, char * argv[])
 		// we could now do other things with this file, such as run it through a motion segmentation algorithm
 	}
 	*/
+
 }
+
 
 #endif

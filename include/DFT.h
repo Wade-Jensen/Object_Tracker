@@ -18,18 +18,22 @@ using std::map;
 class DFT
 {
 public:
+    // create a method for initialising the DFT with what we need it to have
     DFT();
+    DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height /*, possible default values for optional arguments in the consturctor*/ );
     ~DFT();
+
+    map<vcl_string,int> locateObject(const DistributionField& df, int maxSearchDist);
+    map<vcl_string,int> locateObject(void);
+    void updateModel( DistributionField currentFrame );
+    void displayCurrentPosition ( vil_image_view<unsigned char> image, vcl_string outputPath, int frameNum );
+
 protected:
 private:
     void trackObject( vcl_vector< vil_image_view<unsigned char> >& images);
     vector<vil_image_view<unsigned char> > getDistributionField();
 
-    map<vcl_string,int> locateObject(const DistributionField& df, map<vcl_string,int> currentPosition, int maxSearchDist);
 
-
-    void displayCurrentPosition ( vil_image_view<unsigned char>& image, map<vcl_string,int> currentPosition );
-    void updateModel(vector< vil_image_view<unsigned char> > df, map<vcl_string,int> currentPosition);
 
     bool _firstFrame; // have we computed // the first frame?
 
@@ -37,6 +41,9 @@ private:
     unsigned int _maxSearchDist; ///  max distance to travel in search
     //vector< vil_image_view<unsigned char> > _objectModel; /// a model of the object being tracked
     DistributionField _objectModel;
+
+    vcl_string _outputPath;
+    float _learningRate;
 };
 
 #endif // DFT_H
