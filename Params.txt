@@ -1,0 +1,6 @@
+directory:../../Data/bolt/bolt
+extension:*.jpg
+ipx:12
+ipy:1
+sd:1.0
+lr:2.0
