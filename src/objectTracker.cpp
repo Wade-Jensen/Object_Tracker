@@ -28,28 +28,68 @@
 
 int main (int argc, char * argv[])
 {
+    vcl_string outputPath = "output";
+    vcl_string inputPath = "Data/bicycle";
+    vcl_string extension = ".jpeg";
+
+    vcl_string directory = inputPath;
+
+    /// Parsing a directory of images
+	/// this is a list to store our filenames in
+
+
+
+	vcl_vector<vcl_string> filenames;
+
+    for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
+	{
+		/// we can check to make sure that what we are looking at is a file and not a directory
+		if (!vul_file::is_directory(fn()))
+		{
+			/// if it is a file, add it to our list of files
+			filenames.push_back (fn());
+		}
+	}
+
+	if (filenames.size() == 0)
+    {
+        vcl_cout << "No input files, exiting." << vcl_endl;
+        return 0;
+    }
 
     vcl_vector< vil_image_view<unsigned char> > images;
+     /// filenames now contain all of the files with our target extension in our directory, if we want to loop through them, we can now do
+	for (int i = 0; i < filenames.size(); i++)
+	{
+        vcl_cout << filenames[i].c_str() << vcl_endl;
+        /// do something with filenames[i]
+		/// if filenames[i] is an image, we might want to load it, so we could do:
+		images.push_back( vil_load(filenames[i].c_str()) );
+	}
+
+
+
+
+
 
     /// placeholders until we work out how to pass in these variables
     /*int numChannels;
     int spatialBlurSize;
     int colourBlurSize;*/
 
-    vcl_string outputPath = "output";
-
-    int x;
-    int y;
-    int width;
-    int height;
+    int x = 154;
+    int y = 94;
+    int width = 18;
+    int height = 48;
 
     int numChannels = 8;
-    int blurSpatial = 3;
+    int blurSpatial = 4;
     int blurColour = 1;
     float sdSpatial = 1;
-    float sdColour = 1;
+    float sdColour = 0.625;
 
-    int maxSearchDist;
+    int maxSearchDist = 30;
+    float learningRate = 0.05;
 
     DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial, sdColour);
 
@@ -63,16 +103,19 @@ int main (int argc, char * argv[])
 
     for (int i=1; i<images.size(); i++)
     {
+        dfFrame = DistributionField(images[i], default_params);
 
-            /// locate the object in the current frame. Use gradient descent search
-            /// to find the new object position
-            map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
+        dfFrame.saveField();
 
-            ///  update the object model to incorporate new information
-            DFTracker.updateModel(dfFrame);
+        /// locate the object in the current frame. Use gradient descent search
+        /// to find the new object position
+        map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
 
-            /// display or print an image, ie. draw a bounding box around the object being tracked
-            DFTracker.displayCurrentPosition (images[i], outputPath, i );
+        ///  update the object model to incorporate new information
+        DFTracker.updateModel(dfFrame);
+
+        /// display or print an image, ie. draw a bounding box around the object being tracked
+        DFTracker.displayCurrentPosition (images[i], outputPath, i );
     }
 
 

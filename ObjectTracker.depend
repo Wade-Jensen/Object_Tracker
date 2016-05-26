@@ -924,7 +924,7 @@
 	"../include/DFT.h"
 	"..\include\DF.h"
 
-1464216369 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\dft.h
+1464217393 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\dft.h
 	<vcl_vector.h>
 	<vector>
 	<vil/vil_image_view.h>
@@ -1767,8 +1767,9 @@
 1460351237 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\vxl-1.17.0\include\vxl\core\vil\vil_pyramid_image_resource_sptr.h
 	<vil/vil_smart_ptr.h>
 
-1464177064 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\objecttracker.cpp
+1464262436 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\objecttracker.cpp
 	"..\include\Version.h"
+	"..\include\DFT.h"
 	<vil/vil_image_view.h>
 	<vil/vil_load.h>
 	<vil/vil_save.h>
@@ -1839,4 +1840,7 @@
 
 1460351274 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
+
+1464179149 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\df.cpp
+	"..\include\DF.h"
 
