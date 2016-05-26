@@ -30,14 +30,29 @@ int main (int argc, char * argv[])
 {
     vcl_string outputPath = "output";
     vcl_string inputPath = "Data/bicycle";
-    vcl_string extension = ".jpeg";
+    vcl_string extension = "*jpg";
 
     vcl_string directory = inputPath;
 
     /// Parsing a directory of images
 	/// this is a list to store our filenames in
 
+    vcl_cout << inputPath << vcl_endl;
+    vcl_cout << extension << vcl_endl;
 
+    vul_file vulStruct;
+
+    vcl_string dir = vulStruct.get_cwd();
+    //char* dummy;
+    //vcl_string dir = get_cwd(dummy);
+
+    vcl_cout << dir << vcl_endl;
+
+    vul_file_iterator fn=(directory + "/*" + extension);
+    if (vul_file::is_directory(fn()))
+		{
+			vcl_cout << dir << "/" << inputPath << vcl_endl;
+		}
 
 	vcl_vector<vcl_string> filenames;
 
@@ -105,7 +120,7 @@ int main (int argc, char * argv[])
     {
         dfFrame = DistributionField(images[i], default_params);
 
-        dfFrame.saveField();
+        //dfFrame.saveField();
 
         /// locate the object in the current frame. Use gradient descent search
         /// to find the new object position
