@@ -26,7 +26,7 @@ bool inputParams::textParamsReader()
     string directory ;
 	string extension ;
     int lipx=0; int lipy=0; float lsd=0; float llr=0;// default values
-    ifstream textFile ("../../Params/Params.txt");
+    ifstream textFile ("../../Params.txt");
 	if (textFile.is_open())
 	{
         int paramCount=0;
