@@ -67,8 +67,8 @@ bool inputParams::textParamsReader()
         {
             vcl_cout << "No input files at given path OR Invalid Parameters detected" << vcl_endl;
             vcl_cout << "Check The Parameter Text File Structure. Example of Valid Text File structure must be as follows"<<endl;
-            vcl_cout << "directory:../../Data/bolt/bolt"<<endl;
-            vcl_cout << "extension:../../*.jpg"<<endl;
+            vcl_cout << "directory:../../Data/bolt"<<endl;
+            vcl_cout << "extension:*.jpg"<<endl;
             vcl_cout << "ipx:3"<<endl;
             vcl_cout << "ipy:1"<<endl;
             vcl_cout << "sd:1.0"<<endl;
@@ -79,7 +79,7 @@ bool inputParams::textParamsReader()
         else {
             //params.initInputParams(filenames,lipx,lipy,lsd,llr);
             vcl_cout << "Parameters are being initialized Through Text Parameter File" <<vcl_endl;
-            this->initInputParams(filenames,lipx,lipy,lsd,llr);
+            initInputParams(filenames,lipx,lipy,lsd,llr);
             vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
             //vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
             //vcl_cout << "Initial Position x for DFT = "<< lipx <<vcl_endl;
