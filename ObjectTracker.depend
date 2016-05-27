@@ -1,14 +1,16 @@
 # depslib dependency file v1.0
-1463983102 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
+1464222151 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
 	"../include/DFT.h"
 	"..\include\DF.h"
-	<vcl_vector.h>
 
-1463819555 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
+1464222150 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
 	<vcl_vector.h>
+	<vector>
 	<vil/vil_image_view.h>
 	<map>
 	<vul/vul_file.h>
+	<vil/vil_save.h>
+	"../include/DF.h"
 
 1462766142 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\vcl\vcl_vector.h
 	"vcl_compiler.h"
@@ -758,14 +760,14 @@
 	<vil/vil_smart_ptr.h>
 	<vil/vil_pixel_format.h>
 
-1464013744 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df_test.cpp
+1464172109 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df_test.cpp
 	"..\include\Version.h"
 	"..\include\DF.h"
 	<vil/vil_load.h>
 
-1463388934 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\version.h
+1464222150 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\version.h
 
-1464013981 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
+1464222150 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
 	<vector>
 	<sstream>
 	<vil/vil_image_view.h>
@@ -835,8 +837,9 @@
 1462766111 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\core\vil\vil_pyramid_image_resource_sptr.h
 	<vil/vil_smart_ptr.h>
 
-1463241739 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\objecttracker.cpp
+1464271765 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\objecttracker.cpp
 	"..\include\Version.h"
+	"..\include\DFT.h"
 	<vil/vil_image_view.h>
 	<vil/vil_load.h>
 	<vil/vil_save.h>
@@ -912,7 +915,7 @@
 1462766150 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
 
-1464013584 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
+1464316440 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
 	"..\include\DF.h"
 
 1462766110 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\core\vil\vil_crop.h

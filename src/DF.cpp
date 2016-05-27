@@ -33,7 +33,7 @@ DistributionField::DistributionField()
 {
 }
 
-DistributionField::DistributionField(const DistributionField& SuperF, int x, int y, int width, int height)
+DistributionField::DistributionField(const DistributionField& SuperF, int x, int y, int Width, int Height)
 {
 
     /*Transfer Parameters*/
@@ -44,6 +44,8 @@ DistributionField::DistributionField(const DistributionField& SuperF, int x, int
     sdSpatial = SuperF.sdSpatial;
     sdColour = SuperF.sdColour;
 
+    width = Width;
+    height = Height;
     planes = SuperF.planes;
 
     /*For each Channel, save a "sub-channel" using vil_crop*/
