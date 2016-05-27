@@ -121,6 +121,8 @@ int main (int argc, char * argv[])
 
     for (int i=1; i<images.size(); i++)
     {
+        vcl_cout << "current frame is: "<< i << vcl_endl;
+
         dfFrame = DistributionField(images[i], default_params);
 
         //dfFrame.saveField();
