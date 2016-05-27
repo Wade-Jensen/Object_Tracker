@@ -185,7 +185,7 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
         }
     }
     // turn the bottom line of the bounding box to a black line
-    for (int i = x; x< i+width; i++)
+    for (int i = x; i< x+width; i++)
     {
         for (int p = 0; p< currentFrame.nplanes(); p++)
         {
