@@ -106,11 +106,14 @@ int main (int argc, char * argv[])
     int maxSearchDist = 30;
     float learningRate = 0.05;
 
-    DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial, sdColour);
+    vil_save( images[0], "frame1.jpg");
+
+    DF_params default_params = DF_params(8, 9, 3, 3, 1 /*numChannels, blurSpatial, blurColour, sdSpatial, sdColour*/);
 
     DistributionField dfFrame;
     /// this is the first frame, we need to build the model before we can track it
     dfFrame = DistributionField(images[0], default_params);
+    dfFrame.saveField();
     /// create the model from the distribution field, and the current position
     /// setup and generate the distribution field for the whole frame, then crop it to just the object
     DFT DFTracker;

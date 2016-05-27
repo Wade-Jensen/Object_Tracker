@@ -128,7 +128,9 @@ map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearch
 
             //vector <vil_image_view<unsigned char> > croppedField = cropDF(df,x,y,height,width);
             DistributionField croppedField = df.subfield(x, y, width, height);
-
+            //
+            croppedField.saveField();
+            //
             int distance = _objectModel.compare(croppedField);
             //int distance;
             if (distance < minDistance)
@@ -148,6 +150,10 @@ map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearch
                               +
                               (objectLocation["y"]-initialPosition["y"])*(objectLocation["y"]-initialPosition["y"])
                               );
+
+        vcl_cout << bestLocation << vcl_endl;
+        vcl_cout << searchDist << vcl_endl;
+        vcl_cout << maxSearchDist << vcl_endl;
 
         // if the best_location is 0, i.e. no motion, then we have reached the end of the search, or
         // if we’ve gone maxSearchDist, we’ve reached the end of our search
