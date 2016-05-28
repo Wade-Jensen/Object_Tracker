@@ -28,44 +28,50 @@
 
 int main (int argc, char * argv[])
 {
+	// Set the directories where to save output
+	// where to find input
+	// and the type of image files (jpg, png etc)
     vcl_string outputPath = "output";
     vcl_string inputPath = "Data/bicycle";
-    vcl_string extension = "*jpg";
+    vcl_string extension = "*jpg"; //does this need to be ".jpg"?
 
+	// same as inputPath, why not use that? needs cleaning up
     vcl_string directory = inputPath;
 
-    /// Parsing a directory of images
-	/// this is a list to store our filenames in
-
+	// Print input directory and image type
     vcl_cout << inputPath << vcl_endl;
     vcl_cout << extension << vcl_endl;
 
+	// Print current working directory
     vul_file vulStruct;
-
     vcl_string dir = vulStruct.get_cwd();
-    //char* dummy;
-    //vcl_string dir = get_cwd(dummy);
-
     vcl_cout << dir << vcl_endl;
 
-    vul_file_iterator fn=(directory + "/*" + extension);
+	// Parsing a directory of images
+	// this is a list to store our filenames in
+	// wouldn't this just make a string "Data/bicycle/**jpg"???
+	vul_file_iterator fn=(directory + "/*" + extension);
+	
+	// I think this is trying to verify that input path is subdirectory of cwd?
     if (vul_file::is_directory(fn()))
-		{
-			vcl_cout << dir << "/" << inputPath << vcl_endl;
-		}
+	{
+		vcl_cout << dir << "/" << inputPath << vcl_endl;
+	}
 
 	vcl_vector<vcl_string> filenames;
 
+	// Just use the fn created a few lines up here instead of making a new one?
     for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
 	{
-		/// we can check to make sure that what we are looking at is a file and not a directory
+		// check to make sure that what we are looking at is a file and not a directory
 		if (!vul_file::is_directory(fn()))
 		{
-			/// if it is a file, add it to our list of files
+			// if it is a file, add it to our list of files
 			filenames.push_back (fn());
 		}
 	}
 
+	// Check that files were found
 	if (filenames.size() == 0)
     {
         vcl_cout << "No input files, exiting." << vcl_endl;
@@ -73,68 +79,70 @@ int main (int argc, char * argv[])
     }
 
     vcl_vector< vil_image_view<unsigned char> > images;
-     /// filenames now contain all of the files with our target extension in our directory, if we want to loop through them, we can now do
+    // filenames should now contain all of the files with our target extension
+	// in our directory, if we want to loop through them, we can now do
 	for (int i = 0; i < filenames.size(); i++)
 	{
         vcl_cout << filenames[i].c_str() << vcl_endl;
-        /// do something with filenames[i]
-		/// if filenames[i] is an image, we might want to load it, so we could do:
+        // do something with filenames[i]
+		// if filenames[i] is an image, we might want to load it, so we could do:
 		images.push_back( vil_load(filenames[i].c_str()) );
 	}
 
-
-
-
-
-
-    /// placeholders until we work out how to pass in these variables
-    /*int numChannels;
-    int spatialBlurSize;
-    int colourBlurSize;*/
-
+    // placeholder variables until we work out how to pass in these variables
+    
+	// Top corner and size of object in first image to track?
     int x = 154;
     int y = 94;
     int width = 18;
     int height = 48;
 
+	// image characteristics?
     int numChannels = 8;
     int blurSpatial = 4;
     int blurColour = 1;
     float sdSpatial = 1;
     float sdColour = 0.625;
 
+	// distribution field tracker parameters?
     int maxSearchDist = 30;
     float learningRate = 0.05;
 
+	// save first image into cwd
     vil_save( images[0], "frame1.jpg");
 
+	// why not using vars from just above for this?
     DF_params default_params = DF_params(8, 9, 3, 3, 1 /*numChannels, blurSpatial, blurColour, sdSpatial, sdColour*/);
 
     DistributionField dfFrame;
-    /// this is the first frame, we need to build the model before we can track it
+	
+    // We need to build the model using the first frame before we can track it
     dfFrame = DistributionField(images[0], default_params);
     dfFrame.saveField();
-    /// create the model from the distribution field, and the current position
-    /// setup and generate the distribution field for the whole frame, then crop it to just the object
+	
+    // create the model from the distribution field, and the current position
+    // setup and generate the distribution field for the whole frame, then crop it to just the object
     DFT DFTracker;
     DFTracker = DFT(dfFrame, x, y, width, height);
 
-    for (int i=1; i<images.size(); i++)
+	// This is the main loop that tracks the object through the image sequence
+    for (int i=1; i<images.size(); i++) // make sure to skip the first image
     {
         vcl_cout << "current frame is: "<< i << vcl_endl;
 
+		// calculate distribution field for current image
         dfFrame = DistributionField(images[i], default_params);
 
         //dfFrame.saveField();
 
-        /// locate the object in the current frame. Use gradient descent search
-        /// to find the new object position
+        // locate the object in the current frame. Use gradient descent search
+        // to find the new object position
         map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
 
-        ///  update the object model to incorporate new information
+        //  update the object model to incorporate new information
         DFTracker.updateModel(dfFrame);
 
-        /// display or print an image, ie. draw a bounding box around the object being tracked
+        // display or print an image, i.e. draw a bounding box around the object being tracked
         DFTracker.displayCurrentPosition (images[i], outputPath, i );
     }
 
