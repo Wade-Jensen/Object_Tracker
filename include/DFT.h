@@ -20,7 +20,7 @@ class DFT
 public:
     // create a method for initialising the DFT with what we need it to have
     DFT();
-    DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height /*, possible default values for optional arguments in the consturctor*/ );
+    DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height /*, possible default values for optional arguments in the constructor*/ );
     ~DFT();
 
     map<vcl_string,int> locateObject(const DistributionField& df, int maxSearchDist);
