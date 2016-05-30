@@ -28,44 +28,50 @@
 
 int main (int argc, char * argv[])
 {
+	// Set the directories where to save output
+	// where to find input
+	// and the type of image files (jpg, png etc)
     vcl_string outputPath = "output";
     vcl_string inputPath = "Data/juice";
     vcl_string extension = "*jpg";
 
+	// same as inputPath, why not use that? needs cleaning up
     vcl_string directory = inputPath;
 
-    /// Parsing a directory of images
-	/// this is a list to store our filenames in
-
+	// Print input directory and image type
     vcl_cout << inputPath << vcl_endl;
     vcl_cout << extension << vcl_endl;
 
+	// Print current working directory
     vul_file vulStruct;
-
     vcl_string dir = vulStruct.get_cwd();
-    //char* dummy;
-    //vcl_string dir = get_cwd(dummy);
-
     vcl_cout << dir << vcl_endl;
 
-    vul_file_iterator fn=(directory + "/*" + extension);
+	// Parsing a directory of images
+	// this is a list to store our filenames in
+	// wouldn't this just make a string "Data/bicycle/**jpg"???
+	vul_file_iterator fn=(directory + "/*" + extension);
+
+	// I think this is trying to verify that input path is subdirectory of cwd?
     if (vul_file::is_directory(fn()))
-		{
-			vcl_cout << dir << "/" << inputPath << vcl_endl;
-		}
+	{
+		vcl_cout << dir << "/" << inputPath << vcl_endl;
+	}
 
 	vcl_vector<vcl_string> filenames;
 
+	// Just use the fn created a few lines up here instead of making a new one?
     for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
 	{
-		/// we can check to make sure that what we are looking at is a file and not a directory
+		// check to make sure that what we are looking at is a file and not a directory
 		if (!vul_file::is_directory(fn()))
 		{
-			/// if it is a file, add it to our list of files
+			// if it is a file, add it to our list of files
 			filenames.push_back (fn());
 		}
 	}
 
+	// Check that files were found
 	if (filenames.size() == 0)
     {
         vcl_cout << "No input files, exiting." << vcl_endl;
@@ -73,19 +79,15 @@ int main (int argc, char * argv[])
     }
 
     vcl_vector< vil_image_view<unsigned char> > images;
-     /// filenames now contain all of the files with our target extension in our directory, if we want to loop through them, we can now do
+    // filenames should now contain all of the files with our target extension
+	// in our directory, if we want to loop through them, we can now do
 	for (int i = 0; i < filenames.size(); i++)
 	{
         vcl_cout << filenames[i].c_str() << vcl_endl;
-        /// do something with filenames[i]
-		/// if filenames[i] is an image, we might want to load it, so we could do:
+        // do something with filenames[i]
+		// if filenames[i] is an image, we might want to load it, so we could do:
 		images.push_back( vil_load(filenames[i].c_str()) );
 	}
-
-
-
-
-
 
     /// placeholders until we work out how to pass in these variables
     /*int numChannels;
@@ -97,12 +99,14 @@ int main (int argc, char * argv[])
     int width = 40;
     int height = 85;
 
+	// image characteristics?
     int numChannels = 8;
     int blurSpatial = 4;
     int blurColour = 1;
     float sdSpatial = 1;
     float sdColour = 0.625;
 
+	// distribution field tracker parameters?
     int maxSearchDist = 30;
     float learningRate = 0.05;
 
@@ -126,7 +130,6 @@ int main (int argc, char * argv[])
     try{
         for (int i=0; i<images.size(); i++)
         {
-
             vcl_cout << "current frame is: "<< i << vcl_endl;
 
             DistributionField dfFrame = DistributionField(images[i], default_params);
