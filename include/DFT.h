@@ -20,17 +20,18 @@ class DFT
 public:
     // create a method for initialising the DFT with what we need it to have
     DFT();
-    DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height /*, possible default values for optional arguments in the consturctor*/ );
+    DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height, float /*, possible default values for optional arguments in the consturctor*/ );
     ~DFT();
 
     map<vcl_string,int> locateObject(const DistributionField& df, int maxSearchDist);
     map<vcl_string,int> locateObject(void);
-    void updateModel( DistributionField currentFrame );
+    void updateModel( DistributionField& currentFrame );
     void displayCurrentPosition ( vil_image_view<unsigned char> image, vcl_string outputPath, int frameNum );
 
 protected:
 private:
     void trackObject( vcl_vector< vil_image_view<unsigned char> >& images);
+    void SafeWrite(vil_image_view<unsigned char>&, int, int, int, unsigned char);
     vector<vil_image_view<unsigned char> > getDistributionField();
 
 

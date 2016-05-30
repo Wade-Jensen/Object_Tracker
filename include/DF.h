@@ -46,7 +46,7 @@ public:
 
     /* Constructor & Destructor*/
     DistributionField();
-    DistributionField(vil_image_view<unsigned char>&, DF_params&);
+    DistributionField(const vil_image_view<unsigned char>&, DF_params&);
     DistributionField(const DistributionField&, int x, int y, int width, int height);
     ~DistributionField();
 
@@ -55,7 +55,7 @@ public:
      * Update updates the DF, also as described
      * Subfield returns a sub-DF, contained within this
     */
-    int compare(DistributionField&) const;
+    float compare(DistributionField&) const;
     void update(DistributionField&, float);
     DistributionField subfield(int, int, int ,int) const;
 
@@ -71,11 +71,12 @@ private:
     /* Init will create the DF
     *  Input Image, Channels, Spatial Blur Size, Colour Blur Size
     */
-    void init(vil_image_view<unsigned char>&, DF_params&);
+    void init(const vil_image_view<unsigned char>&, DF_params&);
     /*Create DF with Set Parameters*/
     void createField(vil_image_view<unsigned char>&); /// NEED THIS TO RETURN SOMETHING
     /*Run Colour Clur routine*/
     void colourBlur();
+    vil_image_view<unsigned char> grey(const vil_image_view<unsigned char>&);
 
     /*Vector of Images fors the DF*/
     vector< vil_image_view<unsigned char> > dist_field;

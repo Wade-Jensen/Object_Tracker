@@ -36,6 +36,20 @@ DistributionField::DistributionField()
 DistributionField::DistributionField(const DistributionField& SuperF, int x, int y, int Width, int Height)
 {
 
+    if((x+Width >= SuperF.width)||
+       (y+Height >= SuperF.height)||
+       (x < 0)||(y < 0)
+       ){
+            stringstream Ex;
+            Ex << "Attempt to Create a Subfield of Size ( " << Width << ", "
+            << Height << " ) Failed, as it reaches Coordinates ( " << x+Width
+            << ", " << y+Height << " ) On a Feild of Size ( " << SuperF.width << ", "
+            << SuperF.height << " )\n";
+
+            vcl_string ExStr = Ex.str();
+            throw ExStr;
+       }
+
     /*Transfer Parameters*/
     numChannels = SuperF.numChannels;
     channelWidth = SuperF.channelWidth;
@@ -52,13 +66,13 @@ DistributionField::DistributionField(const DistributionField& SuperF, int x, int
     for(int k = 0; k < numChannels; k++){
 
         dist_field.push_back(vil_crop(SuperF.dist_field[k],
-                                      x, width,
-                                      y, height));
+                                      x, Width,
+                                      y, Height));
     }
 
 }
 
-DistributionField::DistributionField(vil_image_view<unsigned char>& Input, DF_params& params)
+DistributionField::DistributionField(const vil_image_view<unsigned char>& Input, DF_params& params)
 {
 
     /*Following RAII*/
@@ -68,7 +82,7 @@ DistributionField::DistributionField(vil_image_view<unsigned char>& Input, DF_pa
 /*Default, does nothing*/
 DistributionField::~DistributionField(){}
 
-void DistributionField::init(vil_image_view<unsigned char>& Input, DF_params& params)
+void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_params& params)
 {
 
     /* Set Parameters from Arguements*/
@@ -81,10 +95,11 @@ void DistributionField::init(vil_image_view<unsigned char>& Input, DF_params& pa
 
     width = Input.ni();
     height = Input.nj();
-    planes = Input.nplanes();
+    planes = 1;
 
     /*Begin DF Creation */
-    createField(Input);
+    vil_image_view<unsigned char> greyInput = grey(Input);
+    createField(greyInput);
 
 }
 
@@ -94,7 +109,9 @@ void DistributionField::createField(vil_image_view<unsigned char>& Input)
     /*Create All Channels - Blank*/
     for(int k = 0; k < numChannels; k++){
 
-        dist_field.push_back(vil_image_view<unsigned char>(width, height, planes, 1));
+        vil_image_view<unsigned char> channel =
+            vil_image_view<unsigned char>(width, height, planes, 1);
+        dist_field.push_back(channel);
     }
 
     /*Pixel-byPixel loop*/
@@ -161,7 +178,7 @@ void DistributionField::colourBlur()
 
 }
 
-int DistributionField::compare(DistributionField& inputDF) const
+float DistributionField::compare(DistributionField& inputDF) const
 {
 
     if(inputDF != *this)
@@ -183,7 +200,6 @@ int DistributionField::compare(DistributionField& inputDF) const
                 float del = 0;
                 for(int p = 0; p < planes; p++)
                 {
-
                     del += pow(
                         dist_field[channel](i, j, p)-inputDF.dist_field[channel](i, j, p), 2);
                 }
@@ -213,9 +229,14 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate)
             {
                 for(int p = 0; p < planes; p++)
                 {
-                    dist_field[channel](i, j, p) =
-                                    (1 - learning_rate)*dist_field[channel](i, j, p)
-                                    + learning_rate*inputDF.dist_field[channel](i, j, p);
+                    int PIX = dist_field[channel](i, j, p);
+                    float prev = (1 - learning_rate)*dist_field[channel](i, j, p);
+                    float Update = learning_rate*inputDF.dist_field[channel](i, j, p);
+
+                    dist_field[channel](i, j, p) = round(prev + Update);
+                    PIX = dist_field[channel](i, j, p) = round(prev + Update);
+                    PIX = dist_field[channel](i, j, p);
+                    PIX = 0;
                 }
             }
         }
@@ -226,15 +247,17 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate)
 /*
  * This method will grab a (width x height) subfield starting at (X, Y)
 */
-DistributionField DistributionField::subfield(int X, int Y, int width, int height) const
+DistributionField DistributionField::subfield(int X, int Y, int Width, int Height) const
 {
 
     // /*Package Parameters */
     //int pos[2] = {X, Y};
     //int size[2] = {width, height};
 
+
+
     /*Return constructed sub-field based on smaller window of DF*/
-    return DistributionField(*this, X, Y, width, height);
+    return DistributionField(*this, X, Y, Width, Height);
 }
 
 void DistributionField::saveField()
@@ -253,6 +276,27 @@ void DistributionField::saveField()
         /*Save channel as jpeg*/
         vil_save(dist_field[i], vcl_string(vcl_string("Channel")+index+vcl_string(".jpeg")).c_str());
     }
+}
+
+vil_image_view<unsigned char> DistributionField::grey(const vil_image_view<unsigned char>& Input)
+{
+    float scale = sqrt(Input.nplanes())*sqrt(pow(255, 2));
+    vil_image_view<unsigned char> Grey = vil_image_view<unsigned char>(width, height, 1, 1);
+
+    for(int i = 0; i < width; i++){
+        for(int j = 0; j < height; j++){
+
+            float mag = 0;
+            for(int p = 0; p < Input.nplanes(); p++){
+
+                mag += pow(Input(i, j, p), 2);
+            }
+
+            Grey(i, j, 0) = (255/scale)*sqrt(mag);
+        }
+    }
+
+    return Grey;
 }
 
 bool DistributionField::operator!=(const DistributionField& inputDF)

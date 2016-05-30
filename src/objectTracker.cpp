@@ -29,7 +29,7 @@
 int main (int argc, char * argv[])
 {
     vcl_string outputPath = "output";
-    vcl_string inputPath = "Data/bicycle";
+    vcl_string inputPath = "Data/juice";
     vcl_string extension = "*jpg";
 
     vcl_string directory = inputPath;
@@ -92,10 +92,10 @@ int main (int argc, char * argv[])
     int spatialBlurSize;
     int colourBlurSize;*/
 
-    int x = 154;
-    int y = 94;
-    int width = 18;
-    int height = 48;
+    int x = 130;
+    int y = 50;
+    int width = 40;
+    int height = 85;
 
     int numChannels = 8;
     int blurSpatial = 4;
@@ -106,39 +106,58 @@ int main (int argc, char * argv[])
     int maxSearchDist = 30;
     float learningRate = 0.05;
 
-    vil_save( images[0], "frame1.jpg");
+    //vil_save( images[0], "frame1.jpg");
 
-    DF_params default_params = DF_params(8, 9, 3, 3, 1 /*numChannels, blurSpatial, blurColour, sdSpatial, sdColour*/);
+    DF_params default_params = DF_params(numChannels, blurSpatial, blurColour,
+                                         sdSpatial, sdColour /*numChannels, blurSpatial, blurColour, sdSpatial, sdColour*/);
 
-    DistributionField dfFrame;
+    DF_params default_params2 = DF_params(numChannels, blurSpatial, blurColour,
+                                         sdSpatial, sdColour);
+
+    static const DistributionField initFrame = DistributionField(images[0], default_params);
+    DistributionField secFrame = DistributionField(images[1], default_params2);
     /// this is the first frame, we need to build the model before we can track it
-    dfFrame = DistributionField(images[0], default_params);
-    dfFrame.saveField();
+    secFrame.saveField();
     /// create the model from the distribution field, and the current position
     /// setup and generate the distribution field for the whole frame, then crop it to just the object
     DFT DFTracker;
-    DFTracker = DFT(dfFrame, x, y, width, height);
+    DFTracker = DFT(initFrame, x, y, width, height, learningRate);
 
-    for (int i=1; i<images.size(); i++)
-    {
-        vcl_cout << "current frame is: "<< i << vcl_endl;
+    try{
+        for (int i=0; i<images.size(); i++)
+        {
 
-        dfFrame = DistributionField(images[i], default_params);
+            vcl_cout << "current frame is: "<< i << vcl_endl;
 
-        //dfFrame.saveField();
+            DistributionField dfFrame = DistributionField(images[i], default_params);
+            //dfFrame.saveField();
 
-        /// locate the object in the current frame. Use gradient descent search
-        /// to find the new object position
-        map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
+            /// locate the object in the current frame. Use gradient descent search
+            /// to find the new object position
+            map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
+            int x = currentPosition["x"];
+            int y = currentPosition["y"];
 
-        ///  update the object model to incorporate new information
-        DFTracker.updateModel(dfFrame);
+            ///  update the object model to incorporate new information
+            DFTracker.updateModel(dfFrame);
 
-        /// display or print an image, ie. draw a bounding box around the object being tracked
-        DFTracker.displayCurrentPosition (images[i], outputPath, i );
+            /// display or print an image, ie. draw a bounding box around the object being tracked
+            DFTracker.displayCurrentPosition (images[i], outputPath, i );
+
+            char dummy;
+            std::cin >> dummy;
+        }
     }
+    catch(int bad_write[6]){
+        std::cout << "Attempted Writing to pixel (" << bad_write[0] << "," <<
+        bad_write[1] << "," << bad_write[2] << ")";
+        std::cout << " Failed as frame is of size (" << bad_write[3] << "," <<
+        bad_write[4] << "," << bad_write[5] << ")\n";
+        std::cout << "Object Position at Throw Time: (" << bad_write[6] << ", "
+        << bad_write[7] << ")\n";
 
-
+        delete bad_write;
+    }
 /*
    //bool first_frame; // have we computed // the first frame?
     // unknown type current_position = initial_position /// objects current // position, initial // position is // provided by the
