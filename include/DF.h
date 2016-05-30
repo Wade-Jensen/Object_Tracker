@@ -72,6 +72,7 @@ private:
     *  Input Image, Channels, Spatial Blur Size, Colour Blur Size
     */
     void init(const vil_image_view<unsigned char>&, DF_params&);
+
     /*Create DF with Set Parameters*/
     void createField(vil_image_view<unsigned char>&); /// NEED THIS TO RETURN SOMETHING
     /*Run Colour Clur routine*/

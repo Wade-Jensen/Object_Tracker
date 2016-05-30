@@ -10,16 +10,18 @@
 int main()
 {
 
-    vil_image_view<unsigned char> test_image = vil_load("baboon.jpg");
+    const vil_image_view<unsigned char> test_image = vil_load("baboon.jpg");
     DF_params params = DF_params(8, 9, 3, 3, 1);
     DistributionField DF = DistributionField(test_image, params);
+    DistributionField DF2 = DistributionField(test_image, params);
 
-    DF.saveField();
+    DF2.saveField();
 
     std::cout << DF.compare(DF) << "\n";
+    std::cout << DF.compare(DF2) << "\n";
 
-    DistributionField DF2 = DF.subfield(128, 128, 256, 256);
-    DF2.saveField();
+    DistributionField DFS = DF.subfield(128, 128, 256, 256);
+    //DF2.saveField();
 
     try
     {

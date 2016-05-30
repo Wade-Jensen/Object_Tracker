@@ -111,6 +111,7 @@ void DistributionField::createField(vil_image_view<unsigned char>& Input)
 
         vil_image_view<unsigned char> channel =
             vil_image_view<unsigned char>(width, height, planes, 1);
+        channel.fill(0);
         dist_field.push_back(channel);
     }
 
@@ -200,6 +201,7 @@ float DistributionField::compare(DistributionField& inputDF) const
                 float del = 0;
                 for(int p = 0; p < planes; p++)
                 {
+
                     del += pow(
                         dist_field[channel](i, j, p)-inputDF.dist_field[channel](i, j, p), 2);
                 }

@@ -147,8 +147,8 @@ int main (int argc, char * argv[])
             /// display or print an image, ie. draw a bounding box around the object being tracked
             DFTracker.displayCurrentPosition (images[i], outputPath, i );
 
-            char dummy;
-            std::cin >> dummy;
+            /*char dummy;
+            std::cin >> dummy;*/
         }
     }
     catch(int bad_write[6]){
