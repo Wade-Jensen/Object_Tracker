@@ -14,10 +14,6 @@ image_array DF = initImageArray( width, height, arrLength);
 /// after this process, we have a set of channels that indicate exactly where in
 /// the source image each colour occurs
 
-
-
-
-
 image_array SomeClass::initImageArray(int width, int height, int planes int arrLength)
 {
     vcl_vector< vil_image_view<unsigned char> > image_vector;
@@ -29,6 +25,7 @@ image_array SomeClass::initImageArray(int width, int height, int planes int arrL
 }
 */
 
+// Default constructor
 DistributionField::DistributionField()
 {
 }
@@ -79,9 +76,10 @@ DistributionField::DistributionField(const vil_image_view<unsigned char>& Input,
     init(Input, params);
 }
 
-/*Default, does nothing*/
+// Default destructor
 DistributionField::~DistributionField(){}
 
+//
 void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_params& params)
 {
 
@@ -103,6 +101,7 @@ void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_para
 
 }
 
+//
 void DistributionField::createField(vil_image_view<unsigned char>& Input)
 {
 
@@ -142,6 +141,7 @@ void DistributionField::createField(vil_image_view<unsigned char>& Input)
 
 }
 
+// Colour Blur routine
 void DistributionField::colourBlur()
 {
 
@@ -179,6 +179,7 @@ void DistributionField::colourBlur()
 
 }
 
+// Determine if the contents of two distribution fields are the same
 float DistributionField::compare(DistributionField& inputDF) const
 {
 
@@ -214,6 +215,7 @@ float DistributionField::compare(DistributionField& inputDF) const
 
 }
 
+//
 void DistributionField::update(DistributionField& inputDF, float learning_rate)
 {
 
@@ -262,6 +264,7 @@ DistributionField DistributionField::subfield(int X, int Y, int Width, int Heigh
     return DistributionField(*this, X, Y, Width, Height);
 }
 
+// Save the DF by saving each channel as a JPEG
 void DistributionField::saveField()
 {
 
@@ -280,6 +283,7 @@ void DistributionField::saveField()
     }
 }
 
+// Convert a colour image to greyscale
 vil_image_view<unsigned char> DistributionField::grey(const vil_image_view<unsigned char>& Input)
 {
     float scale = sqrt(Input.nplanes())*sqrt(pow(255, 2));
@@ -301,6 +305,7 @@ vil_image_view<unsigned char> DistributionField::grey(const vil_image_view<unsig
     return Grey;
 }
 
+// Compare distribution field dimensions
 bool DistributionField::operator!=(const DistributionField& inputDF)
 {
 
@@ -315,9 +320,11 @@ vector<vil_image_view<unsigned char> > DistributionField::getDistributionField()
     return dist_field;
 }
 
+// constructor, takes the following parameters which are used
+// to define a Distribution Field and stores them:
+// Number of channels, Blur_spatial, Blur_colour, SD_spatial, SD_colour
 DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float SD_spatial, float SD_colour)
 {
-
     numChannels = Num_channels;
     channelWidth = 256/numChannels;
     blurSpatial = Blur_spatial;

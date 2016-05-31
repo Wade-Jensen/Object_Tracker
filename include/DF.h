@@ -11,21 +11,25 @@
 using std::vector;
 using std::stringstream;
 
-/*
- * Class for passing bulk parameters to a DF constructor
-*/
+// Class for passing bulk parameters to a DF constructor
 class DF_params
 {
 
 public:
 
-    /*These are all obvious*/
     friend class DistributionField;
+	
+	// constructor, takes the following parameters which are used
+	// to define a Distribution Field:
+	// Number of channels, Blur_spatial, Blur_colour, SD_spatial, SD_colour
     DF_params(int, int, int, float, float);
+	
+	// Destructor
     ~DF_params();
 
 private:
 
+	// Distribution Field parameters
     int numChannels;
     int channelWidth;
     int blurSpatial;
@@ -39,31 +43,39 @@ private:
 
 };
 
+// Distribution Field Class
 class DistributionField
 {
 
 public:
 
-    /* Constructor & Destructor*/
+    // Constructors & Destructor
     DistributionField();
+	
+	// Create using image and parameters
     DistributionField(const vil_image_view<unsigned char>&, DF_params&);
+	
+	// Create based on an existing distribution field and a bounding region
+	// for the tracked object
     DistributionField(const DistributionField&, int x, int y, int width, int height);
+	
     ~DistributionField();
 
-    /*Methods for use in DFT
-     * Compare returns raw difference, as described in algorithm breakdown
-     * Update updates the DF, also as described
-     * Subfield returns a sub-DF, contained within this
+    /*Member functions for use in DFT
+      Compare returns raw difference, as described in algorithm breakdown
+      Update updates the DF, also as described
+      Subfield returns a sub-DF, contained within this
     */
     float compare(DistributionField&) const;
     void update(DistributionField&, float);
     DistributionField subfield(int, int, int ,int) const;
 
-    /* Save the DF by saving each channel as a JPEG*/
+    // Save the DF by saving each channel as a JPEG
     void saveField();
 
     vector<vil_image_view<unsigned char> > getDistributionField();
 
+	// Compare distribution field dimensions
     bool operator!=(const DistributionField&);
 
 private:
@@ -74,12 +86,15 @@ private:
     void init(const vil_image_view<unsigned char>&, DF_params&);
 
     /*Create DF with Set Parameters*/
-    void createField(vil_image_view<unsigned char>&); /// NEED THIS TO RETURN SOMETHING
-    /*Run Colour Clur routine*/
+    void createField(vil_image_view<unsigned char>&); // NEED THIS TO RETURN SOMETHING
+	
+    /*Run Colour Blur routine*/
     void colourBlur();
+	
+	// Convert a colour image to greyscale
     vil_image_view<unsigned char> grey(const vil_image_view<unsigned char>&);
 
-    /*Vector of Images fors the DF*/
+    /*Vector of Images for the DF*/
     vector< vil_image_view<unsigned char> > dist_field;
 
     /*Parameters*/
