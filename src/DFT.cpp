@@ -2,32 +2,35 @@
 
 #include "..\include\DF.h"
 
+// initialise a default DFT, no arguments
 DFT::DFT()
 {
     //constructor
 }
 
-DFT::DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height, float learningRate /*, possible default values for optional arguments in the consturctor*/ )
+// initialise a DFT using the first frame of a series,
+// the top left pixel location (x,y), width and height of the
+// object in the image to be tracked
+DFT::DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height, float learningRate /*default value = 0.05*/)
+: _learningRate(learningRate) // initialiser list
 {
     _currentPosition["x"] = x;
     _currentPosition["y"] = y;
     _currentPosition["width"] = width;
     _currentPosition["height"] = height;
-
-    _learningRate = learningRate;
     _objectModel = initialFrameDF.subfield(x, y, width, height);
     //_objectModel.saveField();
 }
 
-
+//destructor
 DFT::~DFT()
 {
-    //destructor
+
 }
 
 void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
 {
-    /// placeholders until we work out how to pass in these variables
+    // placeholders until we work out how to pass in these variables
     /*int numChannels;
     int spatialBlurSize;
     int colourBlurSize;*/
@@ -46,7 +49,7 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
     {
         DistributionField dfFrame;
 
-        /// if this is the first frame, we need to build the model before we can track it
+        // if this is the first frame, we need to build the model before we can track it
         if (_firstFrame)
         {
             int x = _currentPosition["x"];
@@ -55,17 +58,19 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
             int width = _currentPosition["width"];
             int height = _currentPosition["height"];
 
-            /// create the model from the distribution field, and the current position
-            /// setup and generate the distribution field for the whole frame, then crop it to just the object
+            // create the model from the distribution field,
+			// and the current position
+            // setup and generate the distribution field for the whole frame,
+			// then crop it to just the object
             _objectModel = DistributionField(images[i], default_params);
             _objectModel.subfield(x, y, width, height);
 
-            _firstFrame = false; /// not the first frame, so we can track the object
+            _firstFrame = false; // not the first frame, so we can track the object
         }
         if (!_firstFrame)
         {
-            /// locate the object in the current frame. Use gradient descent search
-            /// to find the new object position
+            // locate the object in the current frame. Use gradient descent search
+            // to find the new object position
             _currentPosition = locateObject( dfFrame, _maxSearchDist );
 
             int x = _currentPosition["x"];
@@ -77,10 +82,10 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
             // get a cropped copy of the distribution field at the new object position
             DistributionField dfCropped = dfFrame.subfield(x,y,width,height);
 
-            ///  update the object model to incorporate new information
+            //  update the object model to incorporate new information
             updateModel(dfCropped);
 
-            /// display or print an image, ie. draw a bounding box around the object being tracked
+            // display or print an image, ie. draw a bounding box around the object being tracked
             displayCurrentPosition (images[i], outputPath, i );
         }
 
@@ -188,10 +193,11 @@ map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearch
     return _currentPosition;
 }
 
+// Draw a bounding box around the current position of the object
+// and save the image to disk
+// Takes the current frame, a path to save into, and the frame number
 void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, vcl_string outputPath, int frameNum )
 {
-    //TODO display the image somehow (probably draw a bounding box onto an output image
-
     int x = _currentPosition["x"];
     int y = _currentPosition["y"];
     int width = _currentPosition["width"];
@@ -236,20 +242,20 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
 
     // Save the image
 
-    /*Use a string stream to convert int to stream*/
+    // Use a string stream to convert int to stream
     stringstream conv;
     conv << frameNum;
     vcl_string index;
     conv >> index;
 
-    /*Save channel as jpeg*/
+    //Save channel as jpeg
     vil_save(currentFrame, vcl_string(vcl_string("frame")+index+vcl_string(".jpeg")).c_str());
 }
 
+// Update the object model using the learning rate
 void DFT::updateModel(DistributionField& dfFrame)
 {
     // Update the object_model member variable
-
     int x = _currentPosition["x"];
     int y = _currentPosition["y"];
     int width = _currentPosition["width"];
