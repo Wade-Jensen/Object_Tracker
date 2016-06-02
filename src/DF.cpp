@@ -96,8 +96,9 @@ void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_para
     planes = 1;
 
     /*Begin DF Creation */
-    vil_image_view<unsigned char> greyInput = grey(Input);
-    createField(greyInput);
+    //vil_image_view<unsigned char> greyInput = grey(Input);
+    vil_image_view<unsigned char> newIn = Input;
+    createField(newIn);
 
 }
 

@@ -1,34 +1,3 @@
-/*
-#ifndef _VIL_IMAGE_
-#define _VIL_IMAGE_
-#include <vil/vil_image_view.h>
-#endif
-
-#ifndef _VIL_LOAD_
-#include "..\include\Version.h"
-#include "..\include\DFT.h"
-#define _VIL_LOAD_
-#include <vil/vil_load.h>
-#endif
-
-#ifndef _VIL_SAVE_
-#define _VIL_SAVE_
-#include <vil/vil_save.h>
-#endif
-
-#include <vul/vul_file_iterator.h>
-
-#ifndef _VUL_FILE_
-#define _VUL_FILE_
-#include <vul/vul_file.h>
-#endif
-
-#include <vul/vul_arg.h>
-#include "../include/DF.h"
-#include "../include/inputParams.h"
-#include <fstream>
-#include <string>
-*/
 #include "..\include\inputParams.h"
 #include "..\include\Version.h"
 #include "..\include\DFT.h"
@@ -46,10 +15,7 @@
 #include <vul/vul_file.h>
 #endif
 
-#include <vul/vul_arg.h>//#ifndef _CSTDINT_
-//#define _CSTDINT_
-//#include <cstdint>
-//#endif
+#include <vul/vul_arg.h>
 
 /*
  * Main program to run the Object Tracker algorithm.
@@ -66,12 +32,7 @@ vcl_vector<vcl_string>  generateFileNames(vcl_string directory, vcl_string exten
 int main (int argc, char * argv[])
 {
     inputParams params;// input Parameters
-   //bool first_frame; // have we computed // the first frame?
-    // unknown type current_position = initial_position /// objects current // position, initial // position is // provided by the
-                                                        /// Needs to store a location and size
-                                                        /// provided by the user
 
-                                                    /// this shall be a vector of vil_image_view's
     vul_arg<vcl_string>
 		arg_in_path("-path", "Path to Image Frames, e.g. C:/somefiles/"),
 		arg_in_glob("-glob", "Image (Frame) Extension (png,jpg,bmp,tiff,jpeg), e.g. *.jpeg, this will get all jpeg's.");
@@ -85,89 +46,63 @@ int main (int argc, char * argv[])
                           arg_sb("-sb", "Spatial Blur", -1),
                           arg_bc("-bc", "Blur Colour", -1),
                           arg_sd("-sd", "Max Search Distance", -1);
+
+    // float arguments
 	vul_arg<float> arg_lr("-lr", "Learning Rate", -1),
                    arg_sds("-sds", "SD Spatial", -1),
                    arg_sdc("-sdc", "SD Colour", -1);
+
+    // last string argument
     vul_arg<vcl_string> arg_odir("-odir", "Output Frames Storage Director", "Output");
 	vul_arg_parse(argc, argv, true);
 
-
-
-	if(((arg_in_path() == "") || (arg_in_glob() == ""))) {// command line args are not passed perfectly
-        //vcl_cout << "Parmeter Error. Check provided Parameters" <<vcl_endl;
+	if(((arg_in_path() == "") || (arg_in_glob() == ""))) // command line args are not passed perfectly
+    {
         vcl_cout << "Not sufficient or incorrrect argument parameters detected..." <<vcl_endl;
-        //vul_arg_display_usage_and_exit();
-        vcl_cout <<"Utilizing Parameter Text File Method to Obtain input Parameters"<<endl;
-        vcl_cout << "Checking Parameter Text File for Parameters..." <<vcl_endl;
-        //vul_arg_display_usage_and_exit();
-       bool parametersExtracted=params.textParamsReader();
-     if ( parametersExtracted==false)// failed to capture all parameters
-        {
-            vcl_cout << "Text File Doesn't Contain Valid Parameters, Exiting After Checking Text File Parameters" <<vcl_endl;
-            //vcl_cout << "Text File Location: ../../Params.txt" <<vcl_endl;
-            //vul_arg_display_usage_and_exit();
-            return 0;
-        }
-
-
-	}
-		// Parsing a directory of images from command line argument
-
-	else{ // command line arguments are passed correctly
-         vcl_vector<vcl_string> filenames;
-        for (vul_file_iterator fn=(arg_in_path() + "/*" + arg_in_glob()); fn; ++fn)
+        vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
+        vcl_cout << "Checking parameter text file for parameters..." <<vcl_endl;
+        bool parametersExtracted = params.textParamsReader();
+        if (parametersExtracted == false) // failed to capture all parameters
             {
+            vcl_cout << "Text file doesn't contain valid parameters, exiting" <<vcl_endl;
+            return 0;
+            }
+    }
+
+    // Parsing a directory of images from command line argument
+	else // command line arguments are passed correctly
+    {
+        vcl_vector<vcl_string> filenames;
+
+        // create file list
+        for (vul_file_iterator fn=(arg_in_path() + "/*" + arg_in_glob()); fn; ++fn)
+        {
             if (!vul_file::is_directory(fn()))
             {
                 filenames.push_back (fn());
             }
         }
-	if (filenames.size() == 0 || arg_ipy()<= 0|| arg_ipx()<=0 || arg_sd()<= 0 || arg_lr()<=0)
-    {
-        vcl_cout << "No input files at given path OR Parameters are Incorrect" << vcl_endl;
-        vcl_cout <<  "Exiting form Program"<< endl;
-        return 0;
-    }
-    else{// every thing is file thorugh command line Argument
-    // calling InputParams Class Constructor
-     //params.initInputParams(filenames,arg_ipx(),arg_ipy(),arg_w(),arg_h());
-     params.initInputParams(filenames,  arg_ipx(),  arg_ipy(),  arg_w(),  arg_h(),  arg_c(),  arg_sb(),  arg_bc(),  arg_sd(),  arg_lr(),  arg_sds(),  arg_sdc(), arg_odir());
-    vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
-    vcl_cout << "Input Parameters Initialized By Command Line Arguments";
-    // vcl_cout << "Initial Position x for DFT = "<< arg_ipx() <<vcl_endl;
-    // vcl_cout << "Initial Position y for DFT = "<< arg_ipy() <<vcl_endl;
-    // vcl_cout << "Maximum Search Distance for DFT = "<< arg_sd() <<vcl_endl;
-    // vcl_cout << "Learning Rate for DFT = "<< arg_lr() <<vcl_endl;
-    // unsigned int maxSearchDist=arg_sd();  ///  max distance to travel in search (user provided)
 
+        // check input files and for valid pixel positions
+        if (filenames.size() == 0 || arg_ipy()<= 0|| arg_ipx()<=0 || arg_sd()<= 0 || arg_lr()<=0)
+        {
+            vcl_cout << "No input files at given path OR parameters are incorrect" << vcl_endl;
+            vcl_cout << "Exiting from program"<< endl;
+            return 0;
+        }
 
+        else // parameters given by command line Argument
+        {
+            // calling InputParams Class Constructor
+            params.initInputParams(filenames,  arg_ipx(),  arg_ipy(),  arg_w(),  arg_h(),  arg_c(),  arg_sb(),  arg_bc(),  arg_sd(),  arg_lr(),  arg_sds(),  arg_sdc(), arg_odir());
+            vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
+            vcl_cout << "Input Parameters Initialized By Command Line Arguments";
+        }
     }
 
-  }
+// delete &params;
 
-//  delete &params;
-
-// return 1;
-// Merging files form here
-
-/*
-    int x = 124.67;
-    int y = 92.308;
-    int width = 46.73;
-    int height = 58.572;
-
-	// image characteristics?
-    int numChannels = 8;
-    int blurSpatial = 4;
-    int blurColour = 1;
-    float sdSpatial = 1;
-    float sdColour = 0.625;
-
-	// distribution field tracker parameters?
-    int maxSearchDist = 30;
-    float learningRate = 0.05;
-*/
-
+// Uncomment to print statements checking correct read in of parameters:
 /*
 vcl_cout << "ipx:"<<params.ipx<<"; "<<x <<endl;
 vcl_cout << "ipy:"<<params.ipy<<"; "<< y<<endl;
@@ -181,60 +116,62 @@ vcl_cout << "sdColour:"<<params.sdc<<"; "<< sdColour <<endl;
 vcl_cout << "maxSearchDist:"<<params.sd<<"; "<< maxSearchDist<<endl;
 vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
 */
- vul_file vulStruct;
+
+    vul_file vulStruct;
+
+    // Print current working directory
     vcl_string dir = vulStruct.get_cwd();
     vcl_cout << dir << vcl_endl;
 
+    // Top corner and size of object in first image to track
     int x = params.ipx;
     int y = params.ipy;
     int width = params.w;
     int height = params.h;
 
-	// image characteristics?
+	// Distribution Field parameters
     int numChannels = params.c;
     int blurSpatial = params.sb;
     int blurColour = params.bc;
     float sdSpatial = params.sds;
     float sdColour = params.sdc;
-   	// distribution field tracker parameters?
+
+   	// Tracker parameters
     int maxSearchDist = params.sd;
     float learningRate = params.lr;
 
-
     //output Path
-        //vcl_string outputPath = "output";
-        vcl_string outputPath = params.odir;
+    vcl_string outputPath = params.odir;
+
     //loading images
     vcl_vector< vil_image_view<unsigned char> > images;
-    vcl_vector<vcl_string> filenames =params.filenames;
+    vcl_vector<vcl_string> filenames = params.filenames;
 
-    // filenames should now contain all of the files with our target extension
-	// in our directory, if we want to loop through them, we can now do
+    // filenames should now contain the names of all the files with our target extension
+	// in the input directory, if we want to loop through them, we can now do
 	for (int i = 0; i < filenames.size(); i++)
 	{
         vcl_cout << filenames[i].c_str() << vcl_endl;
-        // do something with filenames[i]
-		// if filenames[i] is an image, we might want to load it, so we could do:
+		// load the image file into the vector of images:
 		images.push_back( vil_load(filenames[i].c_str()) );
 	}
 
-    //vil_save( images[0], "frame1.jpg");
+	// save the distribution field parameters
+    DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
+                                          sdColour);
 
-    DF_params default_params = DF_params(numChannels, blurSpatial, blurColour,
-                                         sdSpatial, sdColour /*numChannels, blurSpatial, blurColour, sdSpatial, sdColour*/);
-
-    DF_params default_params2 = DF_params(numChannels, blurSpatial, blurColour,
-                                         sdSpatial, sdColour);
-
+    // The first frame is used to build the object model before we can track it
     static const DistributionField initFrame = DistributionField(images[0], default_params);
-    DistributionField secFrame = DistributionField(images[1], default_params2);
-    /// this is the first frame, we need to build the model before we can track it
-    secFrame.saveField();
-    /// create the model from the distribution field, and the current position
-    /// setup and generate the distribution field for the whole frame, then crop it to just the object
+
+    DistributionField saveFrame = DistributionField(images[0], default_params);
+    // output jpeg images of the distribution field
+    saveFrame.saveField();
+
+    // create the object model for tracking
     DFT DFTracker;
     DFTracker = DFT(initFrame, x, y, width, height, learningRate);
 
+    // create output path if it does not exist
     if (outputPath.c_str() != "")
     {
         if (!vul_file::is_directory(outputPath.c_str()))
@@ -243,32 +180,32 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
         }
     }
 
+    // move the working directory to the output path, print to confirm
     vul_file::change_directory(outputPath.c_str());
     dir = vulStruct.get_cwd();
-    vcl_cout << dir << vcl_endl;
+    vcl_cout << "Working directory is now: " << dir << vcl_endl;
 
+    // This is the main loop that tracks the object through the image sequence
     try{
         for (int i=0; i<images.size(); i++)
         {
-            vcl_cout << "current frame is: "<< i << vcl_endl;
+            vcl_cout << "Current frame is: "<< i << vcl_endl;
 
+            // create distribution field for the current frame
             DistributionField dfFrame = DistributionField(images[i], default_params);
-            //dfFrame.saveField();
 
-            /// locate the object in the current frame. Use gradient descent search
-            /// to find the new object position
+            // locate the object in the current frame. Use gradient descent search
+            // to find the new object position
             map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
             int x = currentPosition["x"];
             int y = currentPosition["y"];
 
-            ///  update the object model to incorporate new information
+            //  update the object model to incorporate new information
             DFTracker.updateModel(dfFrame);
 
-            /// display or print an image, ie. draw a bounding box around the object being tracked
+            // display or print an image, ie. draw a bounding box around the object being tracked
             DFTracker.displayCurrentPosition (images[i], outputPath, i );
 
-            /*char dummy;
-            std::cin >> dummy;*/
         }
     }
     catch(int bad_write[6]){
@@ -281,6 +218,7 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
 
         delete bad_write;
     }
+
 /*
    //bool first_frame; // have we computed // the first frame?
     // unknown type current_position = initial_position /// objects current // position, initial // position is // provided by the

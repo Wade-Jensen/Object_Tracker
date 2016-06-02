@@ -3627,3 +3627,123 @@
 988731270 c:\codeblocks\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
 
+1464841841 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\dft.cpp
+	"../include/DFT.h"
+	"..\include\DF.h"
+
+1464719285 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\include\dft.h
+	<vcl_vector.h>
+	<vector>
+	<vil/vil_image_view.h>
+	<map>
+	<vul/vul_file.h>
+	<vil/vil_save.h>
+	"../include/DF.h"
+
+1295202894 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\core\vul\vul_file.h
+	<vcl_string.h>
+	<vxl_config.h>
+
+1464870209 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\df.cpp
+	"..\include\DF.h"
+
+1464865624 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\inputparams.cpp
+	"../include/inputParams.h"
+
+1464865624 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\include\inputparams.h
+	<vul/vul_file_iterator.h>
+	<vul/vul_file.h>
+	<vil/vil_load.h>
+	"vcl_vector.h"
+	"vcl_string.h"
+	<fstream>
+	<string>
+	<stdlib.h>
+
+1240822784 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\core\vul\vul_file_iterator.h
+	<vcl_string.h>
+
+1464865624 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\objecttracker.cpp
+	<vil/vil_image_view.h>
+	"..\include\Version.h"
+	"..\include\DFT.h"
+	<vil/vil_load.h>
+	<vil/vil_save.h>
+	<vul/vul_file_iterator.h>
+	<vul/vul_file.h>
+	<vul/vul_arg.h>
+	"../include/DF.h"
+	"../include/inputParams.h"
+	<fstream>
+	<string>
+	"..\include\inputParams.h"
+	"..\include\Version.h"
+	"..\include\DFT.h"
+	<vil/vil_image_view.h>
+	<vil/vil_load.h>
+	<vil/vil_save.h>
+	<vul/vul_file_iterator.h>
+	<vul/vul_file.h>
+	<vul/vul_arg.h>
+
+1334725238 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\core\vul\vul_arg.h
+	<vcl_vector.h>
+	<vcl_string.h>
+	<vcl_list.h>
+	<vcl_iosfwd.h>
+	<vxl_config.h>
+
+1002723838 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\vcl_list.h
+	"vcl_compiler.h"
+	"emulation/vcl_list.h"
+	"iso/vcl_list.h"
+	"vcl_list.txx"
+
+1026217728 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\emulation\vcl_list.h
+	<vcl_new.h>
+	<vcl_cstddef.h>
+	"vcl_algobase.h"
+	"vcl_iterator.h"
+	"vcl_alloc.h"
+
+981039870 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\iso\vcl_list.h
+	<list>
+	"../generic/vcl_list.h"
+
+1030694828 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\generic\vcl_list.h
+
+1031762640 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\vcl_list.txx
+	"vcl_list.h"
+	"iso/vcl_list.txx"
+	"emulation/vcl_list.txx"
+	"egcs/vcl_list.txx"
+	"gcc-295/vcl_list.txx"
+	"gcc-libstdcxx-v3/vcl_list.txx"
+	"sunpro/vcl_list.txx"
+	"sgi/vcl_list.txx"
+	"iso/vcl_list.txx"
+
+977141204 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\iso\vcl_list.txx
+	<vcl_list.h>
+
+998304566 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\emulation\vcl_list.txx
+	"vcl_list.h"
+	"vcl_algorithm.txx"
+	"vcl_iterator.txx"
+
+988731368 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\egcs\vcl_list.txx
+	<vcl_list.h>
+
+987046286 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\gcc-295\vcl_list.txx
+	<vcl_list.h>
+
+1030006434 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\gcc-libstdcxx-v3\vcl_list.txx
+	<vcl_list.h>
+
+997905334 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\sunpro\vcl_list.txx
+	<vcl_list.h>
+	<vcl_iterator.h>
+
+988731270 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
+	<vcl_list.h>
+
