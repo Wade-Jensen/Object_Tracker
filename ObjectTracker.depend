@@ -930,7 +930,7 @@
 
 1464591577 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\include\version.h
 
-1464720055 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\include\df.h
+1464879165 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\include\df.h
 	<vector>
 	<sstream>
 	<vil/vil_image_view.h>
@@ -3647,10 +3647,10 @@
 1464870209 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\df.cpp
 	"..\include\DF.h"
 
-1464865624 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\inputparams.cpp
+1464880046 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\inputparams.cpp
 	"../include/inputParams.h"
 
-1464865624 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\include\inputparams.h
+1464878701 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\include\inputparams.h
 	<vul/vul_file_iterator.h>
 	<vul/vul_file.h>
 	<vil/vil_load.h>
@@ -3663,19 +3663,7 @@
 1240822784 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\core\vul\vul_file_iterator.h
 	<vcl_string.h>
 
-1464865624 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\objecttracker.cpp
-	<vil/vil_image_view.h>
-	"..\include\Version.h"
-	"..\include\DFT.h"
-	<vil/vil_load.h>
-	<vil/vil_save.h>
-	<vul/vul_file_iterator.h>
-	<vul/vul_file.h>
-	<vul/vul_arg.h>
-	"../include/DF.h"
-	"../include/inputParams.h"
-	<fstream>
-	<string>
+1464880096 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\objecttracker.cpp
 	"..\include\inputParams.h"
 	"..\include\Version.h"
 	"..\include\DFT.h"

@@ -18,12 +18,12 @@ class DF_params
 public:
 
     friend class DistributionField;
-	
+
 	// constructor, takes the following parameters which are used
 	// to define a Distribution Field:
 	// Number of channels, Blur_spatial, Blur_colour, SD_spatial, SD_colour
-    DF_params(int, int, int, float, float);
-	
+    DF_params(int, int, int, float, float, int);
+
 	// Destructor
     ~DF_params();
 
@@ -36,9 +36,11 @@ private:
     int blurColour;
     float sdSpatial;
     float sdColour;
+    int planes;
 
     int width;
     int height;
+
 
 
 };
@@ -51,14 +53,14 @@ public:
 
     // Constructors & Destructor
     DistributionField();
-	
+
 	// Create using image and parameters
     DistributionField(const vil_image_view<unsigned char>&, DF_params&);
-	
+
 	// Create based on an existing distribution field and a bounding region
 	// for the tracked object
     DistributionField(const DistributionField&, int x, int y, int width, int height);
-	
+
     ~DistributionField();
 
     /*Member functions for use in DFT
@@ -87,10 +89,10 @@ private:
 
     /*Create DF with Set Parameters*/
     void createField(vil_image_view<unsigned char>&); // NEED THIS TO RETURN SOMETHING
-	
+
     /*Run Colour Blur routine*/
     void colourBlur();
-	
+
 	// Convert a colour image to greyscale
     vil_image_view<unsigned char> grey(const vil_image_view<unsigned char>&);
 
@@ -104,10 +106,11 @@ private:
     int blurColour;
     float sdSpatial;
     float sdColour;
+    int planes;
 
     int width;
     int height;
-    int planes;
+
 };
 
 #endif // DF_H_INCLUDED

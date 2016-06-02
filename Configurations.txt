@@ -12,3 +12,4 @@ sdColour=0.625
 maxSreachDist=30
 learningRate=0.05
 outputDir=Output Directory
+planes=3

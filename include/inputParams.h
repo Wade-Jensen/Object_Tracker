@@ -23,14 +23,14 @@ class inputParams
     public:
         /** Constructor */
         inputParams();
-        bool initInputParams(vcl_vector<vcl_string>, int, int, int, int, int, int, int, int, float, float, float, vcl_string);
+        bool initInputParams(vcl_vector<vcl_string>, int, int, int, int, int, int, int, int, int, float, float, float, vcl_string);
         bool textParamsReader();
 
         /** Destructor */
         ~inputParams();
         /** Parameters */
         vcl_vector<vcl_string> filenames;
-        int ipx, ipy, w, h, c, sb, bc,sd;
+        int ipx, ipy, w, h, c, sb, bc, sd, planes;
         float lr, sds, sdc;
         vcl_string odir;
     protected:

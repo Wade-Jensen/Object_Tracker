@@ -83,7 +83,7 @@ DistributionField::~DistributionField(){}
 void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_params& params)
 {
 
-    /* Set Parameters from Arguements*/
+    /* Set Parameters from Arguments*/
     numChannels = params.numChannels;
     channelWidth = 256/numChannels;
     blurSpatial = params.blurSpatial;
@@ -93,7 +93,7 @@ void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_para
 
     width = Input.ni();
     height = Input.nj();
-    planes = 1;
+    planes = params.planes;
 
     /*Begin DF Creation */
     //vil_image_view<unsigned char> greyInput = grey(Input);
@@ -324,7 +324,7 @@ vector<vil_image_view<unsigned char> > DistributionField::getDistributionField()
 // constructor, takes the following parameters which are used
 // to define a Distribution Field and stores them:
 // Number of channels, Blur_spatial, Blur_colour, SD_spatial, SD_colour
-DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float SD_spatial, float SD_colour)
+DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float SD_spatial, float SD_colour, int planes)
 {
     numChannels = Num_channels;
     channelWidth = 256/numChannels;
@@ -332,6 +332,7 @@ DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float 
     blurColour = Blur_colour;
     sdSpatial = SD_spatial;
     sdColour = SD_colour;
+    this->planes = planes;
 }
 
 DF_params::~DF_params()

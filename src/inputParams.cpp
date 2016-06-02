@@ -5,7 +5,7 @@ inputParams::inputParams()
 
 }
 
-bool inputParams::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int lipy, int lw, int lh, int lc, int lsb, int lbc, int lsd, float llr, float lsds, float lsdc, vcl_string lodir)
+bool inputParams::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int lipy, int lw, int lh, int lc, int lsb, int lbc, int lsd, int lplanes, float llr, float lsds, float lsdc, vcl_string lodir)
 {
 
 	inputParams::filenames = fnames;
@@ -21,6 +21,7 @@ bool inputParams::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int l
     inputParams::sds = lsds;
     inputParams::sdc = lsdc;
     inputParams::odir = lodir;
+    inputParams::planes = lplanes;
 
 
 }
@@ -36,7 +37,7 @@ bool inputParams::textParamsReader()
 	string extension ;
     //int lipx=0; int lipy=0; float lsd=0; float llr=0;// default values
     // Assigning Defualt Values
-    int lipx=-1; int lipy=-1; int lw=-1; int lh=-1; int lc=-1; int lsb=-1; int lbc=-1; int lsd=-1; float llr=-1; float lsds=-1; float lsdc=-1;
+    int lipx=-1; int lipy=-1; int lw=-1; int lh=-1; int lc=-1; int lsb=-1; int lbc=-1; int lsd=-1; int lplanes=-1; float llr=-1; float lsds=-1; float lsdc=-1;
     vcl_string lodir="Output";
     ifstream textFile ("Configurations.txt");
 	if (textFile.is_open())
@@ -62,7 +63,8 @@ bool inputParams::textParamsReader()
             else if (name.compare("learningRate")==0) {llr=atof(value.c_str()); paramCount++;}
             else if (name.compare("maxSreachDist")==0) {lsd=atoi(value.c_str()); paramCount++;}
             else if (name.compare("outputDir")==0) {lodir=value.c_str(); paramCount++;}
-          	paramCount++;
+            else if (name.compare("planes")==0) {lplanes=atoi(value.c_str()); paramCount++;}
+            paramCount++;
           	}
 
 		textFile.close();
@@ -84,7 +86,7 @@ bool inputParams::textParamsReader()
             }
         }
 
-        if (filenames.size() == 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 ||llr<=0 || lsd<=0 || paramCount< 13)
+        if (filenames.size() == 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 ||llr<=0 || lsd<=0 || planes<=0 || paramCount< 14)
         {
             vcl_cout << "No input Parameter file 'Params.txt' found in working dir OR Invalid Parameters detected" << vcl_endl;
             //vcl_cout << "Check The Parameter Text File Structure. Example of Valid Text File structure must be as follows"<<endl;
@@ -102,7 +104,7 @@ bool inputParams::textParamsReader()
             //params.initInputParams(filenames,lipx,lipy,lsd,llr);
             vcl_cout << "Parameters are being initialized Through Text Parameter File" <<vcl_endl;
             //initInputParams(filenames,lipx,lipy,lsd,llr);
-            initInputParams(filenames,  lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd,  llr,  lsds,  lsdc, lodir);
+            initInputParams(filenames,  lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd, lplanes,  llr,  lsds,  lsdc, lodir);
             vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
             //vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
             //vcl_cout << "Initial Position x for DFT = "<< lipx <<vcl_endl;

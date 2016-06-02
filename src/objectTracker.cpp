@@ -45,7 +45,8 @@ int main (int argc, char * argv[])
                           arg_c("-c", "No Of Channels", -1),
                           arg_sb("-sb", "Spatial Blur", -1),
                           arg_bc("-bc", "Blur Colour", -1),
-                          arg_sd("-sd", "Max Search Distance", -1);
+                          arg_sd("-sd", "Max Search Distance", -1),
+                          arg_planes("-planes", "Number of colour planes in DF", -1);
 
     // float arguments
 	vul_arg<float> arg_lr("-lr", "Learning Rate", -1),
@@ -94,7 +95,7 @@ int main (int argc, char * argv[])
         else // parameters given by command line Argument
         {
             // calling InputParams Class Constructor
-            params.initInputParams(filenames,  arg_ipx(),  arg_ipy(),  arg_w(),  arg_h(),  arg_c(),  arg_sb(),  arg_bc(),  arg_sd(),  arg_lr(),  arg_sds(),  arg_sdc(), arg_odir());
+            params.initInputParams(filenames,  arg_ipx(),  arg_ipy(),  arg_w(),  arg_h(),  arg_c(),  arg_sb(),  arg_bc(),  arg_sd(), arg_planes(), arg_lr(),  arg_sds(),  arg_sdc(), arg_odir());
             vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
             vcl_cout << "Input Parameters Initialized By Command Line Arguments";
         }
@@ -135,6 +136,7 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
     int blurColour = params.bc;
     float sdSpatial = params.sds;
     float sdColour = params.sdc;
+    int planes = params.planes;
 
    	// Tracker parameters
     int maxSearchDist = params.sd;
@@ -158,7 +160,7 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
 
 	// save the distribution field parameters
     DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
-                                          sdColour);
+                                          sdColour, planes);
 
     // The first frame is used to build the object model before we can track it
     static const DistributionField initFrame = DistributionField(images[0], default_params);
