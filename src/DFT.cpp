@@ -27,13 +27,13 @@ DFT::~DFT()
 {
 
 }
-
+/*
 void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
 {
     // placeholders until we work out how to pass in these variables
-    /*int numChannels;
-    int spatialBlurSize;
-    int colourBlurSize;*/
+    //int numChannels;
+    //int spatialBlurSize;
+    //int colourBlurSize;
 
     int numChannels = 8;
     int blurSpatial = 3;
@@ -91,7 +91,7 @@ void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
 
     }
 }
-
+*/
 map<vcl_string,int> DFT::locateObject(void)
 {
     return this->_currentPosition;
