@@ -32,7 +32,7 @@ int main (int argc, char * argv[])
 	// where to find input
 	// and the type of image files (jpg, png etc)
     vcl_string outputPath = "output";
-    vcl_string inputPath = "Data/juice";
+    vcl_string inputPath = "Data/cup";
     vcl_string extension = "*jpg";
 
 	// same as inputPath, why not use that? needs cleaning up
@@ -94,10 +94,10 @@ int main (int argc, char * argv[])
     int spatialBlurSize;
     int colourBlurSize;*/
 
-    int x = 130;
-    int y = 50;
-    int width = 40;
-    int height = 85;
+    int x = 124.67;
+    int y = 92.308;
+    int width = 46.73;
+    int height = 58.572;
 
 	// image characteristics?
     int numChannels = 8;
@@ -126,6 +126,18 @@ int main (int argc, char * argv[])
     /// setup and generate the distribution field for the whole frame, then crop it to just the object
     DFT DFTracker;
     DFTracker = DFT(initFrame, x, y, width, height, learningRate);
+
+    if (outputPath.c_str() != "")
+    {
+        if (!vul_file::is_directory(outputPath.c_str()))
+        {
+            vul_file::make_directory(outputPath.c_str());
+        }
+    }
+
+    vul_file::change_directory(outputPath.c_str());
+    dir = vulStruct.get_cwd();
+    vcl_cout << dir << vcl_endl;
 
     try{
         for (int i=0; i<images.size(); i++)
@@ -283,7 +295,6 @@ int main (int argc, char * argv[])
 		// we could now do other things with this file, such as run it through a motion segmentation algorithm
 	}
 	*/
-
 }
 
 

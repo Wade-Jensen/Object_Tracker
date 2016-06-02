@@ -175,8 +175,8 @@ map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearch
                               );
 
         /*vcl_cout << "best location is: " << bestLocation << vcl_endl;*/
-        vcl_cout << "search distance is: " << searchDist << vcl_endl;
-        vcl_cout << " maxSearchDist is: " << maxSearchDist << vcl_endl;
+        //vcl_cout << "search distance is: " << searchDist << vcl_endl;
+        //vcl_cout << "maxSearchDist is: " << maxSearchDist << vcl_endl;
 
         // if the best_location is 0, i.e. no motion, then we have reached the end of the search, or
         // if we’ve gone maxSearchDist, we’ve reached the end of our search
@@ -187,8 +187,7 @@ map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearch
     }
 
     _currentPosition = objectLocation;
-    vcl_cout << "Object Location: (" << _currentPosition["x"]  << ", "
-    << _currentPosition["y"] << ")" << vcl_endl;
+    //vcl_cout << "Object Location: (" << _currentPosition["x"]  << ", " << _currentPosition["y"] << ")" << vcl_endl;
 
     return _currentPosition;
 }
@@ -204,7 +203,7 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
     int height = _currentPosition["height"];
 
     // turn the top line of the bounding box to a black line
-    for (int i = x; i< x+width; i++)
+    for (int i = x; i< x+width+1; i++)
     {
         for (int p = 0; p< currentFrame.nplanes(); p++)
         {
@@ -213,11 +212,11 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
         }
     }
     // turn the bottom line of the bounding box to a black line
-    for (int i = x; i< x+width; i++)
+    for (int i = x; i< x+width+1; i++)
     {
         for (int p = 0; p< currentFrame.nplanes(); p++)
         {
-            //currentFrame(i,y-height,p) = 0;
+            //currentFrame(i, y+height, p) = 0;
             SafeWrite(currentFrame, i, y+height, p, 0);
         }
     }
@@ -226,16 +225,16 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
     {
         for (int p = 0; p< currentFrame.nplanes(); p++)
         {
-            //currentFrame(x,i,p) = 0;
+            //currentFrame(x, i, p) = 0;
             SafeWrite(currentFrame, x, i, p, 0);
         }
     }
-    // turn the bottom line of the bounding box to a black line
-    for (int i = y+height; i > y+1; i--)
+    // turn the right line of the bounding box to a black line
+    for (int i = y+height; i > y; i--)
     {
         for (int p = 0; p < currentFrame.nplanes(); p++)
         {
-            //currentFrame(x+width,i,p) = 0;
+            //currentFrame(x+width, i, p) = 0;
             SafeWrite(currentFrame, x+width, i, p, 0);
         }
     }
@@ -249,7 +248,7 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
     conv >> index;
 
     //Save channel as jpeg
-    vil_save(currentFrame, vcl_string(vcl_string("frame")+index+vcl_string(".jpeg")).c_str());
+    vil_save(currentFrame, vcl_string(vcl_string("frame")+index+vcl_string(".png")).c_str());
 }
 
 // Update the object model using the learning rate
