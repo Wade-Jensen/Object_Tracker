@@ -39,7 +39,7 @@ bool inputParams::textParamsReader()
     // Assigning Defualt Values
     int lipx=-1; int lipy=-1; int lw=-1; int lh=-1; int lc=-1; int lsb=-1; int lbc=-1; int lsd=-1; int lplanes=-1; float llr=-1; float lsds=-1; float lsdc=-1;
     vcl_string lodir="Output";
-    ifstream textFile ("Configurations.txt");
+    ifstream textFile ("Configurations.txt");//
 	if (textFile.is_open())
 	{
         int paramCount=0;
