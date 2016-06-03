@@ -154,7 +154,7 @@ map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearch
                 distance = 100000000;
             }
 
-            vcl_cout << "Distance at (" << x << ", " << y << ") is: " << distance << vcl_endl;
+            //vcl_cout << "Distance at (" << x << ", " << y << ") is: " << distance << vcl_endl;
             //int distance;
             if (distance < minDistance)
             {

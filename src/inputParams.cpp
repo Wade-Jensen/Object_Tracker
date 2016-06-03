@@ -46,8 +46,8 @@ bool inputParams::textParamsReader()
 		while (textFile.good())
 		{
 			getline(textFile,line);
-			name=line.substr(0,line.find('='));
-            value=line.substr(line.find('=')+1);// from position of = to
+			name=line.substr(0,line.find(' '));
+            value=line.substr(line.find(' ')+1);// from position of = to
 
             if (name.compare("directory")==0) {directory=value.c_str(); paramCount++;}
             else if (name.compare("extension")==0) {extension=value.c_str(); paramCount++;}
