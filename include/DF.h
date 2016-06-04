@@ -41,8 +41,6 @@ private:
     int width;
     int height;
 
-
-
 };
 
 // Distribution Field Class
@@ -75,8 +73,6 @@ public:
     // Save the DF by saving each channel as a JPEG
     void saveField();
 
-    vector<vil_image_view<unsigned char> > getDistributionField();
-
 	// Compare distribution field dimensions
     bool operator!=(const DistributionField&);
 
@@ -88,7 +84,7 @@ private:
     void init(const vil_image_view<unsigned char>&, DF_params&);
 
     /*Create DF with Set Parameters*/
-    void createField(vil_image_view<unsigned char>&); // NEED THIS TO RETURN SOMETHING
+    void createField(vil_image_view<unsigned char>&);
 
     /*Run Colour Blur routine*/
     void colourBlur();

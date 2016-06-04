@@ -316,11 +316,6 @@ bool DistributionField::operator!=(const DistributionField& inputDF)
             numChannels == inputDF.numChannels);
 }
 
-vector<vil_image_view<unsigned char> > DistributionField::getDistributionField()
-{
-    return dist_field;
-}
-
 // constructor, takes the following parameters which are used
 // to define a Distribution Field and stores them:
 // Number of channels, Blur_spatial, Blur_colour, SD_spatial, SD_colour

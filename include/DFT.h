@@ -44,13 +44,11 @@ public:
 
 private:
 
-    void trackObject( vcl_vector< vil_image_view<unsigned char> >& images);
     void SafeWrite(vil_image_view<unsigned char>&, int, int, int, unsigned char);
-    vector<vil_image_view<unsigned char> > getDistributionField();
+
     map<vcl_string,int> _currentPosition; // the current location and size of the object
-    unsigned int _maxSearchDist; // max distance to travel in search
-    //vector< vil_image_view<unsigned char> > _objectModel; // a model of the object being tracked
     DistributionField _objectModel; // model of the object to be tracked
+    float _learningRate; // rate at which to update the object model
 };
 
 #endif // DFT_H

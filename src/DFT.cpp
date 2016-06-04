@@ -27,71 +27,7 @@ DFT::~DFT()
 {
 
 }
-/*
-void DFT::trackObject( vcl_vector< vil_image_view<unsigned char> >& images )
-{
-    // placeholders until we work out how to pass in these variables
-    //int numChannels;
-    //int spatialBlurSize;
-    //int colourBlurSize;
 
-    int numChannels = 8;
-    int blurSpatial = 3;
-    int blurColour = 1;
-    float sdSpatial = 1;
-    float sdColour = 1;
-
-    vcl_string outputPath = "output";
-
-    DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial, sdColour);
-
-    for (int i=0; i<images.size(); i++)
-    {
-        DistributionField dfFrame;
-
-        // if this is the first frame, we need to build the model before we can track it
-        if (_firstFrame)
-        {
-            int x = _currentPosition["x"];
-            int y = _currentPosition["y"];
-
-            int width = _currentPosition["width"];
-            int height = _currentPosition["height"];
-
-            // create the model from the distribution field,
-			// and the current position
-            // setup and generate the distribution field for the whole frame,
-			// then crop it to just the object
-            _objectModel = DistributionField(images[i], default_params);
-            _objectModel.subfield(x, y, width, height);
-
-            _firstFrame = false; // not the first frame, so we can track the object
-        }
-        if (!_firstFrame)
-        {
-            // locate the object in the current frame. Use gradient descent search
-            // to find the new object position
-            _currentPosition = locateObject( dfFrame, _maxSearchDist );
-
-            int x = _currentPosition["x"];
-            int y = _currentPosition["y"];
-
-            int width = _currentPosition["width"];
-            int height = _currentPosition["height"];
-
-            // get a cropped copy of the distribution field at the new object position
-            DistributionField dfCropped = dfFrame.subfield(x,y,width,height);
-
-            //  update the object model to incorporate new information
-            updateModel(dfCropped);
-
-            // display or print an image, ie. draw a bounding box around the object being tracked
-            displayCurrentPosition (images[i], outputPath, i );
-        }
-
-    }
-}
-*/
 map<vcl_string,int> DFT::locateObject(void)
 {
     return this->_currentPosition;
@@ -247,7 +183,7 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
     vcl_string index;
     conv >> index;
 
-    //Save channel as jpeg
+    //Save channel as png
     vil_save(currentFrame, vcl_string(vcl_string("frame")+index+vcl_string(".png")).c_str());
 }
 
