@@ -11,6 +11,24 @@
 #include <string>
 #include <stdlib.h>
 
+struct Params
+{
+        vcl_vector<vcl_string> filenames;
+        int initialX;
+        int initialY;
+        int width;
+        int height;
+        int numChannels;
+        int blurSpatial;
+        int blurColour;
+        int maxSearchDist;
+        int planes;
+        float learningRate;
+        float sdSpatial;
+        float sdColour;
+        vcl_string outputDir;
+};
+
 
 using namespace std;
 class inputParams
@@ -18,21 +36,33 @@ class inputParams
     public:
         /** Constructor */
         inputParams();
-        bool initInputParams(vcl_vector<vcl_string>, int, int, int, int, int, int, int, int, int, float, float, float, vcl_string);
+
+        void initInputParams(vcl_vector<vcl_string> filenames, int initialX, int initialY,
+                             int width, int height, int numChannels, int blurSpatial,
+                             int blurColour, int maxSearchDist, int planes, float learningRate,
+                             float sdSpatial, float sdColour, vcl_string outputDir);
         bool parseCli(int argc, char * argv[]);
         bool parseTxt(vcl_string configFile);
-
+        const struct Params getParams();
         /** Destructor */
         ~inputParams();
-        /** Parameters */
-        vcl_vector<vcl_string> filenames;
-        int ipx, ipy, w, h, c, sb, bc, sd, planes;
-        float lr, sds, sdc;
-        vcl_string odir;
-    protected:
-
-
     private:
+
+        /** Parameters */
+        vcl_vector<vcl_string> _filenames;
+        int _initialX;
+        int _initialY;
+        int _width;
+        int _height;
+        int _numChannels;
+        int _blurSpatial;
+        int _blurColour;
+        int _maxSearchDist;
+        int _planes;
+        float _learningRate;
+        float _sdSpatial;
+        float _sdColour;
+        vcl_string _outputDir;
 };
 
 #endif // INPUTPARAMS_H

@@ -303,3 +303,15 @@ output/frame96.png
 output/frame97.png
 output/frame98.png
 output/frame99.png
+Channel0.jpeg
+Channel1.jpeg
+Channel2.jpeg
+Channel3.jpeg
+Channel4.jpeg
+Channel5.jpeg
+Channel6.jpeg
+Channel7.jpeg
+obj/Debug/src/DF.o
+obj/Debug/src/DFT.o
+obj/Debug/src/objectTracker.o
+obj/Release/src/DFT.o
