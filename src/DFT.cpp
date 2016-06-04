@@ -11,15 +11,15 @@ DFT::DFT()
 // initialise a DFT using the first frame of a series,
 // the top left pixel location (x,y), width and height of the
 // object in the image to be tracked
-DFT::DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height, float learningRate /*default value = 0.05*/)
-: _learningRate(learningRate) // initialiser list
+DFT::DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height, float learningRate, int maxSearchDist)
 {
     _currentPosition["x"] = x;
     _currentPosition["y"] = y;
     _currentPosition["width"] = width;
     _currentPosition["height"] = height;
     _objectModel = initialFrameDF.subfield(x, y, width, height);
-    //_objectModel.saveField();
+    _learningRate = learningRate;
+    _maxSearchDist = maxSearchDist;
 }
 
 //destructor
@@ -33,7 +33,7 @@ map<vcl_string,int> DFT::locateObject(void)
     return this->_currentPosition;
 }
 
-map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearchDist)
+map<vcl_string,int> DFT::locateObject(const DistributionField& df)
 {
     // TODO
     // update the currentPosition member variable to the new object position
@@ -116,7 +116,7 @@ map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearch
 
         // if the best_location is 0, i.e. no motion, then we have reached the end of the search, or
         // if we’ve gone maxSearchDist, we’ve reached the end of our search
-        if ( (bestLocation == 4) || (searchDist == maxSearchDist) )
+        if ( (bestLocation == 4) || (searchDist >= _maxSearchDist) )
         {
             break;
         }
