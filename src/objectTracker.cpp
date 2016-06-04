@@ -26,20 +26,23 @@ using namespace std;
 //vcl_vector<vcl_string>  generateFileNames(vcl_string directory, vcl_string extension );
 int main (int argc, char * argv[])
 {
-    inputParams params;// input Parameters
+    inputParams inputParams;// input Parameters
 
-    bool cliRead = params.parseCli(argc, argv);
+    bool cliRead = inputParams.parseCli(argc, argv);
     if (!cliRead)
     {
         vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
         vcl_cout << "Checking parameter text file for parameters..." <<vcl_endl;
-        bool configFileRead = params.parseTxt("config.txt");
+        bool configFileRead = inputParams.parseTxt("config.txt");
         if (!configFileRead)
         {
             vcl_cout << "Text file doesn't contain valid parameters, exiting" <<vcl_endl;
             return 0;
         }
     }
+    // return the input parameters in a structure with the const qualifier to avoid
+    // needing individual getters
+    const struct Params params = inputParams.getParams();
 
     vul_file vulStruct;
 
@@ -48,29 +51,43 @@ int main (int argc, char * argv[])
     vcl_cout << dir << vcl_endl;
 
     // Top corner and size of object in first image to track
-    int x = params.ipx;
-    int y = params.ipy;
-    int width = params.w;
-    int height = params.h;
+    int x = params.initialX;
+    int y = params.initialY;
+    int width = params.width;
+    int height = params.height;
 
 	// Distribution Field parameters
-    int numChannels = params.c;
-    int blurSpatial = params.sb;
-    int blurColour = params.bc;
-    float sdSpatial = params.sds;
-    float sdColour = params.sdc;
+    int numChannels = params.numChannels;
+    int blurSpatial = params.blurSpatial;
+    int blurColour = params.blurColour;
+    float sdSpatial = params.sdSpatial;
+    float sdColour = params.sdColour;
     int planes = params.planes;
 
    	// Tracker parameters
-    int maxSearchDist = params.sd;
-    float learningRate = params.lr;
+    int maxSearchDist = params.maxSearchDist;
+    float learningRate = params.learningRate;
 
     //output Path
-    vcl_string outputPath = params.odir;
+    vcl_string outputPath = params.outputDir;
 
     //loading images
     vcl_vector< vil_image_view<unsigned char> > images;
     vcl_vector<vcl_string> filenames = params.filenames;
+
+    vcl_cout << "x: " << x << vcl_endl;
+    vcl_cout << "y: " << y << vcl_endl;
+    vcl_cout << "width: "<< width<< vcl_endl;
+    vcl_cout << "height: "<< height<< vcl_endl;
+    vcl_cout << "numChannels : "<< numChannels << vcl_endl;
+    vcl_cout << "blurSpatial : "<< blurSpatial << vcl_endl;
+    vcl_cout << "sdSpatial : "<< sdSpatial << vcl_endl;
+    vcl_cout << "sdColour : "<< sdColour << vcl_endl;
+    vcl_cout << "planes : "<< planes << vcl_endl;
+    vcl_cout << "maxSearchDist : "<< maxSearchDist << vcl_endl;
+    vcl_cout << "learningRate : "<< learningRate << vcl_endl;
+    vcl_cout << "outputPath : "<< outputPath << vcl_endl;
+
 
     // filenames should now contain the names of all the files with our target extension
 	// in the input directory, if we want to loop through them, we can now do

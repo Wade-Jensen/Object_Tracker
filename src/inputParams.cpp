@@ -5,26 +5,30 @@ inputParams::inputParams()
 
 }
 
-bool inputParams::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int lipy, int lw, int lh, int lc, int lsb, int lbc, int lsd, int lplanes, float llr, float lsds, float lsdc, vcl_string lodir)
+const struct Params inputParams::getParams()
+{
+    const struct Params params = {_filenames, _initialX,_initialY,_width,_height,_numChannels,
+                                   _blurSpatial,_blurColour,_maxSearchDist, _planes,
+                                   _learningRate, _sdSpatial,_sdColour, _outputDir };
+    return params;
+}
+void inputParams::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int lipy, int lw, int lh, int lc, int lsb, int lbc, int lsd, int lplanes, float llr, float lsds, float lsdc, vcl_string lodir)
 {
 
-	inputParams::filenames = fnames;
-	inputParams::ipx = lipx;
-    inputParams::ipy = lipy;
-    inputParams::w = lw;
-    inputParams::h = lh;
-    inputParams::c = lc;
-    inputParams::sb = lsb;
-    inputParams::bc = lbc;
-    inputParams::sd = lsd;
-    inputParams::lr = llr;
-    inputParams::sds = lsds;
-    inputParams::sdc = lsdc;
-    inputParams::odir = lodir;
-    inputParams::planes = lplanes;
-
-    return true;
-
+	_filenames = fnames;
+	_initialX = lipx;
+    _initialY = lipy;
+    _width = lw;
+    _height = lh;
+    _numChannels = lc;
+    _blurSpatial = lsb;
+    _blurColour = lbc;
+    _maxSearchDist = lsd;
+    _maxSearchDist = llr;
+    _sdSpatial = lsds;
+    _sdColour = lsdc;
+    _outputDir = lodir;
+    _planes = lplanes;
 }
 
 inputParams::~inputParams()
@@ -57,6 +61,11 @@ bool inputParams::parseCli(int argc, char * argv[])
     vul_arg<vcl_string> arg_odir("-odir", "Output Frames Storage Director", "Output");
 	vul_arg_parse(argc, argv, true);
 
+    // Assigning Default Values
+    int lipx=-1; int lipy=-1; int lw=-1; int lh=-1; int lc=-1; int lsb=-1; int lbc=-1; int lsd=-1; int lplanes=-1;
+    float llr=-1; float lsds=-1; float lsdc=-1;
+    vcl_string lodir="output";
+
 	if(((arg_in_path() == "") || (arg_in_glob() == ""))) // command line args are not passed perfectly
     {
         vcl_cout << "Inufficient number of or incorrrect argument parameters detected..." <<vcl_endl;
@@ -65,22 +74,23 @@ bool inputParams::parseCli(int argc, char * argv[])
     else
     {
         // set input object member variable values
-        ipx = arg_ipx();
-        ipy = arg_ipy();
-        w = arg_w();
-        h = arg_h();
-        c = arg_c();
-        sb = arg_sb();
-        bc = arg_bc();
-        sds = arg_sds();
-        sdc = arg_sdc();
-        planes = arg_planes();
-        lr = arg_lr();
-        sd = arg_sd();
-        odir = arg_odir();
+        lipx = arg_ipx();
+        lipy = arg_ipy();
+        lw = arg_w();
+        lh = arg_h();
+        lc = arg_c();
+        lsb = arg_sb();
+        lbc = arg_bc();
+        lsds = arg_sds();
+        lsdc = arg_sdc();
+        lplanes = arg_planes();
+        llr = arg_lr();
+        lsd = arg_sd();
+        lodir = arg_odir();
 
         vcl_string directory = arg_in_path();
         vcl_string extension = arg_in_glob();
+        vector <vcl_string> filenames;
 
         for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
             {
@@ -89,11 +99,18 @@ bool inputParams::parseCli(int argc, char * argv[])
                 filenames.push_back (fn());
             }
         }
-
-        vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
-        vcl_cout << "Input Parameters Initialized By Command Line Arguments";
-
-        return true;
+        if (filenames.size() <= 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 || lsds<=0 || lsdc<=0 || lplanes<=0 || (lodir==""))
+        {
+            vcl_cout << "Distribution field tracking parameters either missing or out of bounds."<< vcl_endl;
+            return false;
+        }
+        else
+        {
+            vcl_cout << "Parameters initialized via command line arguments." <<vcl_endl;
+            initInputParams(filenames,  lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd, lplanes,  llr,  lsds,  lsdc, lodir);
+            vcl_cout << "There are " << _filenames.size() <<" frames in the selected directory."<< vcl_endl;
+            return true;
+        }
     }
     // Uncomment to print statements checking correct read in of parameters:
     /*
@@ -117,15 +134,19 @@ bool inputParams::parseTxt(vcl_string configFile)
     string line, name, value;
     string directory;
 	string extension;
-    //int lipx=0; int lipy=0; float lsd=0; float llr=0;// default values
-    // Assigning Defualt Values
+    // Assigning Default Values
     int lipx=-1; int lipy=-1; int lw=-1; int lh=-1; int lc=-1; int lsb=-1; int lbc=-1; int lsd=-1; int lplanes=-1;
     float llr=-1; float lsds=-1; float lsdc=-1;
+    vcl_vector<vcl_string> filenames;
 
     vcl_string lodir="output";
     ifstream textFile (configFile.c_str());//
-	if (textFile.is_open())
+	if (!textFile.is_open())
 	{
+	    vcl_cout << "Could not find config.txt, please add parameter file." << vcl_endl;
+	}
+	else if (textFile.is_open())
+    {
         int paramCount=0;
 		while (textFile.good())
 		{
@@ -149,94 +170,47 @@ bool inputParams::parseTxt(vcl_string configFile)
             else if (name.compare("outputDir")==0) {lodir=value.c_str(); paramCount++;}
             else if (name.compare("planes")==0) {lplanes=atoi(value.c_str()); paramCount++;}
             //paramCount++;
-          	}
-
-		textFile.close();
-           // vcl_cout <<directory << endl;
-           // vcl_cout <<extension << endl;
-           // vcl_cout <<lipx << endl;
-           // vcl_cout <<lipy << endl;
-           // vcl_cout <<lsd << endl;
-           // vcl_cout <<llr << endl;
-            //vcl_cout <<"Number of parameter found= "<< paramCount << endl;
-
-
-		vcl_vector<vcl_string> filenames;
-        for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
-            {
-            if (!vul_file::is_directory(fn()))
-            {
-                filenames.push_back (fn());
-            }
         }
-
-        if (filenames.size() == 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 ||llr<=0 || lsd<=0 || planes<=0 || paramCount< 14)
+        if(((directory == "") || (extension == ""))) // command line args are not passed perfectly
         {
-            vcl_cout << "No input Parameter file 'config.txt' found in working dir OR invalid Parameters detected" << vcl_endl;
-            //vcl_cout << "Check The Parameter Text File Structure. Example of Valid Text File structure must be as follows"<<endl;
-            vcl_cout << "Check the Parameter text file structure"<<endl;
-            //vcl_cout << "directory:../../Data/bolt"<<endl;
-            //vcl_cout << "extension:*.jpg"<<endl;
-            //vcl_cout << "ipx:3"<<endl;
-            //vcl_cout << "ipy:1"<<endl;
-            //vcl_cout << "sd:1.0"<<endl;
-            //vcl_cout << "lr:2.0"<<endl;
-            vcl_cout << "Exiting from program"<< vcl_endl;
+            vcl_cout << "Input directory and/or extension not specified." <<vcl_endl;
             return false;
         }
-        else {
-            //params.initInputParams(filenames,lipx,lipy,lsd,llr);
-            vcl_cout << "Parameters initialized via text file" <<vcl_endl;
-            //initInputParams(filenames,lipx,lipy,lsd,llr);
-            initInputParams(filenames,  lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd, lplanes,  llr,  lsds,  lsdc, lodir);
-            vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
-            //vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
-            //vcl_cout << "Initial Position x for DFT = "<< lipx <<vcl_endl;
-            //vcl_cout << "Initial Position y for DFT = "<< lipy <<vcl_endl;
-            //vcl_cout << "Maximum Search Distance for DFT = "<< lsd <<vcl_endl;
-            //vcl_cout << "Learning Rate for DFT = "<< llr <<vcl_endl;
-            return true;
-            }
-	}
-	else
-	{
-		 vcl_cout << "Unable to open  parameter file from application directory" << endl;
-	return false;
-	}
-
-}
-
-/*
-
-if(((arg_in_path() == "") || (arg_in_glob() == ""))) // command line args are not passed perfectly
-    {
-        vcl_cout << "Not sufficient or incorrrect argument parameters detected..." <<vcl_endl;
-        vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
-        vcl_cout << "Checking parameter text file for parameters..." <<vcl_endl;
-        bool parametersExtracted = params.parseTxt();
-        if (parametersExtracted == false) // failed to capture all parameters
+        else
+        {
+            for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
             {
-            vcl_cout << "Text file doesn't contain valid parameters, exiting" <<vcl_endl;
-            return 0;
+                if (!vul_file::is_directory(fn()))
+                {
+                    filenames.push_back (fn());
+                }
             }
+        }
+        if (filenames.size() <= 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 || lsds<=0 || lsdc<=0 || lplanes<=0 || (lodir==""))
+        {
+            vcl_cout << "Distribution field tracking parameters either missing or out of bounds."<< vcl_endl;
+            return false;
+        }
+        else
+        {
+            vcl_cout << "Parameters initialized via text file." <<vcl_endl;
+            initInputParams(filenames,  lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd, lplanes,  llr,  lsds,  lsdc, lodir);
+            vcl_cout << "There are " << _filenames.size() <<" frames in the selected directory."<< vcl_endl;
+            return true;
+        }
     }
-
-
-
-        // check input files and for valid pixel positions
-        if (filenames.size() == 0 || arg_ipy()<= 0|| arg_ipx()<=0 || arg_sd()<= 0 || arg_lr()<=0)
-        {
-            vcl_cout << "No input files at given path OR parameters are incorrect" << vcl_endl;
-            vcl_cout << "Exiting from program"<< endl;
-            return 0;
-        }
-
-        else // parameters given by command line Argument
-        {
-            // calling InputParams Class Constructor
-            params.initInputParams(filenames,  arg_ipx(),  arg_ipy(),  arg_w(),  arg_h(),  arg_c(),  arg_sb(),  arg_bc(),  arg_sd(), arg_planes(), arg_lr(),  arg_sds(),  arg_sdc(), arg_odir());
-            vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
-            vcl_cout << "Input Parameters Initialized By Command Line Arguments";
-        }
-
-*/
+    // Uncomment to print statements checking correct read in of parameters:
+    /*
+    vcl_cout << "ipx:"<<_initialX<<"; "<<x <<endl;
+    vcl_cout << "ipy:"<<_initialY<<"; "<< y<<endl;
+    vcl_cout << "width:"<<_width<<"; "<< width<<endl;
+    vcl_cout << "height:"<<_height<<"; "<< height <<endl;
+    vcl_cout << "numChannels:"<<_numChannels<<"; "<<numChannels<<endl;
+    vcl_cout << "blurSpatial:"<<_blurSpatial<<"; "<<blurSpatial <<endl;
+    vcl_cout << "blurColour:"<<_blurColour<<"; "<< blurColour <<endl;
+    vcl_cout << "sdSpatial:"<<_sdSpatial<<"; "<< sdSpatial <<endl;
+    vcl_cout << "sdColour:"<<sdColour<<"; "<< sdColour <<endl;
+    vcl_cout << "maxSearchDist:"<<_maxSearchDist<<"; "<< maxSearchDist<<endl;
+    vcl_cout << "learningRate:"<<_learningRate<<"; "<< learningRate<<endl;
+    */
+}
