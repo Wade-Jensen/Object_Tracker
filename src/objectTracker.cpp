@@ -62,7 +62,7 @@ int main (int argc, char * argv[])
         vcl_cout << "Not sufficient or incorrrect argument parameters detected..." <<vcl_endl;
         vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
         vcl_cout << "Checking parameter text file for parameters..." <<vcl_endl;
-        bool parametersExtracted = params.textParamsReader();
+        bool parametersExtracted = params.parseTxt();
         if (parametersExtracted == false) // failed to capture all parameters
             {
             vcl_cout << "Text file doesn't contain valid parameters, exiting" <<vcl_endl;

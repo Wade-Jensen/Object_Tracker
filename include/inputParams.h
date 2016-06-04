@@ -24,7 +24,7 @@ class inputParams
         /** Constructor */
         inputParams();
         bool initInputParams(vcl_vector<vcl_string>, int, int, int, int, int, int, int, int, int, float, float, float, vcl_string);
-        bool textParamsReader();
+        bool parseTxt();
 
         /** Destructor */
         ~inputParams();
