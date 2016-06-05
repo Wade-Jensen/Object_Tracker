@@ -90,7 +90,8 @@ bool UserInput::parseCli(int argc, char * argv[])
 
         vcl_string directory = arg_in_path();
         vcl_string extension = arg_in_glob();
-        vector <vcl_string> filenames;
+        vcl_cout << "extension: "<<arg_in_glob()<<"; " <<endl;
+        vcl_vector <vcl_string> filenames;
 
         for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
             {
@@ -99,6 +100,24 @@ bool UserInput::parseCli(int argc, char * argv[])
                 filenames.push_back (fn());
             }
         }
+
+        //vcl_cout << "directory: "<<arg_in_path()<<"; " <<endl;
+        //vcl_cout << "extension: "<<arg_in_glob()<<"; " <<endl;
+        //vcl_cout << "ipx:"<<lipx<<"; " <<endl;
+        //vcl_cout << "ipy:"<<lipy<<"; "<<endl;
+        //vcl_cout << "width:"<<lw<<"; "<<endl;
+        //vcl_cout << "height:"<<lh<<"; " <<endl;
+        //vcl_cout << "numChannels:"<<lc<<"; "<<endl;
+        //vcl_cout << "blurSpatial:"<<lsb<<"; " <<endl;
+        //vcl_cout << "blurColour:"<<lbc<<"; " <<endl;
+        //vcl_cout << "sdSpatial:"<<lsds<<"; " <<endl;
+        //vcl_cout << "sdColour:"<<lsdc<<"; " <<endl;
+        //vcl_cout << "maxSearchDist:"<<lsd<<"; "<<endl;
+        //vcl_cout << "learningRate:"<<llr<<"; "<<endl;
+        //vcl_cout << "planes: "<<llr<<"; " << endl;
+        //vcl_cout << "output directory: "<<lodir<<"; " << endl;
+        //vcl_cout << "filenames size: "<<filenames.size()<<"; " << endl;
+
         if (filenames.size() <= 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 || lsds<=0 || lsdc<=0 || lplanes<=0 || (lodir==""))
         {
             vcl_cout << "Distribution field tracking parameters either missing or out of bounds."<< vcl_endl;

@@ -24,32 +24,6 @@ using namespace std;
 
 int main (int argc, char * argv[])
 {
-    //inputParams params;// input Parameters
-
-    vul_arg<vcl_string>
-		arg_in_path("-path", "Path to Image Frames, e.g. C:/somefiles/"),
-		arg_in_glob("-glob", "Image (Frame) Extension (png,jpg,bmp,tiff,jpeg), e.g. *.jpeg, this will get all jpeg's.");
-
-	// now we have some integer arguments
-	vul_arg<unsigned int> arg_ipx("-ipx", "Initial Position x .", -1),
-                          arg_ipy("-ipy", "Initial Position y.", -1),
-                          arg_w("-w", "Width.", -1),
-                          arg_h("-h", "Heignt", -1),
-                          arg_c("-c", "No Of Channels", -1),
-                          arg_sb("-sb", "Spatial Blur", -1),
-                          arg_bc("-bc", "Blur Colour", -1),
-                          arg_sd("-sd", "Max Search Distance", -1),
-                          arg_planes("-planes", "Number of colour planes in DF", -1);
-
-    // float arguments
-	vul_arg<float> arg_lr("-lr", "Learning Rate", -1),
-                   arg_sds("-sds", "SD Spatial", -1),
-                   arg_sdc("-sdc", "SD Colour", -1);
-
-    // last string argument
-    vul_arg<vcl_string> arg_odir("-odir", "Output Frames Storage Director", "Output");
-	vul_arg_parse(argc, argv, true);
-
     UserInput userInput;// input Parameters
 
     bool cliRead = userInput.parseCli(argc, argv);
