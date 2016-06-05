@@ -26,12 +26,12 @@ public:
 	// the top left pixel location (x,y), width and height of the
 	// object in the image to be tracked
     DFT(const vil_image_view<unsigned char>& initialFrame, DF_params& params,
-        int x, int y, int width, int height, float learningRate = 0.05/*, possible default values for optional arguments in the constructor*/ );
+        int x, int y, int width, int height, float learningRate, int maxSearchDist/*, possible default values for optional arguments in the constructor*/ );
 
 	// destructor
     ~DFT();
 
-    map<vcl_string,int> locateObject(const vil_image_view<unsigned char>&, DF_params&, int maxSearchDist);
+    map<vcl_string,int> locateObject(const vil_image_view<unsigned char>&, DF_params&);
 
     map<vcl_string,int> locateObject(void);
 
@@ -47,9 +47,11 @@ private:
 
     void SafeWrite(vil_image_view<unsigned char>&, int, int, int, unsigned char);
 
+    //*Parameters*//
     map<vcl_string,int> _currentPosition; // the current location and size of the object
     DistributionField _objectModel; // model of the object to be tracked
     float _learningRate; // rate at which to update the object model
+    int _maxSearchDist; // the maximum cartesian distance of the object position from one frame to the next
 };
 
 #endif // DFT_H

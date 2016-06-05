@@ -1,4 +1,4 @@
-#include "..\include\inputParams.h"
+#include "..\include\UserInput.h"
 #include "..\include\Version.h"
 #include "..\include\DFT.h"
 
@@ -9,12 +9,7 @@
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
 #include <vul/vul_file_iterator.h>
-
-#ifndef _VUL_FILE_
-#define _VUL_FILE_
 #include <vul/vul_file.h>
-#endif
-
 #include <vul/vul_arg.h>
 
 /*
@@ -26,12 +21,10 @@
  *  - will optionally compute performance metrics using a given ground truth image and index
  */
 using namespace std;
-bool textParamsReader(char seperator);
 
-vcl_vector<vcl_string>  generateFileNames(vcl_string directory, vcl_string extension );
 int main (int argc, char * argv[])
 {
-    inputParams params;// input Parameters
+    //inputParams params;// input Parameters
 
     vul_arg<vcl_string>
 		arg_in_path("-path", "Path to Image Frames, e.g. C:/somefiles/"),
@@ -57,66 +50,23 @@ int main (int argc, char * argv[])
     vul_arg<vcl_string> arg_odir("-odir", "Output Frames Storage Director", "Output");
 	vul_arg_parse(argc, argv, true);
 
-	if(1) // command line args are not passed perfectly
+    UserInput userInput;// input Parameters
+
+    bool cliRead = userInput.parseCli(argc, argv);
+    if (!cliRead)
     {
-        vcl_cout << "Not sufficient or incorrrect argument parameters detected..." <<vcl_endl;
         vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
         vcl_cout << "Checking parameter text file for parameters..." <<vcl_endl;
-        bool parametersExtracted = params.parseTxt();
-        if (parametersExtracted == false) // failed to capture all parameters
-            {
+        bool configFileRead = userInput.parseTxt("config.txt");
+        if (!configFileRead)
+        {
             vcl_cout << "Text file doesn't contain valid parameters, exiting" <<vcl_endl;
             return 0;
-            }
-    }
-
-    // Parsing a directory of images from command line argument
-	else // command line arguments are passed correctly
-    {
-        vcl_vector<vcl_string> filenames;
-
-        // create file list
-        for (vul_file_iterator fn=(arg_in_path() + "/*" + arg_in_glob()); fn; ++fn)
-        {
-            if (!vul_file::is_directory(fn()))
-            {
-                filenames.push_back (fn());
-            }
-        }
-
-        // check input files and for valid pixel positions
-        if (filenames.size() == 0 || arg_ipy()<= 0|| arg_ipx()<=0 || arg_sd()<= 0 || arg_lr()<=0)
-        {
-            vcl_cout << "No input files at given path OR parameters are incorrect" << vcl_endl;
-            vcl_cout << "Exiting from program"<< endl;
-            return 0;
-        }
-
-        else // parameters given by command line Argument
-        {
-            // calling InputParams Class Constructor
-            params.initInputParams(filenames,  arg_ipx(),  arg_ipy(),  arg_w(),  arg_h(),  arg_c(),  arg_sb(),  arg_bc(),  arg_sd(), arg_planes(), arg_lr(),  arg_sds(),  arg_sdc(), arg_odir());
-            vcl_cout << "There are " << filenames.size() <<" frames in the selected directory"<< vcl_endl;
-            vcl_cout << "Input Parameters Initialized By Command Line Arguments";
         }
     }
-
-// delete &params;
-
-// Uncomment to print statements checking correct read in of parameters:
-/*
-vcl_cout << "ipx:"<<params.ipx<<"; "<<x <<endl;
-vcl_cout << "ipy:"<<params.ipy<<"; "<< y<<endl;
-vcl_cout << "width:"<<params.w<<"; "<< width<<endl;
-vcl_cout << "height:"<<params.h<<"; "<< height <<endl;
-vcl_cout << "numChannels:"<<params.c<<"; "<<numChannels<<endl;
-vcl_cout << "blurSpatial:"<<params.sb<<"; "<<blurSpatial <<endl;
-vcl_cout << "blurColour:"<<params.bc<<"; "<< blurColour <<endl;
-vcl_cout << "sdSpatial:"<<params.sds<<"; "<< sdSpatial <<endl;
-vcl_cout << "sdColour:"<<params.sdc<<"; "<< sdColour <<endl;
-vcl_cout << "maxSearchDist:"<<params.sd<<"; "<< maxSearchDist<<endl;
-vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
-*/
+    // return the input parameters in a structure with the const qualifier to avoid
+    // needing individual getters
+    const struct Params params = userInput.getParams();
 
     vul_file vulStruct;
 
@@ -125,29 +75,43 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
     vcl_cout << dir << vcl_endl;
 
     // Top corner and size of object in first image to track
-    int x = params.ipx;
-    int y = params.ipy;
-    int width = params.w;
-    int height = params.h;
+    int x = params.initialX;
+    int y = params.initialY;
+    int width = params.width;
+    int height = params.height;
 
 	// Distribution Field parameters
-    int numChannels = params.c;
-    int blurSpatial = params.sb;
-    int blurColour = params.bc;
-    float sdSpatial = params.sds;
-    float sdColour = params.sdc;
+    int numChannels = params.numChannels;
+    int blurSpatial = params.blurSpatial;
+    int blurColour = params.blurColour;
+    float sdSpatial = params.sdSpatial;
+    float sdColour = params.sdColour;
     int planes = params.planes;
 
    	// Tracker parameters
-    int maxSearchDist = params.sd;
-    float learningRate = params.lr;
+    int maxSearchDist = params.maxSearchDist;
+    float learningRate = params.learningRate;
 
     //output Path
-    vcl_string outputPath = params.odir;
+    vcl_string outputPath = params.outputDir;
 
     //loading images
     vcl_vector< vil_image_view<unsigned char> > images;
     vcl_vector<vcl_string> filenames = params.filenames;
+
+    vcl_cout << "x: " << x << vcl_endl;
+    vcl_cout << "y: " << y << vcl_endl;
+    vcl_cout << "width: "<< width<< vcl_endl;
+    vcl_cout << "height: "<< height<< vcl_endl;
+    vcl_cout << "numChannels : "<< numChannels << vcl_endl;
+    vcl_cout << "blurSpatial : "<< blurSpatial << vcl_endl;
+    vcl_cout << "sdSpatial : "<< sdSpatial << vcl_endl;
+    vcl_cout << "sdColour : "<< sdColour << vcl_endl;
+    vcl_cout << "planes : "<< planes << vcl_endl;
+    vcl_cout << "maxSearchDist : "<< maxSearchDist << vcl_endl;
+    vcl_cout << "learningRate : "<< learningRate << vcl_endl;
+    vcl_cout << "outputPath : "<< outputPath << vcl_endl;
+
 
     // filenames should now contain the names of all the files with our target extension
 	// in the input directory, if we want to loop through them, we can now do
@@ -171,7 +135,7 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
 
     // create the object model for tracking
     DFT DFTracker;
-    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate);
+    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate, maxSearchDist);
 
     // create output path if it does not exist
     if (outputPath.c_str() != "")
@@ -198,7 +162,7 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
 
             // locate the object in the current frame. Use gradient descent search
             // to find the new object position
-            map<vcl_string,int> currentPosition = DFTracker.locateObject(images[i], default_params, maxSearchDist );
+            map<vcl_string,int> currentPosition = DFTracker.locateObject(images[i], default_params);
             int x = currentPosition["x"];
             int y = currentPosition["y"];
 

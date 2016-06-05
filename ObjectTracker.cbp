@@ -11,7 +11,6 @@
 				<Option object_output="obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-path Data/Sequence1 -glob *jpeg" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -94,12 +93,12 @@
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="include\DFT.h" />
+		<Unit filename="include\UserInput.h" />
 		<Unit filename="include\Version.h" />
-		<Unit filename="include\inputParams.h" />
 		<Unit filename="src\DF.cpp" />
 		<Unit filename="src\DFT.cpp" />
 		<Unit filename="src\DF_Test.cpp" />
-		<Unit filename="src\inputParams.cpp" />
+		<Unit filename="src\UserInput.cpp" />
 		<Unit filename="src\objectTracker.cpp" />
 		<Extensions>
 			<code_completion />
