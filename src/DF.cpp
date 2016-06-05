@@ -485,6 +485,8 @@ DF_params::DF_params(int Num_channels, int Blur_spatial, int Blur_colour, float 
     this->planes = planes;
 }
 
+DF_params::DF_params(){}
+
 DF_params::~DF_params()
 {
 }

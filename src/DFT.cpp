@@ -19,8 +19,9 @@ DFT::DFT(const vil_image_view<unsigned char>& initialFrame, DF_params& params, i
     _currentPosition["y"] = y;
     _currentPosition["width"] = width;
     _currentPosition["height"] = height;
+    _model_params = params;
     //_objectModel = initialFrameDF.subfield(x, y, width, height);
-    _objectModel = DistributionField(initialFrame, params, x, y, width, height);
+    _objectModel = DistributionField(initialFrame, _model_params, x, y, width, height);
     _learningRate = learningRate;
     _maxSearchDist = maxSearchDist;
 }
@@ -36,8 +37,7 @@ map<vcl_string,int> DFT::locateObject(void)
     return this->_currentPosition;
 }
 
-map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame,
-                                      DF_params& params)
+map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame)
 {
     // TODO
     // update the currentPosition member variable to the new object position
@@ -58,6 +58,16 @@ map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame
     map<vcl_string,int> initialPosition = _currentPosition;
     map<vcl_string,int> objectLocation = _currentPosition;
 
+    int x0 = objectLocation["x"];
+    int y0 = objectLocation["y"];
+    int width = objectLocation["width"];
+    int height = objectLocation["height"];
+
+    DistributionField searchField = DistributionField(frame, _model_params,
+                                                      x0-_maxSearchDist,
+                                                      y0-_maxSearchDist,
+                                                      2*_maxSearchDist + width,
+                                                      2*_maxSearchDist + height);
 
     while(true)
     {
@@ -72,18 +82,20 @@ map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame
             // note that we need to crop df so that it is the same size as the objectModel
             // Our crop takes a location, a width and a height
 
-            int x = objectLocation["x"]+searchLocationsX[i];
-            int y = objectLocation["y"]+searchLocationsY[i];
-            int width = objectLocation["width"];
-            int height = objectLocation["height"];
+            //int x = (objectLocation["x"])+searchLocationsX[i];
+            int x = (objectLocation["x"] - x0 + _maxSearchDist)+searchLocationsX[i];
+            //int y = (objectLocation["y"])+searchLocationsY[i];
+            int y = (objectLocation["y"] - y0 + _maxSearchDist)+searchLocationsY[i];
 
             //vector <vil_image_view<unsigned char> > croppedField = cropDF(df,x,y,height,width);
 
             float distance = 0;
             try{
                 //DistributionField croppedField = df.subfield(x, y, width, height);
-                DistributionField croppedField = DistributionField(frame, params,
-                                                                   x, y, width, height);
+                /*DistributionField croppedField = DistributionField(frame, _model_params,
+                                                                   x, y, width, height);*/
+
+                DistributionField croppedField = searchField.subfield(x, y, width, height);
                 //
                 //croppedField.saveField();
                 //
@@ -194,7 +206,7 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
 }
 
 // Update the object model using the learning rate
-void DFT::updateModel(const vil_image_view<unsigned char> frame, DF_params& params)
+void DFT::updateModel(const vil_image_view<unsigned char> frame)
 {
     // Update the object_model member variable
     int x = _currentPosition["x"];
@@ -202,7 +214,7 @@ void DFT::updateModel(const vil_image_view<unsigned char> frame, DF_params& para
     int width = _currentPosition["width"];
     int height = _currentPosition["height"];
     // get a cropped copy of the distribution field at the new object position
-    DistributionField dfCropped = DistributionField(frame, params, x, y, width, height);
+    DistributionField dfCropped = DistributionField(frame, _model_params, x, y, width, height);
     _objectModel.update(dfCropped, _learningRate);
 
 }

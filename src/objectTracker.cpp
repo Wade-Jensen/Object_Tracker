@@ -162,12 +162,12 @@ int main (int argc, char * argv[])
 
             // locate the object in the current frame. Use gradient descent search
             // to find the new object position
-            map<vcl_string,int> currentPosition = DFTracker.locateObject(images[i], default_params);
+            map<vcl_string,int> currentPosition = DFTracker.locateObject(images[i]);
             int x = currentPosition["x"];
             int y = currentPosition["y"];
 
             //  update the object model to incorporate new information
-            DFTracker.updateModel(images[i], default_params);
+            DFTracker.updateModel(images[i]);
 
             // display or print an image, ie. draw a bounding box around the object being tracked
             DFTracker.displayCurrentPosition (images[i], outputPath, i );

@@ -6,7 +6,7 @@
 
 1464590913 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\version.h
 
-1465099107 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
+1465121876 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
 	<vector>
 	<sstream>
 	<vil/vil_image_view.h>
@@ -829,7 +829,7 @@
 1462766111 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\core\vil\vil_pyramid_image_resource_sptr.h
 	<vil/vil_smart_ptr.h>
 
-1465108280 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\objecttracker.cpp
+1465121903 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\objecttracker.cpp
 	"..\include\UserInput.h"
 	"..\include\Version.h"
 	"..\include\DFT.h"
@@ -840,7 +840,7 @@
 	<vul/vul_file.h>
 	<vul/vul_arg.h>
 
-1465104490 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
+1465121887 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
 	<vcl_vector.h>
 	<vector>
 	<vil/vil_image_view.h>
@@ -917,10 +917,10 @@
 1462766150 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
 
-1465111588 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
+1465121942 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
 	"..\include\DF.h"
 
-1465104518 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
+1465123509 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
 	"../include/DFT.h"
 	"..\include\DF.h"
 

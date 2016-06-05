@@ -31,12 +31,12 @@ public:
 	// destructor
     ~DFT();
 
-    map<vcl_string,int> locateObject(const vil_image_view<unsigned char>&, DF_params&);
+    map<vcl_string,int> locateObject(const vil_image_view<unsigned char>&);
 
     map<vcl_string,int> locateObject(void);
 
 	// Update the object model using the learning rate
-    void updateModel(const vil_image_view<unsigned char> frame, DF_params& params);
+    void updateModel(const vil_image_view<unsigned char> frame);
 
 	// Draw a box around the current position of the object
 	// and save the image to disk
@@ -48,6 +48,7 @@ private:
     void SafeWrite(vil_image_view<unsigned char>&, int, int, int, unsigned char);
 
     //*Parameters*//
+    DF_params _model_params;
     map<vcl_string,int> _currentPosition; // the current location and size of the object
     DistributionField _objectModel; // model of the object to be tracked
     float _learningRate; // rate at which to update the object model

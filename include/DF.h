@@ -22,6 +22,7 @@ public:
 	// constructor, takes the following parameters which are used
 	// to define a Distribution Field:
 	// Number of channels, Blur_spatial, Blur_colour, SD_spatial, SD_colour
+	DF_params();
     DF_params(int, int, int, float, float, int);
 
 	// Destructor
