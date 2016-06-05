@@ -90,7 +90,7 @@ bool UserInput::parseCli(int argc, char * argv[])
 
         vcl_string directory = arg_in_path();
         vcl_string extension = arg_in_glob();
-        vcl_cout << "extension: "<<arg_in_glob()<<"; " <<endl;
+        //vcl_cout << "extension: "<<arg_in_glob()<<"; " <<endl;
         vcl_vector <vcl_string> filenames;
 
         for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
@@ -163,6 +163,7 @@ bool UserInput::parseTxt(vcl_string configFile)
 	if (!textFile.is_open())
 	{
 	    vcl_cout << "Could not find config.txt, please add parameter file." << vcl_endl;
+        return 0;
 	}
 	else if (textFile.is_open())
     {
