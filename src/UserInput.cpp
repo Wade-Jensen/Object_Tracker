@@ -6,6 +6,7 @@ UserInput::UserInput()
 
 }
 
+// const structure used to store DFT parameters
 const struct Params UserInput::getParams()
 {
     const struct Params params = {_filenames, _initialX,_initialY,_width,_height,_numChannels,
