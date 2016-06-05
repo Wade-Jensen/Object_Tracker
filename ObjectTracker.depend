@@ -6,7 +6,7 @@
 
 1464590913 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\version.h
 
-1464590830 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
+1465099107 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
 	<vector>
 	<sstream>
 	<vil/vil_image_view.h>
@@ -829,7 +829,8 @@
 1462766111 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\core\vil\vil_pyramid_image_resource_sptr.h
 	<vil/vil_smart_ptr.h>
 
-1464569573 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\objecttracker.cpp
+1465100746 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\objecttracker.cpp
+	"..\include\inputParams.h"
 	"..\include\Version.h"
 	"..\include\DFT.h"
 	<vil/vil_image_view.h>
@@ -839,7 +840,7 @@
 	<vul/vul_file.h>
 	<vul/vul_arg.h>
 
-1464569468 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
+1465100842 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
 	<vcl_vector.h>
 	<vector>
 	<vil/vil_image_view.h>
@@ -916,10 +917,10 @@
 1462766150 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
 
-1464590905 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
+1465099053 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
 	"..\include\DF.h"
 
-1464537896 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
+1465100850 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
 	"../include/DFT.h"
 	"..\include\DF.h"
 
@@ -3748,4 +3749,17 @@
 	<fstream>
 	<string>
 	<stdlib.h>
+
+1465024749 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\inputparams.h
+	<vul/vul_file_iterator.h>
+	<vul/vul_file.h>
+	<vil/vil_load.h>
+	"vcl_vector.h"
+	"vcl_string.h"
+	<fstream>
+	<string>
+	<stdlib.h>
+
+1465088189 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\inputparams.cpp
+	"../include/inputParams.h"
 

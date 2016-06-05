@@ -11,14 +11,16 @@ DFT::DFT()
 // initialise a DFT using the first frame of a series,
 // the top left pixel location (x,y), width and height of the
 // object in the image to be tracked
-DFT::DFT(const DistributionField& initialFrameDF , int x, int y, int width, int height, float learningRate /*default value = 0.05*/)
+DFT::DFT(const vil_image_view<unsigned char>& initialFrame, DF_params& params, int x, int y,
+         int width, int height, float learningRate /*default value = 0.05*/)
 : _learningRate(learningRate) // initialiser list
 {
     _currentPosition["x"] = x;
     _currentPosition["y"] = y;
     _currentPosition["width"] = width;
     _currentPosition["height"] = height;
-    _objectModel = initialFrameDF.subfield(x, y, width, height);
+    //_objectModel = initialFrameDF.subfield(x, y, width, height);
+    _objectModel = DistributionField(initialFrame, params, x, y, width, height);
     //_objectModel.saveField();
 }
 
@@ -33,7 +35,8 @@ map<vcl_string,int> DFT::locateObject(void)
     return this->_currentPosition;
 }
 
-map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearchDist)
+map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame,
+                                      DF_params& params, int maxSearchDist)
 {
     // TODO
     // update the currentPosition member variable to the new object position
@@ -77,7 +80,9 @@ map<vcl_string,int> DFT::locateObject(const DistributionField& df, int maxSearch
 
             float distance = 0;
             try{
-                DistributionField croppedField = df.subfield(x, y, width, height);
+                //DistributionField croppedField = df.subfield(x, y, width, height);
+                DistributionField croppedField = DistributionField(frame, params,
+                                                                   x, y, width, height);
                 //
                 //croppedField.saveField();
                 //
@@ -188,7 +193,7 @@ void DFT::displayCurrentPosition ( vil_image_view<unsigned char> currentFrame, v
 }
 
 // Update the object model using the learning rate
-void DFT::updateModel(DistributionField& dfFrame)
+void DFT::updateModel(const vil_image_view<unsigned char> frame, DF_params& params)
 {
     // Update the object_model member variable
     int x = _currentPosition["x"];
@@ -196,7 +201,7 @@ void DFT::updateModel(DistributionField& dfFrame)
     int width = _currentPosition["width"];
     int height = _currentPosition["height"];
     // get a cropped copy of the distribution field at the new object position
-    DistributionField dfCropped = dfFrame.subfield(x,y,width,height);
+    DistributionField dfCropped = DistributionField(frame, params, x, y, width, height);
     _objectModel.update(dfCropped, _learningRate);
 
 }

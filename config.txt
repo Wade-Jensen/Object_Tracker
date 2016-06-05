@@ -1,4 +1,4 @@
-directory Data/cup
+directory Data\cup
 extension *jpg
 ipx 124.67
 ipy 92.308

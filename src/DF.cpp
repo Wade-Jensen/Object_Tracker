@@ -59,12 +59,21 @@ DistributionField::DistributionField(const DistributionField& SuperF, int x, int
     height = Height;
     planes = SuperF.planes;
 
+    origin = new unsigned char*[numChannels];
+    di = new vcl_ptrdiff_t[numChannels];
+    dj = new vcl_ptrdiff_t[numChannels];
+    dp = new vcl_ptrdiff_t[numChannels];
+
     /*For each Channel, save a "sub-channel" using vil_crop*/
     for(int k = 0; k < numChannels; k++){
 
-        dist_field.push_back(vil_crop(SuperF.dist_field[k],
+        /*dist_field.push_back(vil_crop(SuperF.dist_field[k],
                                       x, Width,
-                                      y, Height));
+                                      y, Height));*/
+        di[k] = SuperF.di[k];
+        dj[k] = SuperF.dj[k];
+        dp[k] = SuperF.dp[k];
+        origin[k] = SuperF.origin[k] + x*di[k] + y*dj[k];
     }
 
 }
@@ -74,6 +83,14 @@ DistributionField::DistributionField(const vil_image_view<unsigned char>& Input,
 
     /*Following RAII*/
     init(Input, params);
+}
+
+DistributionField::DistributionField(const vil_image_view<unsigned char>& Input, DF_params& params,
+                                    int x, int y, int width, int height)
+{
+
+    /*Following RAII*/
+    init(vil_crop(Input, x, width, y, height), params);
 }
 
 // Default destructor
@@ -99,6 +116,7 @@ void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_para
     //vil_image_view<unsigned char> greyInput = grey(Input);
     vil_image_view<unsigned char> newIn = Input;
     createField(newIn);
+    //createChannRep(Input);
 
 }
 
@@ -106,13 +124,23 @@ void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_para
 void DistributionField::createField(vil_image_view<unsigned char>& Input)
 {
 
+    origin = new unsigned char*[numChannels];
+    di = new vcl_ptrdiff_t[numChannels];
+    dj = new vcl_ptrdiff_t[numChannels];
+    dp = new vcl_ptrdiff_t[numChannels];
+
     /*Create All Channels - Blank*/
     for(int k = 0; k < numChannels; k++){
 
         vil_image_view<unsigned char> channel =
             vil_image_view<unsigned char>(width, height, planes, 1);
         channel.fill(0);
+
         dist_field.push_back(channel);
+        origin[k] = dist_field[k].top_left_ptr();
+        di[k] = dist_field[k].istep();
+        dj[k] = dist_field[k].jstep();
+        dp[k] = dist_field[k].planestep();
     }
 
     /*Pixel-byPixel loop*/
@@ -180,6 +208,68 @@ void DistributionField::colourBlur()
 
 }
 
+void DistributionField::createChannRep(const vil_image_view<unsigned char>& Input){
+
+    float** LUT = new float*[256];
+
+    for(int i = 0; i < 256; i++){
+
+        LUT[i] = new float[numChannels];
+    }
+
+    for(int i = 0; i < 256; i++){
+        for(int j = 0; j < numChannels; j++){
+
+            float dist = fabs((j + 1)*channelWidth/2 - i);
+
+            if(dist <= channelWidth/2){
+                LUT[i][j] = 0.75 - pow(dist/channelWidth, 2);
+            }
+            else if(dist <= 1.5*channelWidth){
+                LUT[i][j] = pow((dist/channelWidth - 1.5), 2)/2;
+            }
+            else{
+                LUT[i][j] = 0;
+            }
+
+        }
+    }
+
+
+    for(int k = 0; k < numChannels; k++){
+
+        vil_image_view<unsigned char> channel =
+            vil_image_view<unsigned char>(width, height, planes, 1);
+        channel.fill(0);
+        dist_field.push_back(channel);
+    }
+
+
+    /*Pixel-byPixel loop*/
+    for(int channel = 0; channel < numChannels; channel++){
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                for(int p = 0; p < planes; p++){
+                    dist_field[channel](i, j, p) = 255*LUT[Input(i, j, p)][channel];
+                }
+            }
+        }
+    }
+
+    /*Iterate Through Channels*/
+    for(int i = 0; i < numChannels; i++)
+    {
+
+        /*Blur Channe using a parameter object - essentially a kernel*/
+        /*vil_gauss_filter_5tap_params Kernel = vil_gauss_filter_5tap_params(blur_spatial);
+        vil_gauss_filter_5tap(dist_field[i], dist_field[i], Kernel);*/
+
+        vil_gauss_filter_2d(dist_field[i], dist_field[i], sdSpatial, blurSpatial);
+    }
+
+
+}
+
 // Determine if the contents of two distribution fields are the same
 float DistributionField::compare(DistributionField& inputDF) const
 {
@@ -195,20 +285,37 @@ float DistributionField::compare(DistributionField& inputDF) const
 
     for(int channel = 0; channel < numChannels; channel++)
     {
+        unsigned char* i0 = origin[channel];
+        unsigned char* in_i0 = inputDF.origin[channel];
         for(int i = 0; i < width; i++)
         {
+            unsigned char* j0 = i0;
+            unsigned char* in_j0 = in_i0;
             for(int j = 0; j < height; j++)
             {
+
+                unsigned char* p0 = j0;
+                unsigned char* in_p0 = in_j0;
 
                 float del = 0;
                 for(int p = 0; p < planes; p++)
                 {
 
                     del += pow(
-                        dist_field[channel](i, j, p)-inputDF.dist_field[channel](i, j, p), 2);
+                        *p0 - *in_p0, 2);
+
+                    p0 += dp[channel];
+                    in_p0 += inputDF.dp[channel];
+
                 }
                 distance += sqrt(del);
+
+                j0 += dj[channel];
+                in_j0 += inputDF.dj[channel];
             }
+
+            i0 += di[channel];
+            in_i0 += inputDF.di[channel];
         }
     }
 
@@ -228,23 +335,35 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate)
 
     for(int channel = 0; channel < numChannels; channel++)
     {
+        unsigned char* i0 = origin[channel];
+        unsigned char* in_i0 = inputDF.origin[channel];
         for(int i = 0; i < width; i++)
         {
+            unsigned char* j0 = i0;
+            unsigned char* in_j0 = in_i0;
             for(int j = 0; j < height; j++)
             {
+                unsigned char* p0 = j0;
+                unsigned char* in_p0 = in_j0;
                 for(int p = 0; p < planes; p++)
                 {
-                    int PIX = dist_field[channel](i, j, p);
-                    float prev = (1 - learning_rate)*dist_field[channel](i, j, p);
-                    float Update = learning_rate*inputDF.dist_field[channel](i, j, p);
+                    int PIX = *p0;
+                    float prev = (1 - learning_rate)*(*p0);
+                    float Update = learning_rate*(*in_p0);
 
-                    dist_field[channel](i, j, p) = round(prev + Update);
-                    PIX = dist_field[channel](i, j, p) = round(prev + Update);
-                    PIX = dist_field[channel](i, j, p);
-                    PIX = 0;
+                    *p0 = round(prev + Update);
+
+                    p0 += dp[channel];
+                    in_p0 += inputDF.dp[channel];
                 }
             }
+
+            j0 += dj[channel];
+            in_j0 += dj[channel];
         }
+
+        i0 += di[channel];
+        in_i0 += di[channel];
     }
 
 }

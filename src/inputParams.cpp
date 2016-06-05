@@ -86,7 +86,7 @@ bool inputParams::parseTxt()
             }
         }
 
-        if (filenames.size() == 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 ||llr<=0 || lsd<=0 || planes<=0 || paramCount< 14)
+        if (filenames.size() == 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 ||llr<=0 || lsd<=0 || lplanes<=0 || paramCount< 14)
         {
             vcl_cout << "No input Parameter file 'config.txt' found in working dir OR invalid Parameters detected" << vcl_endl;
             //vcl_cout << "Check The Parameter Text File Structure. Example of Valid Text File structure must be as follows"<<endl;

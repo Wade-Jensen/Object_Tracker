@@ -57,7 +57,7 @@ int main (int argc, char * argv[])
     vul_arg<vcl_string> arg_odir("-odir", "Output Frames Storage Director", "Output");
 	vul_arg_parse(argc, argv, true);
 
-	if(((arg_in_path() == "") || (arg_in_glob() == ""))) // command line args are not passed perfectly
+	if(1) // command line args are not passed perfectly
     {
         vcl_cout << "Not sufficient or incorrrect argument parameters detected..." <<vcl_endl;
         vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
@@ -171,7 +171,7 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
 
     // create the object model for tracking
     DFT DFTracker;
-    DFTracker = DFT(initFrame, x, y, width, height, learningRate);
+    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate);
 
     // create output path if it does not exist
     if (outputPath.c_str() != "")
@@ -194,20 +194,19 @@ vcl_cout << "learningRate:"<<params.lr<<"; "<< learningRate<<endl;
             vcl_cout << "Current frame is: "<< i << vcl_endl;
 
             // create distribution field for the current frame
-            DistributionField dfFrame = DistributionField(images[i], default_params);
+            //DistributionField dfFrame = DistributionField(images[i], default_params);
 
             // locate the object in the current frame. Use gradient descent search
             // to find the new object position
-            map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
+            map<vcl_string,int> currentPosition = DFTracker.locateObject(images[i], default_params, maxSearchDist );
             int x = currentPosition["x"];
             int y = currentPosition["y"];
 
             //  update the object model to incorporate new information
-            DFTracker.updateModel(dfFrame);
+            DFTracker.updateModel(images[i], default_params);
 
             // display or print an image, ie. draw a bounding box around the object being tracked
             DFTracker.displayCurrentPosition (images[i], outputPath, i );
-
         }
     }
     catch(int bad_write[6]){

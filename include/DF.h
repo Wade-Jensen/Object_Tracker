@@ -54,6 +54,8 @@ public:
 
 	// Create using image and parameters
     DistributionField(const vil_image_view<unsigned char>&, DF_params&);
+    DistributionField(const vil_image_view<unsigned char>&, DF_params&,
+                                    int, int, int, int);
 
 	// Create based on an existing distribution field and a bounding region
 	// for the tracked object
@@ -85,6 +87,7 @@ private:
 
     /*Create DF with Set Parameters*/
     void createField(vil_image_view<unsigned char>&);
+    void createChannRep(const vil_image_view<unsigned char>&);
 
     /*Run Colour Blur routine*/
     void colourBlur();
@@ -94,6 +97,10 @@ private:
 
     /*Vector of Images for the DF*/
     vector< vil_image_view<unsigned char> > dist_field;
+    unsigned char** origin;
+    vcl_ptrdiff_t* di;
+    vcl_ptrdiff_t* dj;
+    vcl_ptrdiff_t* dp;
 
     /*Parameters*/
     int numChannels;
@@ -106,6 +113,12 @@ private:
 
     int width;
     int height;
+
+};
+
+class SubField : public DistributionField{
+
+
 
 };
 
