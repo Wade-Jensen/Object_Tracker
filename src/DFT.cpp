@@ -12,7 +12,7 @@ DFT::DFT()
 // the top left pixel location (x,y), width and height of the
 // object in the image to be tracked
 DFT::DFT(const vil_image_view<unsigned char>& initialFrame, DF_params& params, int x, int y,
-         int width, int height, float learningRate, int maxSearchDist /*default value = 0.05*/)
+         int width, int height, float learningRate, int maxSearchDist, bool extended /*default value = 0.05*/)
 : _learningRate(learningRate) // initialiser list
 {
     _currentPosition["x"] = x;
@@ -21,7 +21,15 @@ DFT::DFT(const vil_image_view<unsigned char>& initialFrame, DF_params& params, i
     _currentPosition["height"] = height;
     _model_params = params;
     //_objectModel = initialFrameDF.subfield(x, y, width, height);
-    _objectModel = DistributionField(initialFrame, _model_params, x, y, width, height);
+    if(!extended)
+        _objectModel = new DistributionField(initialFrame, _model_params, x, y, width, height);
+    else
+    {
+        _objectModel = new ChannelRep(initialFrame, _model_params, x, y, width, height);
+        _extended = true;
+        _velocityX = 0;
+        _velocityY = 0;
+    }
     _learningRate = learningRate;
     _maxSearchDist = maxSearchDist;
 }
@@ -82,6 +90,10 @@ map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame
             // note that we need to crop df so that it is the same size as the objectModel
             // Our crop takes a location, a width and a height
 
+            if(_extended){
+                project();
+            }
+
             //int x = (objectLocation["x"])+searchLocationsX[i];
             int x = (objectLocation["x"] - x0 + _maxSearchDist)+searchLocationsX[i];
             //int y = (objectLocation["y"])+searchLocationsY[i];
@@ -100,7 +112,7 @@ map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame
                 //croppedField.saveField();
                 //
                 //croppedField.saveField();
-                distance = _objectModel.compare(croppedField);
+                distance = _objectModel->compare(croppedField);
             }
             catch(vcl_string ex_msg){
 
@@ -120,7 +132,7 @@ map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame
         // update the object location based on this iteration
         objectLocation["x"] += searchLocationsX[bestLocation];
         objectLocation["y"] += searchLocationsY[bestLocation];
-
+        velocityUpdate(objectLocation["x"] - x0, objectLocation["y"] - y0);
 
         int searchDist = sqrt(
                               (objectLocation["x"]-initialPosition["x"])*(objectLocation["x"]-initialPosition["x"])
@@ -215,8 +227,23 @@ void DFT::updateModel(const vil_image_view<unsigned char> frame)
     int height = _currentPosition["height"];
     // get a cropped copy of the distribution field at the new object position
     DistributionField dfCropped = DistributionField(frame, _model_params, x, y, width, height);
-    _objectModel.update(dfCropped, _learningRate);
+    _objectModel->update(dfCropped, _learningRate);
 
+}
+
+void DFT::velocityUpdate(int dx, int dy){
+
+    static int i = 0;
+
+    _velocityX = (_velocityX*i + dx)/(i+1);
+    _velocityY = (_velocityY*i + dy)/(i+1);
+    i++;
+}
+
+void DFT::project(){
+
+    _currentPosition["x"] += _velocityX;
+    _currentPosition["y"] += _velocityY;
 }
 
 void DFT::SafeWrite(vil_image_view<unsigned char>& frame, int i, int j, int p,

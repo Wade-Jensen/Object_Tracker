@@ -101,15 +101,16 @@ int main (int argc, char * argv[])
                                           sdColour, planes);
 
     // The first frame is used to build the object model before we can track it
-    static const DistributionField initFrame = DistributionField(images[0], default_params);
+    //static const DistributionField initFrame = DistributionField(images[0], default_params);
 
     DistributionField saveFrame = DistributionField(images[0], default_params, x, y, width, height);
+    ChannelRep tester = ChannelRep(images[0], default_params, x, y, width, height);
     // output jpeg images of the distribution field
-    saveFrame.saveField();
+    //tester.saveField();
 
     // create the object model for tracking
     DFT DFTracker;
-    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate, maxSearchDist);
+    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate, maxSearchDist, false);
 
     // create output path if it does not exist
     if (outputPath.c_str() != "")

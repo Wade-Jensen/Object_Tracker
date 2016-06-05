@@ -90,7 +90,9 @@ DistributionField::DistributionField(const vil_image_view<unsigned char>& Input,
 {
 
     /*Following RAII*/
-    init(vil_crop(Input, x, width, y, height), params);
+    vil_image_view<unsigned char> window = vil_crop(Input, x, width, y, height);
+    init(window, params);
+    createField(window);
 }
 
 // Default destructor
@@ -114,8 +116,8 @@ void DistributionField::init(const vil_image_view<unsigned char>& Input, DF_para
 
     /*Begin DF Creation */
     //vil_image_view<unsigned char> greyInput = grey(Input);
-    vil_image_view<unsigned char> newIn = Input;
-    createField(newIn);
+    //vil_image_view<unsigned char> newIn = Input;
+    //createField(newIn);
     //createChannRep(Input);
 
 }
@@ -204,68 +206,6 @@ void DistributionField::colourBlur()
         }
     }
 
-
-
-}
-
-void DistributionField::createChannRep(const vil_image_view<unsigned char>& Input){
-
-    float** LUT = new float*[256];
-
-    for(int i = 0; i < 256; i++){
-
-        LUT[i] = new float[numChannels];
-    }
-
-    for(int i = 0; i < 256; i++){
-        for(int j = 0; j < numChannels; j++){
-
-            float dist = fabs((j + 1)*channelWidth/2 - i);
-
-            if(dist <= channelWidth/2){
-                LUT[i][j] = 0.75 - pow(dist/channelWidth, 2);
-            }
-            else if(dist <= 1.5*channelWidth){
-                LUT[i][j] = pow((dist/channelWidth - 1.5), 2)/2;
-            }
-            else{
-                LUT[i][j] = 0;
-            }
-
-        }
-    }
-
-
-    for(int k = 0; k < numChannels; k++){
-
-        vil_image_view<unsigned char> channel =
-            vil_image_view<unsigned char>(width, height, planes, 1);
-        channel.fill(0);
-        dist_field.push_back(channel);
-    }
-
-
-    /*Pixel-byPixel loop*/
-    for(int channel = 0; channel < numChannels; channel++){
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                for(int p = 0; p < planes; p++){
-                    dist_field[channel](i, j, p) = 255*LUT[Input(i, j, p)][channel];
-                }
-            }
-        }
-    }
-
-    /*Iterate Through Channels*/
-    for(int i = 0; i < numChannels; i++)
-    {
-
-        /*Blur Channe using a parameter object - essentially a kernel*/
-        /*vil_gauss_filter_5tap_params Kernel = vil_gauss_filter_5tap_params(blur_spatial);
-        vil_gauss_filter_5tap(dist_field[i], dist_field[i], Kernel);*/
-
-        vil_gauss_filter_2d(dist_field[i], dist_field[i], sdSpatial, blurSpatial);
-    }
 
 
 }
@@ -491,6 +431,83 @@ DF_params::~DF_params()
 {
 }
 
+ChannelRep::ChannelRep(const vil_image_view<unsigned char>& Input, DF_params& params,
+                                    int x, int y, int width, int height){
+
+    vil_image_view<unsigned char> window = vil_crop(Input, x, width, y, height);
+    init(window, params);
+    createChannRep(window);
+}
+
+void ChannelRep::createChannRep(const vil_image_view<unsigned char>& Input){
+
+    float** LUT = new float*[256];
+
+    for(int i = 0; i < 256; i++){
+
+        LUT[i] = new float[numChannels];
+    }
+
+    for(int i = 0; i < 256; i++){
+        for(int j = 0; j < numChannels; j++){
+
+            float dist = fabs((j + 1)*channelWidth/2 - i);
+
+            if(dist <= channelWidth/2){
+                LUT[i][j] = 0.75 - pow(dist/channelWidth, 2);
+            }
+            else if(dist <= 1.5*channelWidth){
+                LUT[i][j] = pow((dist/channelWidth - 1.5), 2)/2;
+            }
+            else{
+                LUT[i][j] = 0;
+            }
+
+        }
+    }
+
+    origin = new unsigned char*[numChannels];
+    di = new vcl_ptrdiff_t[numChannels];
+    dj = new vcl_ptrdiff_t[numChannels];
+    dp = new vcl_ptrdiff_t[numChannels];
+
+    for(int k = 0; k < numChannels; k++){
+
+        vil_image_view<unsigned char> channel =
+            vil_image_view<unsigned char>(width, height, planes, 1);
+        channel.fill(0);
+
+        dist_field.push_back(channel);
+        origin[k] = dist_field[k].top_left_ptr();
+        di[k] = dist_field[k].istep();
+        dj[k] = dist_field[k].jstep();
+        dp[k] = dist_field[k].planestep();
+    }
+
+
+    /*Pixel-byPixel loop*/
+    for(int channel = 0; channel < numChannels; channel++){
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                for(int p = 0; p < planes; p++){
+                    dist_field[channel](i, j, p) = 255*LUT[Input(i, j, p)][channel];
+                }
+            }
+        }
+    }
+
+    /*Iterate Through Channels*/
+    for(int i = 0; i < numChannels; i++)
+    {
+
+        /*Blur Channe using a parameter object - essentially a kernel*/
+        /*vil_gauss_filter_5tap_params Kernel = vil_gauss_filter_5tap_params(blur_spatial);
+        vil_gauss_filter_5tap(dist_field[i], dist_field[i], Kernel);*/
+
+        vil_gauss_filter_2d(dist_field[i], dist_field[i], sdSpatial, blurSpatial);
+    }
+
+}
 
 
 

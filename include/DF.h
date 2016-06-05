@@ -79,7 +79,7 @@ public:
 	// Compare distribution field dimensions
     bool operator!=(const DistributionField&);
 
-private:
+protected:
 
     /* Init will create the DF
     *  Input Image, Channels, Spatial Blur Size, Colour Blur Size
@@ -87,8 +87,7 @@ private:
     void init(const vil_image_view<unsigned char>&, DF_params&);
 
     /*Create DF with Set Parameters*/
-    void createField(vil_image_view<unsigned char>&);
-    void createChannRep(const vil_image_view<unsigned char>&);
+    virtual void createField(vil_image_view<unsigned char>&);
 
     /*Run Colour Blur routine*/
     void colourBlur();
@@ -117,9 +116,14 @@ private:
 
 };
 
-class SubField : public DistributionField{
+class ChannelRep : public DistributionField{
 
+public:
+    ChannelRep(const vil_image_view<unsigned char>&, DF_params&,
+                                    int, int, int, int);
 
+private:
+     void createChannRep(const vil_image_view<unsigned char>&);
 
 };
 
