@@ -129,7 +129,7 @@ int main (int argc, char * argv[])
     // The first frame is used to build the object model before we can track it
     static const DistributionField initFrame = DistributionField(images[0], default_params);
 
-    DistributionField saveFrame = DistributionField(images[0], default_params);
+    DistributionField saveFrame = DistributionField(images[0], default_params, x, y, width, height);
     // output jpeg images of the distribution field
     saveFrame.saveField();
 

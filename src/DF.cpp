@@ -333,7 +333,7 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate)
         throw "Distribution Field Sizes Do Not Match";
     }
 
-    for(int channel = 0; channel < numChannels; channel++)
+    /*for(int channel = 0; channel < numChannels; channel++)
     {
         unsigned char* i0 = origin[channel];
         unsigned char* in_i0 = inputDF.origin[channel];
@@ -347,11 +347,10 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate)
                 unsigned char* in_p0 = in_j0;
                 for(int p = 0; p < planes; p++)
                 {
-                    int PIX = *p0;
                     float prev = (1 - learning_rate)*(*p0);
                     float Update = learning_rate*(*in_p0);
 
-                    *p0 = round(prev + Update);
+                    /* *p0dist_field[channel](i, j, p) = round(prev + Update);
 
                     p0 += dp[channel];
                     in_p0 += inputDF.dp[channel];
@@ -359,11 +358,48 @@ void DistributionField::update(DistributionField& inputDF, float learning_rate)
             }
 
             j0 += dj[channel];
-            in_j0 += dj[channel];
+            in_j0 += inputDF.dj[channel];
         }
 
         i0 += di[channel];
-        in_i0 += di[channel];
+        in_i0 += inputDF.di[channel];
+    } */
+
+    for(int channel = 0; channel < numChannels; channel++)
+    {
+        unsigned char* i0 = origin[channel];
+        unsigned char* in_i0 = inputDF.origin[channel];
+        for(int i = 0; i < width; i++)
+        {
+            unsigned char* j0 = i0;
+            unsigned char* in_j0 = in_i0;
+            for(int j = 0; j < height; j++)
+            {
+
+                unsigned char* p0 = j0;
+                unsigned char* in_p0 = in_j0;
+
+                float del = 0;
+                for(int p = 0; p < planes; p++)
+                {
+
+                    float prev = (1 - learning_rate)*(*p0);
+                    float Update = learning_rate*(*in_p0);
+
+                    *p0 = round(prev + Update);
+
+                    p0 += dp[channel];
+                    in_p0 += inputDF.dp[channel];
+
+                }
+
+                j0 += dj[channel];
+                in_j0 += inputDF.dj[channel];
+            }
+
+            i0 += di[channel];
+            in_i0 += inputDF.di[channel];
+        }
     }
 
 }

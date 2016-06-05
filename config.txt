@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-directory Data\cup
-=======
 directory Data/bolt
->>>>>>> 220d044491386927f6fc7f9fb3443114e682d56c
 extension *jpg
 ipx 336
 ipy 165
