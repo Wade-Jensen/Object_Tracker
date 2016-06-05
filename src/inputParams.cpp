@@ -14,7 +14,6 @@ const struct Params inputParams::getParams()
 }
 void inputParams::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int lipy, int lw, int lh, int lc, int lsb, int lbc, int lsd, int lplanes, float llr, float lsds, float lsdc, vcl_string lodir)
 {
-
 	_filenames = fnames;
 	_initialX = lipx;
     _initialY = lipy;
@@ -24,7 +23,7 @@ void inputParams::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int l
     _blurSpatial = lsb;
     _blurColour = lbc;
     _maxSearchDist = lsd;
-    _maxSearchDist = llr;
+    _learningRate = llr;
     _sdSpatial = lsds;
     _sdColour = lsdc;
     _outputDir = lodir;
