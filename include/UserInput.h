@@ -14,6 +14,7 @@
 struct Params
 {
         vcl_vector<vcl_string> filenames;
+        vcl_string gTruth;
         int initialX;
         int initialY;
         int width;
@@ -37,7 +38,7 @@ class UserInput
         /** Constructor */
         UserInput();
 
-        void initInputParams(vcl_vector<vcl_string> filenames, int initialX, int initialY,
+        void initInputParams(vcl_vector<vcl_string> filenames, vcl_string, int initialX, int initialY,
                              int width, int height, int numChannels, int blurSpatial,
                              int blurColour, int maxSearchDist, int planes, float learningRate,
                              float sdSpatial, float sdColour, vcl_string outputDir);
@@ -63,6 +64,7 @@ class UserInput
         float _sdSpatial;
         float _sdColour;
         vcl_string _outputDir;
+        vcl_string _gTruth;
 };
 
 #endif // INPUTPARAMS_H

@@ -7,15 +7,18 @@ UserInput::UserInput()
 
 const struct Params UserInput::getParams()
 {
-    const struct Params params = {_filenames, _initialX,_initialY,_width,_height,_numChannels,
+    const struct Params params = {_filenames, _gTruth, _initialX,_initialY,_width,_height,_numChannels,
                                    _blurSpatial,_blurColour,_maxSearchDist, _planes,
                                    _learningRate, _sdSpatial,_sdColour, _outputDir };
     return params;
 }
-void UserInput::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int lipy, int lw, int lh, int lc, int lsb, int lbc, int lsd, int lplanes, float llr, float lsds, float lsdc, vcl_string lodir)
+void UserInput::initInputParams(vcl_vector<vcl_string> fnames, vcl_string gTruth, int lipx, int lipy,
+                                int lw, int lh, int lc, int lsb, int lbc, int lsd,
+                                int lplanes, float llr, float lsds, float lsdc, vcl_string lodir)
 {
 
 	_filenames = fnames;
+	_gTruth = gTruth;
 	_initialX = lipx;
     _initialY = lipy;
     _width = lw;
@@ -126,7 +129,7 @@ bool UserInput::parseCli(int argc, char * argv[])
         else
         {
             vcl_cout << "Parameters initialized via command line arguments." <<vcl_endl;
-            initInputParams(filenames,  lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd, lplanes,  llr,  lsds,  lsdc, lodir);
+            initInputParams(filenames,  _gTruth, lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd, lplanes,  llr,  lsds,  lsdc, lodir);
             vcl_cout << "There are " << _filenames.size() <<" frames in the selected directory."<< vcl_endl;
             return true;
         }
@@ -153,6 +156,7 @@ bool UserInput::parseTxt(vcl_string configFile)
     string line, name, value;
     string directory;
 	string extension;
+	string gTruth;
     // Assigning Default Values
     int lipx=-1; int lipy=-1; int lw=-1; int lh=-1; int lc=-1; int lsb=-1; int lbc=-1; int lsd=-1; int lplanes=-1;
     float llr=-1; float lsds=-1; float lsdc=-1;
@@ -205,6 +209,9 @@ bool UserInput::parseTxt(vcl_string configFile)
                     filenames.push_back (fn());
                 }
             }
+
+            gTruth = directory + "/groundtruth.txt";
+
         }
         if (filenames.size() <= 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 || lsds<=0 || lsdc<=0 || lplanes<=0 || (lodir==""))
         {
@@ -214,7 +221,7 @@ bool UserInput::parseTxt(vcl_string configFile)
         else
         {
             vcl_cout << "Parameters initialized via text file." <<vcl_endl;
-            initInputParams(filenames,  lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd, lplanes,  llr,  lsds,  lsdc, lodir);
+            initInputParams(filenames,  gTruth, lipx,  lipy,  lw,  lh,  lc,  lsb,  lbc,  lsd, lplanes,  llr,  lsds,  lsdc, lodir);
             vcl_cout << "There are " << _filenames.size() <<" frames in the selected directory."<< vcl_endl;
             return true;
         }

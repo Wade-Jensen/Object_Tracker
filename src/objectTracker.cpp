@@ -96,6 +96,11 @@ int main (int argc, char * argv[])
 		images.push_back( vil_load(filenames[i].c_str()) );
 	}
 
+    std::ifstream gTruth;
+    gTruth.open(params.gTruth.c_str(), std::ifstream::in);
+    char comma;
+    int dummy;
+
 	// save the distribution field parameters
     DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
                                           sdColour, planes);
@@ -110,7 +115,7 @@ int main (int argc, char * argv[])
 
     // create the object model for tracking
     DFT DFTracker;
-    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate, maxSearchDist, false);
+    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate, maxSearchDist, true);
 
     // create output path if it does not exist
     if (outputPath.c_str() != "")
@@ -126,6 +131,7 @@ int main (int argc, char * argv[])
     dir = vulStruct.get_cwd();
     vcl_cout << "Working directory is now: " << dir << vcl_endl;
 
+    float meanDist = 0;
     // This is the main loop that tracks the object through the image sequence
     try{
         for (int i=0; i<images.size(); i++)
@@ -141,12 +147,29 @@ int main (int argc, char * argv[])
             int x = currentPosition["x"];
             int y = currentPosition["y"];
 
+            int xc, yc;
+            gTruth >> xc;
+            gTruth >> comma;
+            gTruth >> yc;
+            gTruth >> comma;
+
+            float dist = sqrt(
+                              pow(x - xc, 2) +
+                              pow(y - yc, 2));
+            meanDist = (meanDist*i + dist)/(i+1);
+
+            gTruth >> dummy;
+            gTruth >> comma;
+            gTruth >> dummy;
+
             //  update the object model to incorporate new information
             DFTracker.updateModel(images[i]);
 
             // display or print an image, ie. draw a bounding box around the object being tracked
             DFTracker.displayCurrentPosition (images[i], outputPath, i );
         }
+
+        std::cout << meanDist << "\n";
     }
     catch(int bad_write[6]){
         std::cout << "Attempted Writing to pixel (" << bad_write[0] << "," <<
