@@ -1,4 +1,4 @@
-#include "..\include\inputParams.h"
+#include "..\include\UserInput.h"
 #include "..\include\Version.h"
 #include "..\include\DFT.h"
 
@@ -21,19 +21,17 @@
  *  - will optionally compute performance metrics using a given ground truth image and index
  */
 using namespace std;
-//bool textParamsReader(char seperator);
 
-//vcl_vector<vcl_string>  generateFileNames(vcl_string directory, vcl_string extension );
 int main (int argc, char * argv[])
 {
-    inputParams inputParams;// input Parameters
+    UserInput userInput;// input Parameters
 
-    bool cliRead = inputParams.parseCli(argc, argv);
+    bool cliRead = userInput.parseCli(argc, argv);
     if (!cliRead)
     {
         vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
         vcl_cout << "Checking parameter text file for parameters..." <<vcl_endl;
-        bool configFileRead = inputParams.parseTxt("config.txt");
+        bool configFileRead = userInput.parseTxt("config.txt");
         if (!configFileRead)
         {
             vcl_cout << "Text file doesn't contain valid parameters, exiting" <<vcl_endl;
@@ -42,7 +40,7 @@ int main (int argc, char * argv[])
     }
     // return the input parameters in a structure with the const qualifier to avoid
     // needing individual getters
-    const struct Params params = inputParams.getParams();
+    const struct Params params = userInput.getParams();
 
     vul_file vulStruct;
 
@@ -111,7 +109,7 @@ int main (int argc, char * argv[])
 
     // create the object model for tracking
     DFT DFTracker;
-    DFTracker = DFT(initFrame, x, y, width, height, learningRate);
+    DFTracker = DFT(initFrame, x, y, width, height, learningRate, maxSearchDist);
 
     // create output path if it does not exist
     if (outputPath.c_str() != "")
@@ -138,7 +136,7 @@ int main (int argc, char * argv[])
 
             // locate the object in the current frame. Use gradient descent search
             // to find the new object position
-            map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame, maxSearchDist );
+            map<vcl_string,int> currentPosition = DFTracker.locateObject( dfFrame );
             int x = currentPosition["x"];
             int y = currentPosition["y"];
 

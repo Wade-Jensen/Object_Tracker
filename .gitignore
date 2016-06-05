@@ -315,3 +315,4 @@ obj/Debug/src/DF.o
 obj/Debug/src/DFT.o
 obj/Debug/src/objectTracker.o
 obj/Release/src/DFT.o
+obj/Debug/src/UserInput.o

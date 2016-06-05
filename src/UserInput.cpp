@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/inputParams.cpp
 #include "../include/inputParams.h"
 
 inputParams::inputParams()
@@ -98,6 +99,109 @@ bool inputParams::parseCli(int argc, char * argv[])
                 filenames.push_back (fn());
             }
         }
+=======
+#include "../include/UserInput.h"
+
+UserInput::UserInput()
+{
+
+}
+
+const struct Params UserInput::getParams()
+{
+    const struct Params params = {_filenames, _initialX,_initialY,_width,_height,_numChannels,
+                                   _blurSpatial,_blurColour,_maxSearchDist, _planes,
+                                   _learningRate, _sdSpatial,_sdColour, _outputDir };
+    return params;
+}
+void UserInput::initInputParams(vcl_vector<vcl_string> fnames, int lipx, int lipy, int lw, int lh, int lc, int lsb, int lbc, int lsd, int lplanes, float llr, float lsds, float lsdc, vcl_string lodir)
+{
+
+	_filenames = fnames;
+	_initialX = lipx;
+    _initialY = lipy;
+    _width = lw;
+    _height = lh;
+    _numChannels = lc;
+    _blurSpatial = lsb;
+    _blurColour = lbc;
+    _maxSearchDist = lsd;
+    _maxSearchDist = llr;
+    _sdSpatial = lsds;
+    _sdColour = lsdc;
+    _outputDir = lodir;
+    _planes = lplanes;
+}
+
+UserInput::~UserInput()
+{
+    //delete this;
+}
+bool UserInput::parseCli(int argc, char * argv[])
+{
+        vul_arg<vcl_string>
+		arg_in_path("-path", "Path to Image Frames, e.g. C:/somefiles/"),
+		arg_in_glob("-glob", "Image (Frame) Extension (png,jpg,bmp,tiff,jpeg), e.g. *.jpeg, this will get all jpeg's.");
+
+	// now we have some integer arguments
+	vul_arg<unsigned int> arg_ipx("-ipx", "Initial Position x .", -1),
+                          arg_ipy("-ipy", "Initial Position y.", -1),
+                          arg_w("-w", "Width.", -1),
+                          arg_h("-h", "Heignt", -1),
+                          arg_c("-c", "No Of Channels", -1),
+                          arg_sb("-sb", "Spatial Blur", -1),
+                          arg_bc("-bc", "Blur Colour", -1),
+                          arg_sd("-sd", "Max Search Distance", -1),
+                          arg_planes("-planes", "Number of colour planes in DF", -1);
+
+    // float arguments
+	vul_arg<float> arg_lr("-lr", "Learning Rate", -1),
+                   arg_sds("-sds", "SD Spatial", -1),
+                   arg_sdc("-sdc", "SD Colour", -1);
+
+    // last string argument
+    vul_arg<vcl_string> arg_odir("-odir", "Output Frames Storage Director", "Output");
+	vul_arg_parse(argc, argv, true);
+
+    // Assigning Default Values
+    int lipx=-1; int lipy=-1; int lw=-1; int lh=-1; int lc=-1; int lsb=-1; int lbc=-1; int lsd=-1; int lplanes=-1;
+    float llr=-1; float lsds=-1; float lsdc=-1;
+    vcl_string lodir="output";
+
+	if(((arg_in_path() == "") || (arg_in_glob() == ""))) // command line args are not passed perfectly
+    {
+        vcl_cout << "Inufficient number of or incorrrect argument parameters detected..." <<vcl_endl;
+        return false;
+    }
+    else
+    {
+        // set input object member variable values
+        lipx = arg_ipx();
+        lipy = arg_ipy();
+        lw = arg_w();
+        lh = arg_h();
+        lc = arg_c();
+        lsb = arg_sb();
+        lbc = arg_bc();
+        lsds = arg_sds();
+        lsdc = arg_sdc();
+        lplanes = arg_planes();
+        llr = arg_lr();
+        lsd = arg_sd();
+        lodir = arg_odir();
+
+        vcl_string directory = arg_in_path();
+        vcl_string extension = arg_in_glob();
+        vector <vcl_string> filenames;
+
+        for (vul_file_iterator fn=(directory + "/*" + extension); fn; ++fn)
+            {
+            if (!vul_file::is_directory(fn()))
+            {
+                filenames.push_back (fn());
+            }
+        }
+>>>>>>> 7c5405a752eb11b94d9ae41274608e3162707c85:src/UserInput.cpp
         if (filenames.size() <= 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 || lsds<=0 || lsdc<=0 || lplanes<=0 || (lodir==""))
         {
             vcl_cout << "Distribution field tracking parameters either missing or out of bounds."<< vcl_endl;
@@ -128,7 +232,7 @@ bool inputParams::parseCli(int argc, char * argv[])
 }
 
 
-bool inputParams::parseTxt(vcl_string configFile)
+bool UserInput::parseTxt(vcl_string configFile)
 {
     string line, name, value;
     string directory;
