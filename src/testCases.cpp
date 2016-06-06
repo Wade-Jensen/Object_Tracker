@@ -229,7 +229,6 @@ bool testParseCli1()
     {
         delete[] argv[i];
     }
-    delete argv;
 
     if (cliRead)
     {
@@ -288,7 +287,6 @@ bool testParseCli2()
     {
         delete[] argv[i];
     }
-    delete argv;
 
     if (!cliRead)
     {
