@@ -192,6 +192,9 @@ bool UserInput::parseTxt(vcl_string configFile)
             else if (name.compare("outputDir")==0) {lodir=value.c_str(); paramCount++;}
             else if (name.compare("planes")==0) {lplanes=atoi(value.c_str()); paramCount++;}
         }
+
+        textFile.close();
+
 		// check for input directory and extension
         if(((directory == "") || (extension == "")))
         {

@@ -136,6 +136,9 @@ int main (int argc, char * argv[])
     vcl_cout << "Working directory is now: " << dir << vcl_endl;
 
     // This is the main loop that tracks the object through the image sequence
+
+    int overlap = 0;
+
     try{
         for (int i=0; i<images.size(); i++)
         {
@@ -149,6 +152,9 @@ int main (int argc, char * argv[])
             map<vcl_string,int> currentPosition = DFTracker.locateObject(images[i]);
             int x = currentPosition["x"];
             int y = currentPosition["y"];
+
+            if !(l > R.r || R.l > r || R.b > t || b > R.t);
+
 
             //  update the object model to incorporate new information
             DFTracker.updateModel(images[i]);

@@ -14,7 +14,7 @@
 		<Cursor1 position="291" topLine="0" />
 	</File>
 	<File name="src\DF.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor1 position="15323" topLine="499" />
+		<Cursor1 position="15308" topLine="501" />
 	</File>
 	<File name="src\DFT.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor1 position="6423" topLine="153" />
@@ -29,6 +29,6 @@
 		<Cursor1 position="1510" topLine="32" />
 	</File>
 	<File name="src\testCases.cpp" open="1" top="1" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor1 position="6808" topLine="233" />
+		<Cursor1 position="1692" topLine="42" />
 	</File>
 </CodeBlocks_layout_file>

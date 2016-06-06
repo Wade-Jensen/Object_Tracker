@@ -516,12 +516,14 @@ bool DistributionField::testField(int tnumChannels, int twidth, int theight, int
 	for (int i = 0; i<dist_field.size(); i++)
 	{
 		assert(dist_field[i].ni()==twidth);
-		std::cout << "Width matches; ";
+
 		assert(dist_field[i].nj()==theight);
-		std::cout << "Height matches; ";
+
 		assert(dist_field[i].nplanes()==tplanes);
-		std::cout << "Planes match; ";
 	}
+	std::cout << "Width matches; ";
+	std::cout << "Height matches; ";
+    std::cout << "Planes match; ";
 	return true;
 }
 
