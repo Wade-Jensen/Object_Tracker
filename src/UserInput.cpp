@@ -183,7 +183,7 @@ bool UserInput::parseTxt(vcl_string configFile)
 			getline(textFile,line); // read the next line
 			name=line.substr(0,line.find(' ')); // get parameter name before the space
             value=line.substr(line.find(' ')+1); // get value after the space
-
+            int paramCount = 0;
 			// read in each of the parameters, set object data members
             if (name.compare("directory")==0) {directory=value.c_str(); paramCount++;}
             else if (name.compare("extension")==0) {extension=value.c_str(); paramCount++;}
