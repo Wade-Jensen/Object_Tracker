@@ -23,13 +23,6 @@ DFT::DFT(const vil_image_view<unsigned char>& initialFrame, DF_params& params, i
     //Decided on DF or CR depending on whether this DFT is going to be extended
     if(!extended){
 
-        /*DistributionField* searchField = new DistributionField(initialFrame, _model_params,
-                                                      x-maxSearchDist,
-                                                      y-maxSearchDist,
-                                                      2*maxSearchDist + width,
-                                                      2*maxSearchDist + height);
-        _objectModel = new DistributionField(searchField->subfield(maxSearchDist - 1, maxSearchDist - 1,
-                                                                  width, height));*/
         _objectModel = new DistributionField(initialFrame, _model_params, x, y, width, height);
     }
     else
@@ -114,9 +107,6 @@ map<vcl_string,int> DFT::locateObject(const vil_image_view<unsigned char>& frame
             float distance = 0;
             //Catch Exceptions, which are common here
             try{
-                //DistributionField croppedField = df.subfield(x, y, width, height);
-
-                //croppedField = searchField.subfield(x, y, width, height);
 
                 //Create a object size DF at search location
                 //Polymorphic pointer
@@ -245,12 +235,7 @@ void DFT::updateModel(const vil_image_view<unsigned char> frame)
     int width = _currentPosition["width"];
     int height = _currentPosition["height"];
     // get a cropped copy of the distribution field at the new object position
-    /*DistributionField dfFull = DistributionField(frame, _model_params,
-                                                 x - _maxSearchDist, y - _maxSearchDist,
-                                                 2*_maxSearchDist + width,
-                                                 2*_maxSearchDist + height);
-    DistributionField dfCropped = dfFull.subfield(_maxSearchDist - 1, _maxSearchDist - 1,
-                                                  width, height);*/
+
     //Grab new location of object
     //Polymorphic pointer
     DistributionField* croppedField;

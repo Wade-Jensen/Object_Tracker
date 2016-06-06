@@ -12,6 +12,8 @@
 #include <vul/vul_file.h>
 #include <vul/vul_arg.h>
 
+//#include <array>
+
 /*
  * Main program to run the Object Tracker algorithm.
  * This program will
@@ -20,7 +22,36 @@
  *  - will save a set of images showing the motion segmented output
  *  - will optionally compute performance metrics using a given ground truth image and index
  */
-using namespace std;
+//using namespace std;
+
+//A not good Sorting Function I wrote - Pls Don't Mark This :'(
+void crap_sort(int* array, int size){
+
+    vector<int> buffer;
+
+    int sorting = 4;
+
+    while(sorting){
+        int smallest = 100000000;
+        int index = 0;
+
+        for (int i = 0; i < size; i++){
+            if(array[i] < smallest){
+                smallest = array[i];
+                index = i;
+            }
+        }
+
+        buffer.push_back(array[index]);
+        array[index] = 100000000;
+        sorting--;
+    }
+
+    for(int i = 0; i < size; i++){
+        array[i] = buffer[i];
+    }
+
+}
 
 int main (int argc, char * argv[])
 {
@@ -139,7 +170,7 @@ int main (int argc, char * argv[])
     // This is the main loop that tracks the object through the image sequence
     // Handle Exceptions withing loop
 
-    int overlap = 0;
+    float overlap = 0;
 
     try{
 
@@ -161,13 +192,7 @@ int main (int argc, char * argv[])
 
             //Grab ground truth parameters
             float xg, yg, w, h;
-            gTruth >> xg;
-            gTruth >> comma;
-            gTruth >> yg;
-            gTruth >> comma;
-            gTruth >> w;
-            gTruth >> comma;
-            gTruth >> h;
+            gTruth >> xg >> comma >> yg >> comma >> w >> comma >> h;
 
             //Find centroid from groung truth
             int xc = xg + w/2.0;
@@ -179,23 +204,21 @@ int main (int argc, char * argv[])
                               pow((y+height/2.0) - yc, 2));
             meanDist = (meanDist*i + dist)/(i+1);
 
-            //  Update the object model to incorporate new information
-
             // Average overlap calculation
-            /*
-            if (!(l > Rr || Rl > r || Rb < t || b < Rt))
-            {
-                int [] horiz = {l, r, Rl, Rr};
-                Array.Sort(horiz);
-                int [] vert = {b, t, Rb, Rt};
-                Array.Sort(vert);
-                // left, bottom, right, top
-                int [] intersect = {horiz[1], vert[1], horiz[2], vert[2]};
-                intArea = (intersect[3] - intersect[1])*(intersect[2]-intersect[0]);
-                TotalArea = (Rb - Rt) * (Rr - Rl) + (b - t) * (r - l) - intArea;
-                overlap+=intArea/TotalArea;
-            }
-            */
+            //Find Rectangle lengths and sort
+            int horiz[4] = {xg, xg+w, x, x+width};
+            crap_sort(horiz, 4);
+            int vert[4] = {yg+h, yg, y+height, y};
+            crap_sort(vert, 4);
+            // left, bottom, right, top
+            int intersect[4] = {horiz[1], vert[1], horiz[2], vert[2]};
+            //Calculate Interestion area
+            int intArea = (intersect[3] - intersect[1])*(intersect[2]-intersect[0]);
+            //Calculate Union Area
+            int TotalArea = (height) * (width) + (h) * (w) - intArea;
+            //Increase total overlap
+            overlap += (float)intArea/TotalArea;
+
 
             //  update the object model to incorporate new information
             DFTracker.updateModel(images[i]);
@@ -207,6 +230,8 @@ int main (int argc, char * argv[])
         //At the end of the algorithm, wrtie accuracy to console for user
         std::cout << "\n\n Mean Distance to Centroid: ";
         std::cout << meanDist << "\n\n";
+        std::cout << "\n\n Mean Overlap: ";
+        std::cout << overlap/filenames.size() << "\n\n";
     }
     //A bad write means the algorith gone off-screen, end it and display message for user
     catch(int bad_write[6]){
