@@ -28,6 +28,8 @@ struct Params
         float sdSpatial;
         float sdColour;
         vcl_string outputDir;
+        bool extend;
+        bool color;
 };
 
 
@@ -41,7 +43,7 @@ class UserInput
         void initInputParams(vcl_vector<vcl_string> filenames, vcl_string, int initialX, int initialY,
                              int width, int height, int numChannels, int blurSpatial,
                              int blurColour, int maxSearchDist, int planes, float learningRate,
-                             float sdSpatial, float sdColour, vcl_string outputDir);
+                             float sdSpatial, float sdColour, vcl_string outputDir, bool, bool);
         bool parseCli(int argc, char * argv[]);
         bool parseTxt(vcl_string configFile);
         const struct Params getParams();
@@ -65,6 +67,8 @@ class UserInput
         float _sdColour;
         vcl_string _outputDir;
         vcl_string _gTruth;
+        bool _extend;
+        bool _color;
 };
 
 #endif // INPUTPARAMS_H

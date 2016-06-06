@@ -19,10 +19,10 @@ using std::map;
 class DFT
 {
 public:
-    // initialise a default DFT, no arguments
+    // Initialise a default DFT, no arguments
     DFT();
 
-	// initialise a DFT using the first frame of a series,
+	// Initialise a DFT using the first frame of a series,
 	// the top left pixel location (x,y), width and height of the
 	// object in the image to be tracked
     DFT(const vil_image_view<unsigned char>& initialFrame, DF_params& params,
@@ -39,6 +39,7 @@ public:
 
 	// Update the object model using the learning rate
     void updateModel(const vil_image_view<unsigned char> frame);
+    void updateModel(DistributionField&);
 
 	// Draw a box around the current position of the object
 	// and save the image to disk
@@ -47,17 +48,18 @@ public:
 
 private:
 
+    //Method to throw exceptions in case of off screen write
     void SafeWrite(vil_image_view<unsigned char>&, int, int, int, unsigned char);
 
     //*Parameters*//
-    DF_params _model_params;
+    DF_params _model_params; //Param storer for DF
     map<vcl_string,int> _currentPosition; // the current location and size of the object
     DistributionField* _objectModel; // model of the object to be tracked
     float _learningRate; // rate at which to update the object model
     int _maxSearchDist; // the maximum cartesian distance of the object position from one frame to the next
-    int _velocityX;
-    int _velocityY;
-    bool _extended;
+    int _velocityX;     //Object velocity for Extension
+    int _velocityY;     //Object Velocity for Extension
+    bool _extended;     //Extended Boolean
 
 };
 

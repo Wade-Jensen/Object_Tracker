@@ -19,14 +19,17 @@ public:
 
     friend class DistributionField;
 
-	// constructor, takes the following parameters which are used
+	// Constructor, takes the following parameters which are used
 	// to define a Distribution Field:
 	// Number of channels, Blur_spatial, Blur_colour, SD_spatial, SD_colour
 	DF_params();
-    DF_params(int, int, int, float, float, int);
+	/* numChannels, blurSpatial, blurColour, sdSpatial, sdColour, colour*/
+    DF_params(int, int, int, float, float, bool);
 
 	// Destructor
     ~DF_params();
+
+    bool colour;
 
 private:
 
@@ -37,11 +40,6 @@ private:
     int blurColour;
     float sdSpatial;
     float sdColour;
-    int planes;
-
-    int width;
-    int height;
-
 };
 
 // Distribution Field Class
@@ -54,13 +52,13 @@ public:
     DistributionField();
 
 	// Create using image and parameters
-    DistributionField(const vil_image_view<unsigned char>&, DF_params&);
     DistributionField(const vil_image_view<unsigned char>&, DF_params&,
                                     int, int, int, int);
 
 	// Create based on an existing distribution field and a bounding region
 	// for the tracked object
     DistributionField(const DistributionField&, int x, int y, int width, int height);
+    DistributionField(const DistributionField&);
 
     ~DistributionField();
 
@@ -82,8 +80,7 @@ public:
 protected:
 
     /* Init will create the DF
-    *  Input Image, Channels, Spatial Blur Size, Colour Blur Size
-    */
+    *  Input Image, Channels, Spatial Blur Size, Colour Blur Size*/
     void init(const vil_image_view<unsigned char>&, DF_params&);
 
     /*Create DF with Set Parameters*/
@@ -97,8 +94,8 @@ protected:
 
     /*Vector of Images for the DF*/
     vector< vil_image_view<unsigned char> > dist_field;
-    unsigned char** origin;
-    vcl_ptrdiff_t* di;
+    unsigned char** origin;     /*Top Left Hand Pointer */
+    vcl_ptrdiff_t* di;          // "Step" iterators
     vcl_ptrdiff_t* dj;
     vcl_ptrdiff_t* dp;
 
@@ -109,21 +106,26 @@ protected:
     int blurColour;
     float sdSpatial;
     float sdColour;
-    int planes;
+    bool colour;
 
+    int planes;
     int width;
     int height;
 
 };
 
+//Channel Representation as a child of DF
 class ChannelRep : public DistributionField{
 
 public:
+
+    //Twin Constructor
     ChannelRep(const vil_image_view<unsigned char>&, DF_params&,
                                     int, int, int, int);
 
 private:
-     void createChannRep(const vil_image_view<unsigned char>&);
+    //Creation method
+    void createChannRep(const vil_image_view<unsigned char>&);
 
 };
 

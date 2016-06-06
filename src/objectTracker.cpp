@@ -60,7 +60,7 @@ int main (int argc, char * argv[])
     int blurColour = params.blurColour;
     float sdSpatial = params.sdSpatial;
     float sdColour = params.sdColour;
-    int planes = params.planes;
+    bool colour = params.color;
 
    	// Tracker parameters
     int maxSearchDist = params.maxSearchDist;
@@ -81,7 +81,6 @@ int main (int argc, char * argv[])
     vcl_cout << "blurSpatial : "<< blurSpatial << vcl_endl;
     vcl_cout << "sdSpatial : "<< sdSpatial << vcl_endl;
     vcl_cout << "sdColour : "<< sdColour << vcl_endl;
-    vcl_cout << "planes : "<< planes << vcl_endl;
     vcl_cout << "maxSearchDist : "<< maxSearchDist << vcl_endl;
     vcl_cout << "learningRate : "<< learningRate << vcl_endl;
     vcl_cout << "outputPath : "<< outputPath << vcl_endl;
@@ -103,19 +102,14 @@ int main (int argc, char * argv[])
 
 	// save the distribution field parameters
     DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
-                                          sdColour, planes);
+                                          sdColour, colour);
 
     // The first frame is used to build the object model before we can track it
     //static const DistributionField initFrame = DistributionField(images[0], default_params);
 
-    DistributionField saveFrame = DistributionField(images[0], default_params, x, y, width, height);
-    ChannelRep tester = ChannelRep(images[0], default_params, x, y, width, height);
-    // output jpeg images of the distribution field
-    //tester.saveField();
-
     // create the object model for tracking
     DFT DFTracker;
-    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate, maxSearchDist, true);
+    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate, maxSearchDist, params.extend);
 
     // create output path if it does not exist
     if (outputPath.c_str() != "")
@@ -132,8 +126,12 @@ int main (int argc, char * argv[])
     vcl_cout << "Working directory is now: " << dir << vcl_endl;
 
     float meanDist = 0;
+
     // This is the main loop that tracks the object through the image sequence
+    // Handle Exceptions withing loop
     try{
+
+        //Iterate through images
         for (int i=0; i<images.size(); i++)
         {
             vcl_cout << "Current frame is: "<< i << vcl_endl;
@@ -141,36 +139,46 @@ int main (int argc, char * argv[])
             // create distribution field for the current frame
             //DistributionField dfFrame = DistributionField(images[i], default_params);
 
-            // locate the object in the current frame. Use gradient descent search
+            // Locate the object in the current frame. Use gradient descent search
             // to find the new object position
             map<vcl_string,int> currentPosition = DFTracker.locateObject(images[i]);
             int x = currentPosition["x"];
             int y = currentPosition["y"];
+            int width = currentPosition["width"];
+            int height = currentPosition["height"];
 
-            int xc, yc;
-            gTruth >> xc;
+            //Grab ground truth parameters
+            float xg, yg, w, h;
+            gTruth >> xg;
             gTruth >> comma;
-            gTruth >> yc;
+            gTruth >> yg;
             gTruth >> comma;
+            gTruth >> w;
+            gTruth >> comma;
+            gTruth >> h;
 
+            //Find centroid from groung truth
+            int xc = xg + w/2.0;
+            int yc = yg + h/2.0;
+
+            //Compare the object location centroid
             float dist = sqrt(
-                              pow(x - xc, 2) +
-                              pow(y - yc, 2));
+                              pow((x+width/2.0) - xc, 2) +
+                              pow((y+height/2.0) - yc, 2));
             meanDist = (meanDist*i + dist)/(i+1);
 
-            gTruth >> dummy;
-            gTruth >> comma;
-            gTruth >> dummy;
-
-            //  update the object model to incorporate new information
+            //  Update the object model to incorporate new information
             DFTracker.updateModel(images[i]);
 
-            // display or print an image, ie. draw a bounding box around the object being tracked
+            // Print an image, ie. draw a bounding box around the object being tracked
             DFTracker.displayCurrentPosition (images[i], outputPath, i );
         }
 
-        std::cout << meanDist << "\n";
+        //At the end of the algorithm, wrtie accuracy to console for user
+        std::cout << "\n\n Mean Distance to Centroid: ";
+        std::cout << meanDist << "\n\n";
     }
+    //A bad write means the algorith gone off-screen, end it and display message for user
     catch(int bad_write[6]){
         std::cout << "Attempted Writing to pixel (" << bad_write[0] << "," <<
         bad_write[1] << "," << bad_write[2] << ")";
