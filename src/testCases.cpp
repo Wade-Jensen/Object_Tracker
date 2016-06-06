@@ -137,12 +137,13 @@ int main (int argc, char * argv[])
     dispPass(saveFrame.testField(numChannels, width, height, true));
     dispPass(tester.testField(numChannels, width, height, true));
 
+    /*
     vcl_cout << "DistributionField DistributionField::subfield(int X, int Y, int Width, int Height) const" << endl;
     int tx = 10, ty = 10, twidth = 14, theight = 20;
     DistributionField newTester;
     newTester = tester.subfield(x,y,width,height);
     newTester.testField(numChannels,width,height,true);
-
+    */
 
 
 

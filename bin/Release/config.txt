@@ -1,9 +1,9 @@
 directory ../../Data/bolt
 extension .jpg
-ipx 336
-ipy 165
-width 25
-height 60
+ipx 154
+ipy 94
+width 18
+height 48
 numChannels 8
 blurSpatial 4
 blurColour 1

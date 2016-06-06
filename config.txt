@@ -11,7 +11,7 @@ sdSpatial 1.0
 sdColour 0.625
 maxSearchDist 30
 learningRate 0.05
-outputDir output
+outputDir outputJuice
 planes 3
 extend 1
-color 0
+colour 1
