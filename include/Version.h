@@ -7,8 +7,8 @@
     Change the definition and #ifdef's will activate a different main to be compiled
 */
 
-#define RELEASE   //Object Tracker Main
+//#define RELEASE   //Object Tracker Main
 //#define DF_TESTER   //DF_Test Main, simple program to test DF class
-//#define _TEST_
+#define _TEST_
 
 #endif // VERSION_H_INCLUDED

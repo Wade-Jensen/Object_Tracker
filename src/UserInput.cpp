@@ -78,7 +78,7 @@ bool UserInput::parseCli(int argc, char * argv[])
 	// check for input directory and extension
 	if(((arg_in_path() == "") || (arg_in_glob() == "")))
     {
-        vcl_cout << "Insufficient number of or incorrect argument parameters detected..." <<vcl_endl;
+        vcl_cout << "Insufficient or incorrect argument parameters detected..." <<vcl_endl;
         return false;
     }
     else
