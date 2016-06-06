@@ -4,9 +4,9 @@
 	"..\include\DF.h"
 	<vil/vil_load.h>
 
-1464590913 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\version.h
+1465127454 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\version.h
 
-1465121876 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
+1465131126 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\df.h
 	<vector>
 	<sstream>
 	<vil/vil_image_view.h>
@@ -829,7 +829,7 @@
 1462766111 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\core\vil\vil_pyramid_image_resource_sptr.h
 	<vil/vil_smart_ptr.h>
 
-1465121903 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\objecttracker.cpp
+1465131223 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\objecttracker.cpp
 	"..\include\UserInput.h"
 	"..\include\Version.h"
 	"..\include\DFT.h"
@@ -840,7 +840,7 @@
 	<vul/vul_file.h>
 	<vul/vul_arg.h>
 
-1465121887 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
+1465133593 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\dft.h
 	<vcl_vector.h>
 	<vector>
 	<vil/vil_image_view.h>
@@ -917,10 +917,10 @@
 1462766150 c:\users\jordan\downloads\codeblocks_and_vxl_test\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
 
-1465121942 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
+1465131685 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\df.cpp
 	"..\include\DF.h"
 
-1465123509 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
+1465133484 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\dft.cpp
 	"../include/DFT.h"
 	"..\include\DF.h"
 
@@ -3764,7 +3764,7 @@
 1465088189 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\inputparams.cpp
 	"../include/inputParams.h"
 
-1465102444 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\userinput.cpp
+1465124000 source:c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\src\userinput.cpp
 	"../include/UserInput.h"
 
 1465102444 c:\users\jordan\downloads\codeblocks_and_vxl_test\codeblocks-projects\object_tracker\include\userinput.h
