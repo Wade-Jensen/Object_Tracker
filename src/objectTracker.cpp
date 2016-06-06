@@ -32,7 +32,7 @@ void crap_sort(int* array, int size){
     int sorting = 4;
 
     while(sorting){
-        int smallest = 100000000;
+        int smallest = INFINITY;
         int index = 0;
 
         for (int i = 0; i < size; i++){
@@ -43,7 +43,7 @@ void crap_sort(int* array, int size){
         }
 
         buffer.push_back(array[index]);
-        array[index] = 100000000;
+        array[index] = INFINITY;
         sorting--;
     }
 
@@ -92,14 +92,6 @@ int main (int argc, char * argv[])
     int width = params.width;
     int height = params.height;
 
-	// Distribution Field parameters
-    int numChannels = params.numChannels;
-    int blurSpatial = params.blurSpatial;
-    int blurColour = params.blurColour;
-    float sdSpatial = params.sdSpatial;
-    float sdColour = params.sdColour;
-    bool colour = params.color;
-
    	// Tracker parameters
     int maxSearchDist = params.maxSearchDist;
     float learningRate = params.learningRate;
@@ -110,19 +102,6 @@ int main (int argc, char * argv[])
     //loading images
     vcl_vector< vil_image_view<unsigned char> > images;
     vcl_vector<vcl_string> filenames = params.filenames;
-
-    vcl_cout << "x: " << x << vcl_endl;
-    vcl_cout << "y: " << y << vcl_endl;
-    vcl_cout << "width: "<< width<< vcl_endl;
-    vcl_cout << "height: "<< height<< vcl_endl;
-    vcl_cout << "numChannels : "<< numChannels << vcl_endl;
-    vcl_cout << "blurSpatial : "<< blurSpatial << vcl_endl;
-    vcl_cout << "sdSpatial : "<< sdSpatial << vcl_endl;
-    vcl_cout << "sdColour : "<< sdColour << vcl_endl;
-    vcl_cout << "maxSearchDist : "<< maxSearchDist << vcl_endl;
-    vcl_cout << "learningRate : "<< learningRate << vcl_endl;
-    vcl_cout << "outputPath : "<< outputPath << vcl_endl;
-
 
     // filenames should now contain the names of all the files with our target extension
 	// in the input directory, if we want to loop through them, we can now do
@@ -139,15 +118,13 @@ int main (int argc, char * argv[])
     int dummy;
 
 	// save the distribution field parameters
-    DF_params default_params = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
-                                          sdColour, colour);
+    DF_params default_params = DF_params(params.numChannels, params.blurSpatial, params.blurColour,
+                                         params.sdSpatial, params.sdColour, params.color);
 
-    // The first frame is used to build the object model before we can track it
-    //static const DistributionField initFrame = DistributionField(images[0], default_params);
-
-    // create the object model for tracking
+    // Create the object model for tracking
     DFT DFTracker;
-    DFTracker = DFT(images[0], default_params, x, y, width, height, learningRate, maxSearchDist, params.extend);
+    DFTracker = DFT(images[0], default_params, x, y, width, height,
+                    learningRate, maxSearchDist, params.extend);
 
     // create output path if it does not exist
     if (outputPath.c_str() != "")
