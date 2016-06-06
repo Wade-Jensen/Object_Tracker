@@ -11,6 +11,7 @@
 #include <string>
 #include <stdlib.h>
 
+// A simple structure to store DFT parameters
 struct Params
 {
         vcl_vector<vcl_string> filenames;
@@ -31,6 +32,9 @@ struct Params
 
 
 using namespace std;
+
+// UserInput class handles command line and configuration file inputs
+// for path names, filetypes, and DFT parameters
 class UserInput
 {
     public:
