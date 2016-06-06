@@ -82,7 +82,7 @@ bool UserInput::parseCli(int argc, char * argv[])
 	// check for input directory and extension
 	if(((arg_in_path() == "") || (arg_in_glob() == "")))
     {
-        vcl_cout << "Insufficient number of or incorrect argument parameters detected..." <<vcl_endl;
+        vcl_cout << "Insufficient or incorrect argument parameters detected..." <<vcl_endl;
         return false;
     }
     else
@@ -203,6 +203,9 @@ bool UserInput::parseTxt(vcl_string configFile)
             else if (name.compare("extend")==0) {extend=atoi(value.c_str()); paramCount++;}
             else if (name.compare("color")==0) {color=atoi(value.c_str()); paramCount++;}
         }
+
+        textFile.close();
+
 		// check for input directory and extension
         if(((directory == "") || (extension == "")))
         {

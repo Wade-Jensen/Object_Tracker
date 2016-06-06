@@ -77,6 +77,8 @@ public:
 	// Compare distribution field dimensions
     bool operator!=(const DistributionField&);
 
+    bool testField(int tnumChannels, int twidth, int theight, int tplanes);
+
 protected:
 
     /* Init will create the DF

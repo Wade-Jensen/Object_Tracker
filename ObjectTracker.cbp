@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin\Debug\Object Tracker-Debug" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\Debug\ObjectTracker-Debug" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -16,7 +16,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin\Release\Object Tracker" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\Release\ObjectTracker" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -100,6 +100,7 @@
 		<Unit filename="src\DF_Test.cpp" />
 		<Unit filename="src\UserInput.cpp" />
 		<Unit filename="src\objectTracker.cpp" />
+		<Unit filename="src\testCases.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

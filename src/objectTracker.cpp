@@ -29,14 +29,21 @@ int main (int argc, char * argv[])
     bool cliRead = userInput.parseCli(argc, argv);
     if (!cliRead)
     {
-        vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
-        vcl_cout << "Checking parameter text file for parameters..." <<vcl_endl;
-        bool configFileRead = userInput.parseTxt("config.txt");
-        if (!configFileRead)
-        {
-            vcl_cout << "Text file doesn't contain valid parameters, exiting" <<vcl_endl;
-            return 0;
-        }
+		vcl_cout << "Use config file to get parameters (Y/N)? ";
+		vcl_string goToText;
+		vcl_cin >> goToText;
+		vcl_cout << endl;
+		if (goToText == "y" || goToText == "Y")
+		{
+			vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
+			vcl_cout << "Checking parameter text file for parameters..." <<vcl_endl;
+			bool configFileRead = userInput.parseTxt("config.txt");
+			if (!configFileRead)
+			{
+				vcl_cout << "Text file doesn't contain valid parameters, exiting" <<vcl_endl;
+				return 0;
+			}
+		} else {return 0;}
     }
     // return the input parameters in a structure with the const qualifier to avoid
     // needing individual getters
@@ -116,7 +123,9 @@ int main (int argc, char * argv[])
     {
         if (!vul_file::is_directory(outputPath.c_str()))
         {
-            vul_file::make_directory(outputPath.c_str());
+			vcl_cout << "Output path does not exist" << vcl_endl;
+            vul_file::make_directory_path(outputPath.c_str());
+            vcl_cout << "Output path made" << vcl_endl;
         }
     }
 
@@ -129,6 +138,9 @@ int main (int argc, char * argv[])
 
     // This is the main loop that tracks the object through the image sequence
     // Handle Exceptions withing loop
+
+    int overlap = 0;
+
     try{
 
         //Iterate through images
@@ -168,6 +180,24 @@ int main (int argc, char * argv[])
             meanDist = (meanDist*i + dist)/(i+1);
 
             //  Update the object model to incorporate new information
+
+            // Average overlap calculation
+            /*
+            if (!(l > Rr || Rl > r || Rb < t || b < Rt))
+            {
+                int [] horiz = {l, r, Rl, Rr};
+                Array.Sort(horiz);
+                int [] vert = {b, t, Rb, Rt};
+                Array.Sort(vert);
+                // left, bottom, right, top
+                int [] intersect = {horiz[1], vert[1], horiz[2], vert[2]};
+                intArea = (intersect[3] - intersect[1])*(intersect[2]-intersect[0]);
+                TotalArea = (Rb - Rt) * (Rr - Rl) + (b - t) * (r - l) - intArea;
+                overlap+=intArea/TotalArea;
+            }
+            */
+
+            //  update the object model to incorporate new information
             DFTracker.updateModel(images[i]);
 
             // Print an image, ie. draw a bounding box around the object being tracked
