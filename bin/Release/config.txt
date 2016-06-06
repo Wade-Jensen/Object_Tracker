@@ -13,3 +13,5 @@ maxSearchDist 30
 learningRate 0.05
 outputDir Output/outputBoltConfig
 planes 3
+extend 1
+colour 1
