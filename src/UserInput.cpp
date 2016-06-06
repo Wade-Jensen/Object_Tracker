@@ -111,7 +111,7 @@ bool UserInput::parseCli(int argc, char * argv[])
             }
         }
 
-		// check that all the parameters were updated from inputs 
+		// check that all the parameters were updated from inputs
         if (filenames.size() <= 0 || lipy<= 0|| lipx<=0 || lsd<= 0 || llr<=0 || lw<=0|| lh<=0 || lc<=0 ||lsb<=0 ||lbc<=0 || lsds<=0 || lsdc<=0 || lplanes<=0 || (lodir==""))
         {
 			// if parameters not updated
@@ -127,7 +127,7 @@ bool UserInput::parseCli(int argc, char * argv[])
             return true;
         }
     }
-	
+
     // Uncomment to print statements checking correct read in of parameters:
     /*
     vcl_cout << "ipx:"<<params.ipx<<"; "<< x<<endl;
@@ -174,7 +174,7 @@ bool UserInput::parseTxt(vcl_string configFile)
 			getline(textFile,line); // read the next line
 			name=line.substr(0,line.find(' ')); // get parameter name before the space
             value=line.substr(line.find(' ')+1); // get value after the space
-
+            int paramCount = 0;
 			// read in each of the parameters, set object data members
             if (name.compare("directory")==0) {directory=value.c_str(); paramCount++;}
             else if (name.compare("extension")==0) {extension=value.c_str(); paramCount++;}
@@ -226,7 +226,7 @@ bool UserInput::parseTxt(vcl_string configFile)
             return true;
         }
     }
-	
+
     // Uncomment to print statements checking correct read in of parameters:
     /*
     vcl_cout << "ipx:"<<_initialX<<"; "<<x <<endl;
