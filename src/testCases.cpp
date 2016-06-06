@@ -89,6 +89,8 @@ int main (int argc, char * argv[])
 
     // Test 7 - first six tests are done by testBat
 	// save the distribution field parameters
+    vcl_cout << "TEST CASE 7" << vcl_endl;
+
     DF_params default_params1 = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
                                           sdColour, 1);
     DF_params default_params3 = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
@@ -105,8 +107,12 @@ int main (int argc, char * argv[])
     tester.saveField();
     vul_file::change_directory("..");
 
+    vcl_cout << "TEST CASE 7: PASSED"<< vcl_endl;
+
     saveFrame.testField(numChannels, width, height, 1);
     tester.testField(numChannels, width, height, 1);
+
+    vcl_cout << vcl_endl << "TEST CASE 8" << vcl_endl;
 
     saveFrame = DistributionField(images[0], default_params3, x, y, width, height);
     tester = ChannelRep(images[0], default_params3, x, y, width, height);
@@ -118,8 +124,12 @@ int main (int argc, char * argv[])
     vul_file::change_directory("../ColourChannel");
     tester.saveField();
 
+    vcl_cout << "TEST CASE 8: PASSED" << vcl_end;
+
     saveFrame.testField(numChannels, width, height, 3);
     tester.testField(numChannels, width, height, 3);
+
+    vcl_cout << "TEST CASE 9" << vcl_endl;
 
     return 0;
 
