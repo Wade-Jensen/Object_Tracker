@@ -153,8 +153,21 @@ int main (int argc, char * argv[])
             int x = currentPosition["x"];
             int y = currentPosition["y"];
 
-            if !(l > R.r || R.l > r || R.b > t || b > R.t);
-
+            // Average overlap calculation
+            /*
+            if (!(l > Rr || Rl > r || Rb < t || b < Rt))
+            {
+                int [] horiz = {l, r, Rl, Rr};
+                Array.Sort(horiz);
+                int [] vert = {b, t, Rb, Rt};
+                Array.Sort(vert);
+                // left, bottom, right, top
+                int [] intersect = {horiz[1], vert[1], horiz[2], vert[2]};
+                intArea = (intersect[3] - intersect[1])*(intersect[2]-intersect[0]);
+                TotalArea = (Rb - Rt) * (Rr - Rl) + (b - t) * (r - l) - intArea;
+                overlap+=intArea/TotalArea;
+            }
+            */
 
             //  update the object model to incorporate new information
             DFTracker.updateModel(images[i]);
