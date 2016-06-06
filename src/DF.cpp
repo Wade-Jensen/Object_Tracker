@@ -509,16 +509,20 @@ void ChannelRep::createChannRep(const vil_image_view<unsigned char>& Input){
 
 }
 
-void DistributionField::testField(int tnumChannels, int twidth, int theight, int tplanes)
+bool DistributionField::testField(int tnumChannels, int twidth, int theight, int tplanes)
 {
-    assert(numChannels==tnumChannels);
+    assert(dist_field.size()==tnumChannels);
     std::cout << "Channels match\n";
-    assert(width==twidth);
-    std::cout << "Width matches\n";
-    assert(height==theight);
-    std::cout << "Height matches\n";
-    assert(planes==tplanes);
-    std::cout << "Planes match\n";
+	for (int i = 0; i<dist_field.size(); i++)
+	{
+		assert(dist_field[i].ni()==twidth);
+		std::cout << "Width matches\n";
+		assert(dist_field[i].nj()==theight);
+		std::cout << "Height matches\n";
+		assert(dist_field[i].nplanes()==tplanes);
+		std::cout << "Planes match\n";
+	}
+	return true;
 }
 
 

@@ -24,11 +24,46 @@ bool testParseCli2();
 bool testParseTxt1();
 bool testParseTxt2();
 
+int passes = 0; // count total passes
+int fails = 0; // count total fails
+// display total passes and fails at the end.
+
+bool dispPass(bool pass)
+{
+    if (pass) {
+	cout << "PASS" << endl;
+	passes++;
+	} else {
+	cout << "FAIL" << endl;
+	fails++;
+	}
+    return pass;
+}
+
 int main (int argc, char * argv[])
 {
+    {
+        vcl_cout << "Testing UserInput Class" << endl;
+
+        vcl_cout << "Command line arguments test: ";
+        dispPass(true == testParseCli1());
+        vcl_cout << "Command line arguments test: ";
+        dispPass(true == testParseCli2());
+        vcl_cout << "Configuration file test: ";
+        dispPass(true == testParseTxt1());
+        vcl_cout << "Configuration file test: ";
+        dispPass(true == testParseTxt2());
+    }
+
+    vcl_cout << "good 1" << vcl_endl;
+
     UserInput userInput;// input Parameters
 
+    vcl_cout << "good 2" << vcl_endl;
+
     bool cliRead = userInput.parseCli(argc, argv);
+
+            vcl_cout << "good 3" << vcl_endl;
     if (!cliRead)
     {
         vcl_cout <<"Utilizing parameter text file method to obtain input parameters"<<endl;
@@ -92,34 +127,7 @@ int main (int argc, char * argv[])
     // load the image file into the vector of images:
     images.push_back( vil_load(filenames[0].c_str()) );
 
-    bool success;
-    int numPassed = 0;
-    int numTests = 0;
-
-    vcl_cout << "Running test script: " << vcl_endl;
-
-    bool test1 = testParseCli1(); numPassed += test1; numTests++;
-    bool test2 = testParseCli2(); numPassed += test2; numTests++;
-    bool test3 = testParseTxt1(); numPassed += test3; numTests++;
-    bool test4 = testParseTxt2(); numPassed += test4; numTests++;
-    bool test5 = testParseTxt3(); numPassed += test5; numTests++;
-    bool test6 = testParseTxt4(); numPassed += test6; numTests++;
-
-    vcl_cout << vcl_endl;
-    vcl_cout << "Test1: "; if (test1) {vcl_cout << "Passed"<<vcl_endl;} else if (!test1) {vcl_cout << "Failed"<<vcl_endl;}
-    vcl_cout << "Test2: "; if (test2) {vcl_cout << "Passed"<<vcl_endl;} else if (!test2) {vcl_cout << "Failed"<<vcl_endl;}
-    vcl_cout << "Test3: "; if (test3) {vcl_cout << "Passed"<<vcl_endl;} else if (!test3) {vcl_cout << "Failed"<<vcl_endl;}
-    vcl_cout << "Test4: "; if (test4) {vcl_cout << "Passed"<<vcl_endl;} else if (!test4) {vcl_cout << "Failed"<<vcl_endl;}
-    vcl_cout << "Test5: "; if (test5) {vcl_cout << "Passed"<<vcl_endl;} else if (!test5) {vcl_cout << "Failed"<<vcl_endl;}
-    vcl_cout << "Test6: "; if (test6) {vcl_cout << "Passed"<<vcl_endl;} else if (!test6) {vcl_cout << "Failed"<<vcl_endl;}
-
-
-    vcl_cout << numPassed << " of " << numTests << " Tests Passed." <<vcl_endl;;
-    vcl_cout << "Test script complete" << vcl_endl;
-
-    // Test 7 - first six tests are done by testBat
-	// save the distribution field parameters
-    vcl_cout << "TEST CASE 7" << vcl_endl;
+    vcl_cout << "Testing DF Class" << vcl_endl;
 
     DF_params default_params1 = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
                                           sdColour, 1);
@@ -137,12 +145,8 @@ int main (int argc, char * argv[])
     tester.saveField();
     vul_file::change_directory("..");
 
-    vcl_cout << "TEST CASE 7: PASSED"<< vcl_endl;
-
-    saveFrame.testField(numChannels, width, height, 1);
-    tester.testField(numChannels, width, height, 1);
-
-    vcl_cout << vcl_endl << "TEST CASE 8" << vcl_endl;
+    dispPass(saveFrame.testField(numChannels, width, height, 1));
+    dispPass(tester.testField(numChannels, width, height, 1));
 
     saveFrame = DistributionField(images[0], default_params3, x, y, width, height);
     tester = ChannelRep(images[0], default_params3, x, y, width, height);
@@ -154,16 +158,29 @@ int main (int argc, char * argv[])
     vul_file::change_directory("../ColourChannel");
     tester.saveField();
 
-    vcl_cout << "TEST CASE 8: PASSED" << vcl_endl;
+    dispPass(saveFrame.testField(numChannels, width, height, 3));
+    dispPass(tester.testField(numChannels, width, height, 3));
 
-    saveFrame.testField(numChannels, width, height, 3);
-    tester.testField(numChannels, width, height, 3);
 
-    vcl_cout << "TEST CASE 9" << vcl_endl;
+
+
+
+    vcl_cout << "TOTAL " << "PASSES: " << passes << endl;
+	vcl_cout << "TOTAL " << "FAILS: " << fails << endl;
+	vcl_cout << endl;
 
     return 0;
 
 }
+
+
+
+
+
+
+
+
+
 
 bool testParseCli1()
 {

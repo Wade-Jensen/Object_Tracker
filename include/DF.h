@@ -79,7 +79,7 @@ public:
 	// Compare distribution field dimensions
     bool operator!=(const DistributionField&);
 
-    void testField(int tnumChannels, int twidth, int theight, int tplanes);
+    bool testField(int tnumChannels, int twidth, int theight, int tplanes);
 
 protected:
 
