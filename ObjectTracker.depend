@@ -1754,11 +1754,11 @@
 1275225328 c:\users\lachlan\downloads\codeblocks_and_vxl(1)\vxl-1.17.0\include\vxl\core\vil\vil_pyramid_image_resource_sptr.h
 	<vil/vil_smart_ptr.h>
 
-1465112536 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\dft.cpp
+1465175161 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\dft.cpp
 	"../include/DFT.h"
 	"..\include\DF.h"
 
-1465112536 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\dft.h
+1465175161 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\dft.h
 	<vcl_vector.h>
 	<vector>
 	<vil/vil_image_view.h>
@@ -2526,7 +2526,7 @@
 
 1460351236 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\vxl-1.17.0\include\vxl\core\vil\vil_fwd.h
 
-1465112536 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\df.h
+1465201154 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\df.h
 	<vector>
 	<sstream>
 	<vil/vil_image_view.h>
@@ -2578,7 +2578,7 @@
 	"..\include\DF.h"
 	<vil/vil_load.h>
 
-1465118956 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\version.h
+1465196734 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\version.h
 
 1460351237 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\vxl-1.17.0\include\vxl\core\vil\vil_load.h
 	<vil/vil_fwd.h>
@@ -2601,7 +2601,7 @@
 1460351237 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\vxl-1.17.0\include\vxl\core\vil\vil_pyramid_image_resource_sptr.h
 	<vil/vil_smart_ptr.h>
 
-1465118929 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\objecttracker.cpp
+1465207277 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\objecttracker.cpp
 	"..\include\UserInput.h"
 	"..\include\Version.h"
 	"..\include\DFT.h"
@@ -2676,7 +2676,7 @@
 1460351274 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\vxl-1.17.0\include\vxl\vcl\sgi\vcl_list.txx
 	<vcl_list.h>
 
-1465112548 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\df.cpp
+1465208565 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\df.cpp
 	"..\include\DF.h"
 
 1464798552 source:c:\codeblocks\codeblocks-projects\object_tracker-master\src\dft.cpp
@@ -3778,10 +3778,10 @@
 	<string>
 	<stdlib.h>
 
-1465121424 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\userinput.cpp
+1465207277 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\userinput.cpp
 	"../include/UserInput.h"
 
-1465108650 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\userinput.h
+1465192279 c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\include\userinput.h
 	<vul/vul_file_iterator.h>
 	<vul/vul_file.h>
 	<vul/vul_arg.h>
@@ -3812,6 +3812,17 @@
 	"../include/UserInput.h"
 
 1465205218 source:c:\users\lachlan\downloads\codeblocks_and_vxl(1)\codeblocks-projects\object_tracker\src\testcases.cpp
+	"..\include\UserInput.h"
+	"..\include\Version.h"
+	"..\include\DFT.h"
+	<vil/vil_image_view.h>
+	<vil/vil_load.h>
+	<vil/vil_save.h>
+	<vul/vul_file_iterator.h>
+	<vul/vul_file.h>
+	<vul/vul_arg.h>
+
+1465208198 source:c:\users\wade jensen\dropbox\01_en40\year_3_sem_1\enb241\codeblocks_and_vxl\codeblocks-projects\objecttracker\src\testcases.cpp
 	"..\include\UserInput.h"
 	"..\include\Version.h"
 	"..\include\DFT.h"

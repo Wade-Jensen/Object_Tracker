@@ -24,6 +24,7 @@ image_array SomeClass::initImageArray(int width, int height, int planes int arrL
     return image_vector;
 }
 */
+extern int passes; // a global variable used only for counting number of passed test cases
 
 // Default constructor
 DistributionField::DistributionField()
@@ -515,7 +516,7 @@ bool DistributionField::testField(int tnumChannels, int twidth, int theight, int
     std::cout << "Channels match; ";
 	for (int i = 0; i<dist_field.size(); i++)
 	{
-		assert(dist_field[i].ni()==twidth);
+		assert(dist_field[i].ni()==twidth); passes++;
 
 		assert(dist_field[i].nj()==theight);
 
