@@ -516,7 +516,7 @@ void ChannelRep::createChannRep(const vil_image_view<unsigned char>& Input){
 
 }
 
-bool DistributionField::testField(int tnumChannels, int twidth, int theight, int tplanes)
+bool DistributionField::testField(int tnumChannels, int twidth, int theight, bool tplanes)
 {
     assert(dist_field.size()==tnumChannels);
     vcl_cout << "Channels match; ";
@@ -526,7 +526,9 @@ bool DistributionField::testField(int tnumChannels, int twidth, int theight, int
 
 		assert(dist_field[i].nj()==theight);
 
-		assert(dist_field[i].nplanes()==tplanes);
+		bool colour = (dist_field[i].nplanes()==3);
+
+		assert(colour == tplanes);
 	}
 	vcl_cout << "Width matches; ";
 	vcl_cout << "Height matches; ";

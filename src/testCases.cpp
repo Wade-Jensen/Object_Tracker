@@ -105,9 +105,9 @@ int main (int argc, char * argv[])
     vcl_cout << "Testing DF Class" << endl << "DistributionField(const vil_image_view<unsigned char>&, DF_params&)" << vcl_endl;
 
     DF_params default_params1 = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
-                                          sdColour, 1);
+                                          sdColour, false);
     DF_params default_params3 = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
-                                          sdColour, 3);
+                                          sdColour, true);
 
     DistributionField saveFrame = DistributionField(images[0], default_params1, x, y, width, height);
     ChannelRep tester = ChannelRep(images[0], default_params1, x, y, width, height);
@@ -120,8 +120,8 @@ int main (int argc, char * argv[])
     tester.saveField();
     vul_file::change_directory("..");
 
-    dispPass(saveFrame.testField(numChannels, width, height, 1));
-    dispPass(tester.testField(numChannels, width, height, 1));
+    dispPass(saveFrame.testField(numChannels, width, height, false));
+    dispPass(tester.testField(numChannels, width, height, false));
 
     saveFrame = DistributionField(images[0], default_params3, x, y, width, height);
     tester = ChannelRep(images[0], default_params3, x, y, width, height);
@@ -134,14 +134,14 @@ int main (int argc, char * argv[])
     tester.saveField();
     // images are all saved for manual inspection
 
-    dispPass(saveFrame.testField(numChannels, width, height, 3));
-    dispPass(tester.testField(numChannels, width, height, 3));
+    dispPass(saveFrame.testField(numChannels, width, height, true));
+    dispPass(tester.testField(numChannels, width, height, true));
 
     vcl_cout << "DistributionField DistributionField::subfield(int X, int Y, int Width, int Height) const" << endl;
-    int tx = 50, ty = 50, twidth = 51, theight = 52;
-    DistributionField newTester(tester);
+    int tx = 10, ty = 10, twidth = 14, theight = 20;
+    DistributionField newTester;
     newTester = tester.subfield(x,y,width,height);
-    newTester.testField(numChannels,width,height,3);
+    newTester.testField(numChannels,width,height,true);
 
 
 
