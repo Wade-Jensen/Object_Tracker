@@ -3,7 +3,6 @@
 /*typedef vcl_vector< vil_image_view<unsigned char> > image_array;
 Contains implementations of all methods for Distribution Field class
 */
-extern int passes; // a global variable used only for counting number of passed test cases
 
 // Default constructor - Leave plain
 DistributionField::DistributionField()
@@ -523,7 +522,7 @@ bool DistributionField::testField(int tnumChannels, int twidth, int theight, int
     vcl_cout << "Channels match; ";
 	for (int i = 0; i<dist_field.size(); i++)
 	{
-		assert(dist_field[i].ni()==twidth); passes++;
+		assert(dist_field[i].ni()==twidth); //passes++;
 
 		assert(dist_field[i].nj()==theight);
 
