@@ -46,10 +46,10 @@ int main (int argc, char * argv[])
     {
         vcl_cout << "Testing UserInput Class" << endl;
 
-        vcl_cout << "Command line arguments test: " << vcl_endl<< vcl_endl;
-        dispPass(testParseCli1());
-        vcl_cout << "Command line arguments test: "<< vcl_endl<< vcl_endl;
-        dispPass(testParseCli2());
+        //vcl_cout << "Command line arguments test: " << vcl_endl<< vcl_endl;
+        //dispPass(testParseCli1());
+        //vcl_cout << "Command line arguments test: "<< vcl_endl<< vcl_endl;
+        //dispPass(testParseCli2());
 
         vcl_cout << "Configuration file test: "<< vcl_endl<< vcl_endl;
         dispPass(testParseTxt1());
@@ -102,7 +102,7 @@ int main (int argc, char * argv[])
     // load the image file into the vector of images:
     images.push_back( vil_load(filenames[0].c_str()) );
 
-    vcl_cout << "Testing DF Class" << vcl_endl;
+    vcl_cout << "Testing DF Class" << endl << "DistributionField(const vil_image_view<unsigned char>&, DF_params&)" << vcl_endl;
 
     DF_params default_params1 = DF_params(numChannels, blurSpatial, blurColour, sdSpatial,
                                           sdColour, 1);
@@ -136,6 +136,12 @@ int main (int argc, char * argv[])
 
     dispPass(saveFrame.testField(numChannels, width, height, 3));
     dispPass(tester.testField(numChannels, width, height, 3));
+
+    vcl_cout << "DistributionField DistributionField::subfield(int X, int Y, int Width, int Height) const" << endl;
+    int tx = 50, ty = 50, twidth = 51, theight = 52;
+    DistributionField newTester(tester);
+    newTester = tester.subfield(x,y,width,height);
+    newTester.testField(numChannels,width,height,3);
 
 
 
